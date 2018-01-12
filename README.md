@@ -27,7 +27,7 @@ The `.md` files in `sources/` should be translated in-place.
 | objective          | 目标                 |
 | optimizer          | 优化器               |
 | output shape       | 输出尺寸             |
-| regularizer        | 正则项               |
+| regularizer        | 正则化器             |
 | return             | 返回                 |
 | recurrent          | 循环                 |
 | Sequential Model   | 顺序模型              |
