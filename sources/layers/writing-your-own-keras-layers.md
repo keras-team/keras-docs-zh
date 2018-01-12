@@ -1,12 +1,12 @@
-# Writing your own Keras layers
+# 编写你自己的Keras层
 
-For simple, stateless custom operations, you are probably better off using `layers.core.Lambda` layers. But for any custom operation that has trainable weights, you should implement your own layer.
+对于简单、无状态的自定义操作，你也许可以通过`layers.core.Lambda`层来实现。但是对于那些包含了可训练权重的自定义层，你应该自己实现这种层。
 
-Here is the skeleton of a Keras layer, **as of Keras 2.0** (if you have an older version, please upgrade). There are only three methods you need to implement:
+这是一个**Keras2.0**中，Keras层的骨架（如果你用的是旧的版本，请你更新）。你只需要实现三个方法即可:
 
-- `build(input_shape)`: this is where you will define your weights. This method must set `self.built = True`, which can be done by calling `super([Layer], self).build()`.
-- `call(x)`: this is where the layer's logic lives. Unless you want your layer to support masking, you only have to care about the first argument passed to `call`: the input tensor.
-- `compute_output_shape(input_shape)`: in case your layer modifies the shape of its input, you should specify here the shape transformation logic. This allows Keras to do automatic shape inference.
+- `build(input_shape)`: 这是你定义权重的地方。这个方法必须设`self.built = True`，可以通过调用`super([Layer], self).build()`完成。
+- `call(x)`: 这里是编写层的功能逻辑的地方。你只需要关注传入`call`的第一个参数：输入张量，除非你希望你的层支持masking。
+- `compute_output_shape(input_shape)`: 如果你的层更改了输入张量的形状，你应该在这里定义形状变化的逻辑，这让Keras能够自动推断各层的形状。
 
 ```python
 from keras import backend as K
@@ -34,4 +34,4 @@ class MyLayer(Layer):
         return (input_shape[0], self.output_dim)
 ```
 
-The existing Keras layers provide examples of how to implement almost anything. Never hesitate to read the source code!
+已有的Keras层就是实现层的很好例子。不要犹豫阅读源码！
