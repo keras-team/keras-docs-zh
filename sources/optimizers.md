@@ -1,8 +1,7 @@
 
-## Usage of optimizers
+## 优化器的用法
 
-An optimizer is one of the two arguments required for compiling a Keras model:
-
+优化器(optimizer)是编译Keras模型的所需的两个参数之一：
 ```python
 from keras import optimizers
 
@@ -15,33 +14,35 @@ sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='mean_squared_error', optimizer=sgd)
 ```
 
-You can either instantiate an optimizer before passing it to `model.compile()` , as in the above example, or you can call it by its name. In the latter case, the default parameters for the optimizer will be used.
+你可以先实例化一个优化器对象，然后将它传入`model.compile()`，像上述示例中一样，
+或者你可以通过名称来调用优化器。在后一种情况下，将使用优化器的默认参数。
+
 
 ```python
-# pass optimizer by name: default parameters will be used
+# 传入优化器名称: 默认参数将被采用
 model.compile(loss='mean_squared_error', optimizer='sgd')
 ```
 
 ---
 
-## Parameters common to all Keras optimizers
+## Keras优化器的公共参数
 
-The parameters `clipnorm` and `clipvalue` can be used with all optimizers to control gradient clipping:
+
+参数`clipnorm`和`clipvalue`能在所有的优化器中使用，用于控制梯度裁剪（Gradient Clipping）：
 
 ```python
 from keras import optimizers
 
-# All parameter gradients will be clipped to
-# a maximum norm of 1.
+# 所有参数梯度将被裁剪，让其l2范数最大为1：g * 1 / max(1, l2_norm)
 sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
 ```
 
 ```python
 from keras import optimizers
 
-# All parameter gradients will be clipped to
-# a maximum value of 0.5 and
-# a minimum value of -0.5.
+# 所有参数d 梯度将被裁剪到数值范围内：
+# 最大值0.5
+# 最小值-0.5
 sgd = optimizers.SGD(lr=0.01, clipvalue=0.5)
 ```
 
@@ -54,18 +55,19 @@ sgd = optimizers.SGD(lr=0.01, clipvalue=0.5)
 keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
 ```
 
-Stochastic gradient descent optimizer.
+随机梯度下降优化器
 
-Includes support for momentum,
-learning rate decay, and Nesterov momentum.
+包含扩展功能的支持：
+- 动量（momentum）优化,
+- 学习率衰减（每次参数更新后）
+- Nestrov动量(NAG)优化
 
-__Arguments__
+__参数__
 
-- __lr__: float >= 0. Learning rate.
-- __momentum__: float >= 0. Parameter that accelerates SGD
-in the relevant direction and dampens oscillations.
-- __decay__: float >= 0. Learning rate decay over each update.
-- __nesterov__: boolean. Whether to apply Nesterov momentum.
+- __lr__: float >= 0. 学习率
+- __momentum__: float >= 0. 参数，用于加速SGD在相关方向上前进，并抑制震荡
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
+- __nesterov__: boolean. 是否使用Nesterov动量.
 
 ----
 
@@ -76,23 +78,22 @@ in the relevant direction and dampens oscillations.
 keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
 ```
 
-RMSProp optimizer.
+RMSProp优化器.
 
-It is recommended to leave the parameters of this optimizer
-at their default values
-(except the learning rate, which can be freely tuned).
+建议使用优化器的默认参数
+（除了学习率lr，它可以被自由调节）
 
-This optimizer is usually a good choice for recurrent
-neural networks.
 
-__Arguments__
+这个优化器通常是训练循环神经网络RNN的不错选择。
 
-- __lr__: float >= 0. Learning rate.
-- __rho__: float >= 0.
-- __epsilon__: float >= 0. Fuzz factor. If `None`, defaults to `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
+__参数__
 
-__References__
+- __lr__: float >= 0. 学习率.
+- __rho__: float >= 0. RMSProp梯度平方的移动均值的衰减率.
+- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`.
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
+
+__引用__
 
 - [rmsprop: Divide the gradient by a running average of its recent magnitude](http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf)
 
@@ -105,18 +106,17 @@ __References__
 keras.optimizers.Adagrad(lr=0.01, epsilon=None, decay=0.0)
 ```
 
-Adagrad optimizer.
+Adagrad优化器.
 
-It is recommended to leave the parameters of this optimizer
-at their default values.
+建议使用优化器的默认参数。
 
-__Arguments__
+__参数__
 
-- __lr__: float >= 0. Learning rate.
-- __epsilon__: float >= 0. If `None`, defaults to `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
+- __lr__: float >= 0. 学习率.
+- __epsilon__: float >= 0. 若为 `None`, 默认为 `K.epsilon()`.
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
 
-__References__
+__引用__
 
 - [Adaptive Subgradient Methods for Online Learning and Stochastic Optimization](http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf)
 
@@ -129,20 +129,18 @@ __References__
 keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=None, decay=0.0)
 ```
 
-Adadelta optimizer.
+Adagrad优化器.
 
-It is recommended to leave the parameters of this optimizer
-at their default values.
+建议使用优化器的默认参数。
 
-__Arguments__
+__参数__
 
-- __lr__: float >= 0. Learning rate.
-It is recommended to leave it at the default value.
-- __rho__: float >= 0.
-- __epsilon__: float >= 0. Fuzz factor. If `None`, defaults to `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
+- __lr__: float >= 0. 学习率，建议保留默认值.
+- __rho__: float >= 0. Adadelta梯度平方移动均值的衰减率
+- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`.
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
 
-__References__
+__引用__
 
 - [Adadelta - an adaptive learning rate method](http://arxiv.org/abs/1212.5701)
 
@@ -155,22 +153,22 @@ __References__
 keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 ```
 
-Adam optimizer.
+Adam优化器.
 
-Default parameters follow those provided in the original paper.
+默认参数遵循原论文中提供的值。
 
-__Arguments__
 
-- __lr__: float >= 0. Learning rate.
-- __beta_1__: float, 0 < beta < 1. Generally close to 1.
-- __beta_2__: float, 0 < beta < 1. Generally close to 1.
-- __epsilon__: float >= 0. Fuzz factor. If `None`, defaults to `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
-- __amsgrad__: boolean. Weather to apply the AMSGrad variant of this
-algorithm from the paper "On the Convergence of Adam and
+__参数__
+
+- __lr__: float >= 0. 学习率.
+- __beta_1__: float, 0 < beta < 1. 通常接近于 1.
+- __beta_2__: float, 0 < beta < 1. 通常接近于 1.
+- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`.
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
+- __amsgrad__: boolean. 是否应用此算法的AMSGrad变种，来自论文"On the Convergence of Adam and
 Beyond".
 
-__References__
+__引用__
 
 - [Adam - A Method for Stochastic Optimization](http://arxiv.org/abs/1412.6980v8)
 - [On the Convergence of Adam and Beyond](https://openreview.net/forum?id=ryQu7f-RZ)
@@ -184,19 +182,19 @@ __References__
 keras.optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 ```
 
-Adamax optimizer from Adam paper's Section 7.
+Adamax优化器，来自Adam论文的第七小节.
 
-It is a variant of Adam based on the infinity norm.
-Default parameters follow those provided in the paper.
+它是Adam算法基于无穷范数（infinity norm）的变种。
+默认参数遵循论文中提供的值。
 
-__Arguments__
+__参数__
 
-- __lr__: float >= 0. Learning rate.
-- __beta_1/beta_2__: floats, 0 < beta < 1. Generally close to 1.
-- __epsilon__: float >= 0. Fuzz factor. If `None`, defaults to `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
+- __lr__: float >= 0. 学习率.
+- __beta_1/beta_2__: floats, 0 < beta < 1. 通常接近于 1.
+- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`.
+- __decay__: float >= 0. 每次参数更新后学习率衰减值.
 
-__References__
+__引用__
 
 - [Adam - A Method for Stochastic Optimization](http://arxiv.org/abs/1412.6980v8)
 
@@ -209,22 +207,22 @@ __References__
 keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, schedule_decay=0.004)
 ```
 
-Nesterov Adam optimizer.
+Nesterov版本Adam优化器.
 
-Much like Adam is essentially RMSprop with momentum,
-Nadam is Adam RMSprop with Nesterov momentum.
+正像Adam本质上是RMSProp与动量momentum的结合，
+Nadam是采用Nesterov momentum版本的Adam优化器。
 
-Default parameters follow those provided in the paper.
-It is recommended to leave the parameters of this optimizer
-at their default values.
+默认参数遵循论文中提供的值。
+建议使用优化器的默认参数。
 
-__Arguments__
 
-- __lr__: float >= 0. Learning rate.
-- __beta_1/beta_2__: floats, 0 < beta < 1. Generally close to 1.
-- __epsilon__: float >= 0. Fuzz factor. If `None`, defaults to `K.epsilon()`.
+__参数__
 
-__References__
+- __lr__: float >= 0. 学习率.
+- __beta_1/beta_2__: floats, 0 < beta < 1. 通常接近于 1.
+- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`.
+
+__引用__
 
 - [Nadam report](http://cs229.stanford.edu/proj2015/054_report.pdf)
 - [On the importance of initialization and momentum in deep learning](http://www.cs.toronto.edu/~fritz/absps/momentum.pdf)
@@ -238,5 +236,4 @@ __References__
 keras.optimizers.TFOptimizer(optimizer)
 ```
 
-Wrapper class for native TensorFlow optimizers.
-
+原生Tensorlfow优化器的包装类（wrapper class）。
