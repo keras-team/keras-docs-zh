@@ -11,7 +11,7 @@ plot_model(model, to_file='model.png')
 
 `plot_model`有两个可选参数:
 
-- `show_shapes` (默认为False) 控制是否在图中输出各层的shape。
+- `show_shapes` (默认为False) 控制是否在图中输出各层的尺寸。
 - `show_layer_names` (默认为True) 控制是否在图中显示每一层的名字。
 
 此外，你也可以直接取得`pydot.Graph`对象并自己渲染它。

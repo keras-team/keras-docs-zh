@@ -165,7 +165,7 @@ cosine_proximity(y_true, y_pred)
 
 ----
 
-**注意**: 当使用`categorical_crossentropy`损失时，你的目标值应该是分类格式 (即，如果你有10个类，每个样本的目标值应该是一个10维的向量，这个向量除了表示类别的那个位置为1，其他均为0)。 为了将 *整数目标值* 转换为 *分类目标值*，你可以使用Keras实用函数`to_categorical`：
+**注意**: 当使用`categorical_crossentropy`损失时，你的目标值应该是分类格式 (即，如果你有10个类，每个样本的目标值应该是一个10维的向量，这个向量除了表示类别的那个索引为1，其他均为0)。 为了将 *整数目标值* 转换为 *分类目标值*，你可以使用Keras实用函数`to_categorical`：
 
 ```python
 from keras.utils.np_utils import to_categorical
