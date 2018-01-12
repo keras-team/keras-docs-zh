@@ -1,7 +1,7 @@
 
-## Usage of loss functions
+## 损失函数的使用
 
-A loss function (or objective function, or optimization score function) is one of the two parameters required to compile a model:
+损失函数（或称目标函数、优化评分函数）是编译模型时所需的两个参数之一：
 
 ```python
 model.compile(loss='mean_squared_error', optimizer='sgd')
@@ -13,16 +13,17 @@ from keras import losses
 model.compile(loss=losses.mean_squared_error, optimizer='sgd')
 ```
 
-You can either pass the name of an existing loss function, or pass a TensorFlow/Theano symbolic function that returns a scalar for each data-point and takes the following two arguments:
+你可以传递一个现有的损失函数名，或者一个TensorFlow/Theano符号函数。
+该符号函数为每个数据点返回一个标量，有以下两个参数:
 
-- __y_true__: True labels. TensorFlow/Theano tensor.
-- __y_pred__: Predictions. TensorFlow/Theano tensor of the same shape as y_true.
+- __y_true__: 真实标签. TensorFlow/Theano张量。
+- __y_pred__: 预测值. TensorFlow/Theano张量，其shape与y_true相同。
 
-The actual optimized objective is the mean of the output array across all datapoints.
+实际的优化目标是所有数据点的输出数组的平均值。
 
-For a few examples of such functions, check out the [losses source](https://github.com/keras-team/keras/blob/master/keras/losses.py).
+有关这些函数的几个例子，请查看[losses source](https://github.com/keras-team/keras/blob/master/keras/losses.py)。
 
-## Available loss functions
+## 可用损失函数
 
 ### mean_squared_error
 
@@ -94,22 +95,18 @@ categorical_hinge(y_true, y_pred)
 logcosh(y_true, y_pred)
 ```
 
+预测误差的双曲余弦的对数。
 
-Logarithm of the hyperbolic cosine of the prediction error.
-
-`log(cosh(x))` is approximately equal to `(x ** 2) / 2` for small `x` and
-to `abs(x) - log(2)` for large `x`. This means that 'logcosh' works mostly
-like the mean squared error, but will not be so strongly affected by the
-occasional wildly incorrect prediction.
+对于小的`x`，`log(cosh(x))`近似等于`(x ** 2) / 2`。对于大的`x`，近似于`abs(x) - log(2)`。这表示'logcosh'与均方误差大致相同，但是不会受到偶尔疯狂的错误预测的强烈影响。
 
 __Arguments__
 
-- __y_true__: tensor of true targets.
-- __y_pred__: tensor of predicted targets.
+- __y_true__: 目标真实值的张量。
+- __y_pred__: 目标预测值的张量。
 
 __Returns__
 
-Tensor with one scalar loss entry per sample.
+每个样本都有一个标量损失的张量。
 
 ----
 
@@ -168,7 +165,7 @@ cosine_proximity(y_true, y_pred)
 
 ----
 
-**Note**: when using the `categorical_crossentropy` loss, your targets should be in categorical format (e.g. if you have 10 classes, the target for each sample should be a 10-dimensional vector that is all-zeros except for a 1 at the index corresponding to the class of the sample). In order to convert *integer targets* into *categorical targets*, you can use the Keras utility `to_categorical`:
+**注意**: 当使用`categorical_crossentropy`损失时，你的目标值应该是分类格式 (即，如果你有10个类，每个样本的目标值应该是一个10维的向量，这个向量除了表示类别的那个位置为1，其他均为0)。 为了将 *整数目标值* 转换为 *分类目标值*，你可以使用Keras实用函数`to_categorical`：
 
 ```python
 from keras.utils.np_utils import to_categorical
