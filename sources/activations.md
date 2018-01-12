@@ -1,7 +1,8 @@
 
-## Usage of activations
+## 激活函数的用法
 
-Activations can either be used through an `Activation` layer, or through the `activation` argument supported by all forward layers:
+激活函数可以通过设置单独的激活层实现，也可以在构造层对象时通过传递`activation`参数实现
+
 
 ```python
 from keras.layers import Activation, Dense
@@ -10,13 +11,14 @@ model.add(Dense(64))
 model.add(Activation('tanh'))
 ```
 
-This is equivalent to:
+等价于
 
 ```python
 model.add(Dense(64, activation='tanh'))
 ```
 
-You can also pass an element-wise TensorFlow/Theano/CNTK function as an activation:
+你也可以通过传递一个逐元素运算的Theano/TensorFlow/CNTK函数来作为激活函数：
+
 
 ```python
 from keras import backend as K
@@ -25,7 +27,7 @@ model.add(Dense(64, activation=K.tanh))
 model.add(Activation(K.tanh))
 ```
 
-## Available activations
+## 预定义激活函数
 
 ### softmax
 
@@ -35,16 +37,16 @@ softmax(x, axis=-1)
 ```
 
 
-Softmax activation function.
+Softmax 激活函数.
 
 __Arguments__
 
-x : Tensor.
-- __axis__: Integer, axis along which the softmax normalization is applied.
+x : 张量.
+- __axis__: 整数, 代表softmax所作用的维度
 
 __Returns__
 
-Tensor, output of softmax transformation.
+softmax变换后的张量.
 
 __Raises__
 
@@ -69,20 +71,20 @@ selu(x)
 ```
 
 
-Scaled Exponential Linear Unit. (Klambauer et al., 2017).
+可伸缩的指数线性单元 (Klambauer et al., 2017)。
 
 __Arguments__
 
-- __x__: A tensor or variable to compute the activation function for.
+- __x__: 一个用来用于计算激活函数的张量或变量。
 
 __Returns__
 
-Tensor with the same shape and dtype as `x`.
+与`x`具有相同类型及形状的张量。
 
 __Note__
 
-- To be used together with the initialization "lecun_normal".
-- To be used together with the dropout variant "AlphaDropout".
+- 与 "lecun_normal" 初始化方法一起使用。
+- 与 dropout 的变种 "AlphaDropout" 一起使用。
 
 __References__
 
@@ -152,6 +154,6 @@ linear(x)
 ```
 
 
-## On "Advanced Activations"
+## 高级激活函数
 
-Activations that are more complex than a simple TensorFlow/Theano/CNTK function (eg. learnable activations, which maintain a state) are available as [Advanced Activation layers](layers/advanced-activations.md), and can be found in the module `keras.layers.advanced_activations`. These include `PReLU` and `LeakyReLU`.
+对于简单的Theano/TensorFlow/CNTK不能表达的复杂激活函数，如含有可学习参数的激活函数，可通过[高级激活函数](layers/advanced-activations.md)实现，如PReLU，LeakyReLU等
