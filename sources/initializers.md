@@ -1,8 +1,9 @@
-## Usage of initializers
+## 初始化器的用法
 
-Initializations define the way to set the initial random weights of Keras layers.
 
-The keyword arguments used for passing initializers to layers will depend on the layer. Usually it is simply `kernel_initializer` and `bias_initializer`:
+初始化定义了设置Keras各层权重随机初始值的方法。
+
+用来将初始化器传入keras层的参数名取决于具体的层。通常关键字为`kernel_initializer` and `bias_initializer`:
 
 ```python
 model.add(Dense(64,
@@ -10,9 +11,9 @@ model.add(Dense(64,
                 bias_initializer='zeros'))
 ```
 
-## Available initializers
+## 可用的初始化器
 
-The following built-in initializers are available as part of the `keras.initializers` module:
+下面这些是可用的内置初始化器，是`keras.initializers`模块的一部分:
 
 <span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L14)</span>
 ### Initializer
@@ -21,7 +22,7 @@ The following built-in initializers are available as part of the `keras.initiali
 keras.initializers.Initializer()
 ```
 
-Initializer base class: all initializers inherit from this class.
+初始化器基类：所有初始化器继承这个类。
 
 ----
 
@@ -32,7 +33,7 @@ Initializer base class: all initializers inherit from this class.
 keras.initializers.Zeros()
 ```
 
-Initializer that generates tensors initialized to 0.
+将张量初始值设为0的初始化器。
 
 ----
 
@@ -43,7 +44,7 @@ Initializer that generates tensors initialized to 0.
 keras.initializers.Ones()
 ```
 
-Initializer that generates tensors initialized to 1.
+将张量初始值设为1的初始化器。
 
 ----
 
@@ -54,11 +55,11 @@ Initializer that generates tensors initialized to 1.
 keras.initializers.Constant(value=0)
 ```
 
-Initializer that generates tensors initialized to a constant value.
+将张量初始值设为一个常数的初始化器。
 
-__Arguments__
+__参数__
 
-- __value__: float; the value of the generator tensors.
+- __value__: 浮点数; 生成的张量的值。
 
 ----
 
@@ -69,15 +70,13 @@ __Arguments__
 keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
 ```
 
-Initializer that generates tensors with a normal distribution.
+按照正态分布生成随机张量的初始化器。
 
-__Arguments__
+__参数__
 
-- __mean__: a python scalar or a scalar tensor. Mean of the random values
-to generate.
-- __stddev__: a python scalar or a scalar tensor. Standard deviation of the
-random values to generate.
-- __seed__: A Python integer. Used to seed the random generator.
+- __mean__: 一个python标量或者一个标量张量。要生成的随机值的平均数。
+- __stddev__: 一个python标量或者一个标量张量。要生成的随机值的标准差。
+- __seed__: 一个Python整数。用于设置随机数种子。
 
 ----
 
@@ -88,15 +87,13 @@ random values to generate.
 keras.initializers.RandomUniform(minval=-0.05, maxval=0.05, seed=None)
 ```
 
-Initializer that generates tensors with a uniform distribution.
+按照均匀分布生成随机张量的初始化器。
 
-__Arguments__
+__参数__
 
-- __minval__: A python scalar or a scalar tensor. Lower bound of the range
-of random values to generate.
-- __maxval__: A python scalar or a scalar tensor. Upper bound of the range
-of random values to generate.  Defaults to 1 for float types.
-- __seed__: A Python integer. Used to seed the random generator.
+- __minval__: 一个python标量或者一个标量张量。要生成的随机值的范围下限。
+- __maxval__: 一个python标量或者一个标量张量。要生成的随机值的范围下限。默认为浮点类型的1。
+- __seed__: 一个Python整数。用于设置随机数种子。
 
 ----
 
@@ -107,20 +104,15 @@ of random values to generate.  Defaults to 1 for float types.
 keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 ```
 
-Initializer that generates a truncated normal distribution.
+按照截尾正态分布生成随机张量的初始化器。
 
-These values are similar to values from a `RandomNormal`
-except that values more than two standard deviations from the mean
-are discarded and re-drawn. This is the recommended initializer for
-neural network weights and filters.
+生成的随机值与`RandomNormal`生成的类似，但是在距离平均值两个标准差之外的随机值将被丢弃并重新生成。这是用来生成神经网络权重和滤波器的推荐初始化器。
 
 __Arguments__
 
-- __mean__: a python scalar or a scalar tensor. Mean of the random values
-to generate.
-- __stddev__: a python scalar or a scalar tensor. Standard deviation of the
-random values to generate.
-- __seed__: A Python integer. Used to seed the random generator.
+- __mean__: 一个python标量或者一个标量张量。要生成的随机值的平均数。
+- __stddev__: 一个python标量或者一个标量张量。要生成的随机值的标准差。
+- __seed__: 一个Python整数。用于设置随机数种子。
 
 ----
 
