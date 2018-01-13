@@ -35,3 +35,4 @@ The `.md` files in `sources/` should be translated in-place.
 | target             | 目标                 |
 | testing            | 测试                 |
 | training           | 训练                 |
+| wrapper            | 封装器               |
