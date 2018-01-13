@@ -1,7 +1,7 @@
 
-## Usage of metrics
+## 评估标准的用法
 
-A metric is a function that is used to judge the performance of your model. Metric functions are to be supplied in the `metrics` parameter when a model is compiled.
+一个评估标准是用来判断你的模型的性能的函数。 评估标准函数在模型编译的 `metrics` 参数中提供。
 
 ```python
 model.compile(loss='mean_squared_error',
@@ -17,21 +17,21 @@ model.compile(loss='mean_squared_error',
               metrics=[metrics.mae, metrics.categorical_accuracy])
 ```
 
-A metric function is similar to a [loss function](/losses), except that the results from evaluating a metric are not used when training the model.
+一个估标准函数类似于一个[损失函数](/losses), 除了训练模型时不使用评估度量的估标准。
 
-You can either pass the name of an existing metric, or pass a Theano/TensorFlow symbolic function (see [Custom metrics](#custom-metrics)).
+您可以传递现有度量的名称，也可以通过Theano / TensorFlow标记函数 (看到自定义 [定义的评估标准](#custom-metrics))
+#### 参数
+  - __y_true__: 真正的标签。 Theano/TensorFlow 张量。
+  - __y_pred__: 预测。 Theano/TensorFlow 与 y_true 形状相同的张量。
 
-#### Arguments
-  - __y_true__: True labels. Theano/TensorFlow tensor.
-  - __y_pred__: Predictions. Theano/TensorFlow tensor of the same shape as y_true.
+#### 返回
 
-#### Returns
-  Single tensor value representing the mean of the output array across all
-  datapoints.
+  一个张量代表所有输出数组的平均值
+  数据点。
 
 ----
 
-## Available metrics
+## 可用的评估标准
 
 
 ### binary_accuracy
@@ -80,11 +80,9 @@ sparse_top_k_categorical_accuracy(y_true, y_pred, k=5)
 
 ----
 
-## Custom metrics
+## 自定义的评估标准
 
-Custom metrics can be passed at the compilation step. The
-function would need to take `(y_true, y_pred)` as arguments and return
-a single tensor value.
+自定义评估标准可以在编译步骤中传递。函数将需要`（y_true，y_pred）`作为参数并返回一个张量值。
 
 ```python
 import keras.backend as K
