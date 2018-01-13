@@ -85,7 +85,7 @@ __参数__
 - __lr__: float >= 0. 学习率.
 - __rho__: float >= 0.
 - __epsilon__: float >= 0. 模糊因子（Fuzz factor）. 如果设置为 `None`, 默认就是 `K.epsilon()`.
-- __decay__: float >= 0. Learning rate decay over each update.
+- __decay__: float >= 0. 学习率每次更新的下降量.
 
 __References__
 
