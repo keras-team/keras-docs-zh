@@ -5,12 +5,11 @@
 keras.layers.RNN(cell, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-Base class for recurrent layers.
+循环层的基类
 
-__Arguments__
+__参数__
 
-- __cell__: A RNN cell instance. A RNN cell is a class that has:
-- a `call(input_at_t, states_at_t)` method, returning
+- __cell__: 一个 RNN 组成单元实例. RNN 组成单元是一个类，具有方法 `call(input_at_t, states_at_t)` method, returning
 `(output_at_t, states_at_t_plus_1)`. The call method of the
 cell can also take the optional argument `constants`, see
 section "Note on passing external constants" below.
