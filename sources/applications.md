@@ -1,13 +1,12 @@
-# Applications
+# 应用 Applications
 
-Keras Applications are deep learning models that are made available alongside pre-trained weights.
-These models can be used for prediction, feature extraction, and fine-tuning.
+Keras 的应用模块（keras.applications）提供了带有预训练权值的深度学习模型，这些模型可以用来进行预测、特征提取和微调（fine-tuning）。
 
-Weights are downloaded automatically when instantiating a model. They are stored at `~/.keras/models/`.
+当你初始化一个预训练模型时，会自动下载权值到 `~/.keras/models/` 目录下。
 
-## Available models
+## 可用的模型
 
-### Models for image classification with weights trained on ImageNet:
+### 在 ImageNet 上预训练过的用于图像分类的模型：
 
 - [Xception](#xception)
 - [VGG16](#vgg16)
@@ -19,16 +18,15 @@ Weights are downloaded automatically when instantiating a model. They are stored
 - [DenseNet](#densenet)
 - [NASNet](#nasnet)
 
-All of these architectures (except Xception and MobileNet) are compatible with both TensorFlow and Theano, and upon instantiation the models will be built according to the image data format set in your Keras configuration file at `~/.keras/keras.json`. For instance, if you have set `image_data_format=channels_last`, then any model loaded from this repository will get built according to the TensorFlow data format convention, "Height-Width-Depth".
+所有的这些模型（除了 Xception 和 MobileNet 外）都兼容Theano和Tensorflow，并会自动按照位于 `~/.keras/keras.json` 的配置文件中设置的图像数据格式来构建模型。举个例子，如果你设置 `image_data_format=channels_last`，则加载的模型将按照 TensorFlow 的维度顺序来构造，即“高度-宽度-深度”（Height-Width-Depth）的顺序。
 
-The Xception model is only available for TensorFlow, due to its reliance on `SeparableConvolution` layers.
-The MobileNet model is only available for TensorFlow, due to its reliance on `DepthwiseConvolution` layers.
+Xception 模型仅适用于 TensorFlow，因为它依赖于 SeparableConvolution 层。MobileNet 模型仅适用于 TensorFlow，因为它依赖于 DepthwiseConvolution 层。
 
 -----
 
-## Usage examples for image classification models
+## 图像分类模型的示例代码
 
-### Classify ImageNet classes with ResNet50
+### 使用 ResNet50 进行 ImageNet 分类
 
 ```python
 from keras.applications.resnet50 import ResNet50
@@ -51,7 +49,7 @@ print('Predicted:', decode_predictions(preds, top=3)[0])
 # Predicted: [(u'n02504013', u'Indian_elephant', 0.82658225), (u'n01871265', u'tusker', 0.1122357), (u'n02504458', u'African_elephant', 0.061040461)]
 ```
 
-### Extract features with VGG16
+### 使用 VGG16 提取特征
 
 ```python
 from keras.applications.vgg16 import VGG16
@@ -70,7 +68,7 @@ x = preprocess_input(x)
 features = model.predict(x)
 ```
 
-### Extract features from an arbitrary intermediate layer with VGG19
+### 从VGG19的任意中间层中抽取特征
 
 ```python
 from keras.applications.vgg19 import VGG19
@@ -91,7 +89,7 @@ x = preprocess_input(x)
 block4_pool_features = model.predict(x)
 ```
 
-### Fine-tune InceptionV3 on a new set of classes
+### 在新类上微调 InceptionV3
 
 ```python
 from keras.applications.inception_v3 import InceptionV3
@@ -100,59 +98,59 @@ from keras.models import Model
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 
-# create the base pre-trained model
+# 构建不带分类器的预训练模型
 base_model = InceptionV3(weights='imagenet', include_top=False)
 
-# add a global spatial average pooling layer
+# 添加全局平均池化层
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
-# let's add a fully-connected layer
+
+# 添加一个全连接层
 x = Dense(1024, activation='relu')(x)
-# and a logistic layer -- let's say we have 200 classes
+
+# 添加一个分类器，假设我们有200个类
 predictions = Dense(200, activation='softmax')(x)
 
-# this is the model we will train
+# 构建我们需要训练的完整模型
 model = Model(inputs=base_model.input, outputs=predictions)
 
-# first: train only the top layers (which were randomly initialized)
-# i.e. freeze all convolutional InceptionV3 layers
+# 首先，我们只训练顶部的几层（随机初始化的层）
+# 锁住所有 InceptionV3 的卷积层
 for layer in base_model.layers:
     layer.trainable = False
 
-# compile the model (should be done *after* setting layers to non-trainable)
+# 编译模型（一定要在锁层以后操作）
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-# train the model on the new data for a few epochs
+# 在新的数据集上训练几代
 model.fit_generator(...)
 
-# at this point, the top layers are well trained and we can start fine-tuning
-# convolutional layers from inception V3. We will freeze the bottom N layers
-# and train the remaining top layers.
+# 现在顶层应该训练好了，让我们开始微调 Inception V3 的卷积层。
+# 我们会锁住底下的几层，然后训练其余的顶层。
 
-# let's visualize layer names and layer indices to see how many layers
-# we should freeze:
+# 让我们看看每一层的名字和层号，看看我们应该锁多少层呢：
 for i, layer in enumerate(base_model.layers):
    print(i, layer.name)
 
-# we chose to train the top 2 inception blocks, i.e. we will freeze
-# the first 249 layers and unfreeze the rest:
+# 我们选择训练最上面的两个 Inception block
+也就是说锁住前面249层，然后放开之后的层。
 for layer in model.layers[:249]:
    layer.trainable = False
 for layer in model.layers[249:]:
    layer.trainable = True
 
-# we need to recompile the model for these modifications to take effect
-# we use SGD with a low learning rate
+# 我们需要重新编译模型，才能使上面的修改生效
+# 让我们设置一个很低的学习率，使用 SGD 来微调
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
 
-# we train our model again (this time fine-tuning the top 2 inception blocks
-# alongside the top Dense layers
+# 我们继续训练模型，这次我们训练最后两个 Inception block
+# 和两个全连接层
 model.fit_generator(...)
 ```
 
 
-### Build InceptionV3 over a custom input tensor
+### 通过自定义输入 tensor 构建 InceptionV3
 
 ```python
 from keras.applications.inception_v3 import InceptionV3
@@ -166,9 +164,9 @@ model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=T
 
 -----
 
-# Documentation for individual models
+# 模型概览
 
-| Model | Size | Top-1 Accuracy | Top-5 Accuracy | Parameters | Depth |
+| 模型 | 大小 | Top-1 准确率 | Top-5 准确率 | 参数数量 | 深度 |
 | ----- | ----: | --------------: | --------------: | ----------: | -----: |
 | [Xception](#xception) | 88 MB | 0.790 | 0.945| 22,910,480 | 126 |
 | [VGG16](#vgg16) | 528 MB| 0.715 | 0.901 | 138,357,544 | 23
@@ -194,54 +192,37 @@ The top-1 and top-5 accuracy refers to the model's performance on the ImageNet v
 keras.applications.xception.Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-Xception V1 model, with weights pre-trained on ImageNet.
+在 ImageNet 上预训练的 Xception V1 模型。
 
-On ImageNet, this model gets to a top-1 validation accuracy of 0.790
-and a top-5 validation accuracy of 0.945.
+在 ImageNet 上，该模型取得了验证集 top1 0.790 和 top5 0.945 的准确率。
 
-Note that this model is only available for the TensorFlow backend,
-due to its reliance on `SeparableConvolution` layers. Additionally it only supports
-the data format `'channels_last'` (height, width, channels).
+注意，该模型目前仅能在 TensorFlow 后端使用，因为它依赖 `SeparableConvolution` 层，目前该层只支持 `channels_last` 的维度顺序（高度、宽度、通道）。
 
-The default input size for this model is 299x299.
+模型默认输入尺寸是 299x299。
 
-### Arguments
+### 参数
 
-- include_top: whether to include the fully-connected layer at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(299, 299, 3)`.
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 71.
-    E.g. `(150, 150, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当`include_top=False`时有效（不然输入形状必须是 `(299, 299, 3)`，因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 71，比如 `(150, 150, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### Returns
+### 返回值
 
-A Keras `Model` instance.
+一个 Keras `Model` 对象.
 
-### References
+### 参考文献
 
 - [Xception: Deep Learning with Depthwise Separable Convolutions](https://arxiv.org/abs/1610.02357)
 
 ### License
 
-These weights are trained by ourselves and are released under the MIT license.
+预训练权值由我们自己训练而来，基于 MIT license 发布。
 
 
 -----
@@ -253,51 +234,35 @@ These weights are trained by ourselves and are released under the MIT license.
 keras.applications.vgg16.VGG16(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-VGG16 model, with weights pre-trained on ImageNet.
+VGG16 模型，权值由 ImageNet 训练而来。
 
-This model is available for both the Theano and TensorFlow backend, and can be built both
-with `'channels_first'` data format (channels, height, width) or `'channels_last'` data format (height, width, channels).
+该模型在 `Theano` 和 `TensorFlow` 后端均可使用，并接受 `channels_first` 和 `channels_last` 两种输入维度顺序（高度，宽度，通道）。
 
-The default input size for this model is 224x224.
+模型默认输入尺寸是 224x224。
 
-### Arguments
+### 参数
 
-- include_top: whether to include the 3 fully-connected layers at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(224, 224, 3)` (with `'channels_last'` data format)
-    or `(3, 224, 224)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 48.
-    E.g. `(200, 200, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 48，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### Returns
+### 返回值
 
-A Keras `Model` instance.
+一个 Keras `Model` 对象。
 
-### References
+### 参考文献
 
-- [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556): please cite this paper if you use the VGG models in your work.
+- [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556)：如果在研究中使用了VGG，请引用该论文。
 
 ### License
 
-These weights are ported from the ones [released by VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) under the [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/).
+预训练权值由 [VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) 发布的预训练权值移植而来，基于 [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/)。
 
 -----
 
@@ -308,53 +273,35 @@ These weights are ported from the ones [released by VGG at Oxford](http://www.ro
 keras.applications.vgg19.VGG19(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
+VGG19 模型，权值由 ImageNet 训练而来。
 
-VGG19 model, with weights pre-trained on ImageNet.
+该模型在 `Theano` 和 `TensorFlow` 后端均可使用，并接受 `channels_first` 和 `channels_last` 两种输入维度顺序（高度，宽度，通道）。
 
-This model is available for both the Theano and TensorFlow backend, and can be built both
-with `'channels_first'` data format (channels, height, width) or `'channels_last'` data format (height, width, channels).
+模型默认输入尺寸是 224x224。
 
-The default input size for this model is 224x224.
+### 参数
 
-### Arguments
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 48，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-- include_top: whether to include the 3 fully-connected layers at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(224, 224, 3)` (with `'channels_last'` data format)
-    or `(3, 224, 224)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 48.
-    E.g. `(200, 200, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+### 返回值
 
-### Returns
+一个 Keras `Model` 对象。
 
-A Keras `Model` instance.
+### 参考文献
 
-
-### References
-
-- [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556)
+- [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556)：如果在研究中使用了VGG，请引用该论文。
 
 ### License
 
-These weights are ported from the ones [released by VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) under the [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/).
+预训练权值由 [VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) 发布的预训练权值移植而来，基于 [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/)。
 
 -----
 
@@ -365,53 +312,35 @@ These weights are ported from the ones [released by VGG at Oxford](http://www.ro
 keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
+ResNet50 模型，权值由 ImageNet 训练而来。
 
-ResNet50 model, with weights pre-trained on ImageNet.
+该模型在 `Theano` 和 `TensorFlow` 后端均可使用，并接受 `channels_first` 和 `channels_last` 两种输入维度顺序（高度，宽度，通道）。
 
-This model is available for both the Theano and TensorFlow backend, and can be built both
-with `'channels_first'` data format (channels, height, width) or `'channels_last'` data format (height, width, channels).
+模型默认输入尺寸是 224x224。
 
-The default input size for this model is 224x224.
+### 参数
 
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 197，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### Arguments
+### 返回值
 
-- include_top: whether to include the fully-connected layer at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(224, 224, 3)` (with `'channels_last'` data format)
-    or `(3, 224, 224)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 197.
-    E.g. `(200, 200, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+一个 Keras `Model` 对象。
 
-### Returns
-
-A Keras `Model` instance.
-
-### References
+### 参考文献
 
 - [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
 
 ### License
 
-These weights are ported from the ones [released by Kaiming He](https://github.com/KaimingHe/deep-residual-networks) under the [MIT license](https://github.com/KaimingHe/deep-residual-networks/blob/master/LICENSE).
+预训练权值由 [Kaiming He](https://github.com/KaimingHe/deep-residual-networks) 发布的预训练权值移植而来，基于 [MIT license](https://github.com/KaimingHe/deep-residual-networks/blob/master/LICENSE)。
 
 -----
 
@@ -422,52 +351,35 @@ These weights are ported from the ones [released by Kaiming He](https://github.c
 keras.applications.inception_v3.InceptionV3(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-Inception V3 model, with weights pre-trained on ImageNet.
+Inception V3 模型，权值由 ImageNet 训练而来。
 
-This model is available for both the Theano and TensorFlow backend, and can be built both
-with `'channels_first'` data format (channels, height, width) or `'channels_last'` data format (height, width, channels).
+该模型在 `Theano` 和 `TensorFlow` 后端均可使用，并接受 `channels_first` 和 `channels_last` 两种输入维度顺序（高度，宽度，通道）。
 
-The default input size for this model is 299x299.
+模型默认输入尺寸是 299x299。
 
+### 参数
 
-### Arguments
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(299, 299, 3)` （`channels_last` 格式）或 `(3, 299, 299)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 139，比如 `(150, 150, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-- include_top: whether to include the fully-connected layer at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(299, 299, 3)` (with `'channels_last'` data format)
-    or `(3, 299, 299)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 139.
-    E.g. `(150, 150, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+### 返回值
 
-### Returns
+一个 Keras `Model` 对象。
 
-A Keras `Model` instance.
-
-### References
+### 参考文献		
 
 - [Rethinking the Inception Architecture for Computer Vision](http://arxiv.org/abs/1512.00567)
 
 ### License
 
-These weights are released under [the Apache License](https://github.com/tensorflow/models/blob/master/LICENSE).
+预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
 -----
 
@@ -478,52 +390,35 @@ These weights are released under [the Apache License](https://github.com/tensorf
 keras.applications.inception_resnet_v2.InceptionResNetV2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-Inception-ResNet V2 model, with weights pre-trained on ImageNet.
+Inception-ResNet V2 模型，权值由 ImageNet 训练而来。
 
-This model is available for Theano, TensorFlow and CNTK backends, and can be built both
-with `'channels_first'` data format (channels, height, width) or `'channels_last'` data format (height, width, channels).
+该模型在 `Theano` 和 `TensorFlow` 后端均可使用，并接受 `channels_first` 和 `channels_last` 两种输入维度顺序（高度，宽度，通道）。
 
-The default input size for this model is 299x299.
+模型默认输入尺寸是 299x299。
 
+### 参数
 
-### Arguments
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(299, 299, 3)` （`channels_last` 格式）或 `(3, 299, 299)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 139，比如 `(150, 150, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-- include_top: whether to include the fully-connected layer at the top of the network.
-- weights: one of `None` (random initialization) or `'imagenet'` (pre-training on ImageNet).
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`) to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(299, 299, 3)` (with `'channels_last'` data format)
-    or `(3, 299, 299)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 139.
-    E.g. `(150, 150, 3)` would be one valid value.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images 
-    into, only to be specified if `include_top` is `True`, and 
-    if no `weights` argument is specified.
+### 返回值
 
-### Returns
+一个 Keras `Model` 对象。
 
-A Keras `Model` instance.
+### 参考文献		
 
-### References
-
-- [Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning](https://arxiv.org/abs/1602.07261)
+- [Rethinking the Inception Architecture for Computer Vision](http://arxiv.org/abs/1512.00567)
 
 ### License
 
-These weights are released under [the Apache License](https://github.com/tensorflow/models/blob/master/LICENSE).
+预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
 -----
 
@@ -534,14 +429,13 @@ These weights are released under [the Apache License](https://github.com/tensorf
 keras.applications.mobilenet.MobileNet(input_shape=None, alpha=1.0, depth_multiplier=1, dropout=1e-3, include_top=True, weights='imagenet', input_tensor=None, pooling=None, classes=1000)
 ```
 
-MobileNet model, with weights pre-trained on ImageNet.
+在 ImageNet 上预训练的 MobileNet 模型。
 
-Note that only TensorFlow is supported for now,
-therefore it only works with the data format
-`image_data_format='channels_last'` in your Keras config at `~/.keras/keras.json`.
-To load a MobileNet model via `load_model`, import the custom objects `relu6` and `DepthwiseConv2D` and pass them to the `custom_objects` parameter.
+注意，该模型目前仅能在 TensorFlow 后端使用，因为它依赖 `SeparableConvolution` 层，目前该层只支持 `channels_last` 的维度顺序（高度、宽度、通道）。
 
-E.g.
+要通过 `load_model` 载入 MobileNet 模型，你需要导入自定义对象 `relu6` 和 `DepthwiseConv2D` 并通过 `custom_objects` 传参。
+
+下面是示例代码：
 
 ```python
 model = load_model('mobilenet.h5', custom_objects={
@@ -549,62 +443,46 @@ model = load_model('mobilenet.h5', custom_objects={
                    'DepthwiseConv2D': mobilenet.DepthwiseConv2D})
 ```
 
+模型默认输入尺寸是 224x224.
 
-The default input size for this model is 224x224.
+### 参数
 
-### Arguments
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(299, 299, 3)` （`channels_last` 格式）或 `(3, 299, 299)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 139，比如 `(150, 150, 3)` 是一个合法的输入尺寸。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` ，因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 32，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
+- alpha: 控制网络的宽度：
+    - 如果 `alpha` < 1.0，则同比例减少每层的滤波器个数。
+    - 如果 `alpha` > 1.0，则同比例增加每层的滤波器个数。
+    - 如果 `alpha` = 1，使用论文默认的滤波器个数
+- depth_multiplier: depthwise卷积的深度乘子，也称为（分辨率乘子）
+- dropout: dropout 概率
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(224, 224, 3)` (with `'channels_last'` data format)
-    or `(3, 224, 224)` (with `'channels_first'` data format).
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 32.
-    E.g. `(200, 200, 3)` would be one valid value.
-- alpha: controls the width of the network.
-    - If `alpha` < 1.0, proportionally decreases the number
-        of filters in each layer.
-    - If `alpha` > 1.0, proportionally increases the number
-        of filters in each layer.
-    - If `alpha` = 1, default number of filters from the paper
-        are used at each layer.
-- depth_multiplier: depth multiplier for depthwise convolution
-    (also called the resolution multiplier)
-- dropout: dropout rate
-- include_top: whether to include the fully-connected
-    layer at the top of the network.
-- weights: `None` (random initialization) or
-    `'imagenet'` (ImageNet weights)
-- input_tensor: optional Keras tensor (i.e. output of
-    `layers.Input()`)
-    to use as image input for the model.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model
-    will be the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a
-        2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images
-    into, only to be specified if `include_top` is `True`, and
-    if no `weights` argument is specified.
+### 返回
 
-### Returns
+一个 Keras `Model` 对象。
 
-A Keras `Model` instance.
-
-### References
+### 参考文献
 
 - [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/pdf/1704.04861.pdf)
 
 ### License
 
-These weights are released under [the Apache License](https://github.com/tensorflow/models/blob/master/LICENSE).
+预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
 -----
 
@@ -617,58 +495,34 @@ keras.applications.densenet.DenseNet169(include_top=True, weights='imagenet', in
 keras.applications.densenet.DenseNet201(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-Optionally loads weights pre-trained
-on ImageNet. Note that when using TensorFlow,
-for best performance you should set
-`image_data_format='channels_last'` in your Keras config
-at ~/.keras/keras.json.
+可以选择载入在 ImageNet 上的预训练权值。如果你在使用 TensorFlow 为了发挥最佳性能，请在 `~/.keras/keras.json` 的 Keras 配置文件中设置 `image_data_format='channels_last'`。
 
-The model and the weights are compatible with
-TensorFlow, Theano, and CNTK. The data format
-convention used by the model is the one
-specified in your Keras config file.
+模型和权值兼容 TensorFlow、Theano 和 CNTK。可以在你的 Keras 配置文件中指定数据格式。
 
-### Arguments
+### 参数
 
-- blocks: numbers of building blocks for the four dense layers.
-- include_top: whether to include the fully-connected
-    layer at the top of the network.
-- weights: one of `None` (random initialization),
-    'imagenet' (pre-training on ImageNet),
-    or the path to the weights file to be loaded.
-- input_tensor: optional Keras tensor (i.e. output of `layers.Input()`)
-    to use as image input for the model.
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is False (otherwise the input shape
-    has to be `(224, 224, 3)` (with `channels_last` data format)
-    or `(3, 224, 224)` (with `channels_first` data format).
-    It should have exactly 3 inputs channels.
-- pooling: optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model will be
-        the 4D tensor output of the
-        last convolutional layer.
-    - `avg` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a 2D tensor.
-    - `max` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images
-    into, only to be specified if `include_top` is True, and
-    if no `weights` argument is specified.
+- blocks: 四个 Dense Layers 的 block 数量。
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### Returns
+### 
 
 A Keras model instance.
 
-### References
+### 返回
 
-- [Densely Connected Convolutional Networks](https://arxiv.org/abs/1608.06993) (CVPR 2017 Best Paper Award)
+一个 Keras `Model` 对象。
 
-### License
+### 参考文献
 
-These weights are released under [the BSD 3-clause License](https://github.com/liuzhuang13/DenseNet/blob/master/LICENSE).
+预训练权值基于 [BSD 3-clause License](https://github.com/liuzhuang13/DenseNet/blob/master/LICENSE)。
 
 -----
 
@@ -680,59 +534,33 @@ keras.applications.nasnet.NASNetLarge(input_shape=None, include_top=True, weight
 keras.applications.nasnet.NASNetMobile(input_shape=None, include_top=True, weights='imagenet', input_tensor=None, pooling=None, classes=1000)
 ```
 
-Neural Architecture Search Network (NASNet) model, with weights pre-trained on ImageNet.
+在 ImageNet 上预训练的神经结构搜索网络模型（NASNet）。
 
-Note that only TensorFlow is supported for now,
-therefore it only works with the data format
-`image_data_format='channels_last'` in your Keras config at `~/.keras/keras.json`.
+注意，该模型目前仅能在 TensorFlow 后端使用，因此它只支持 `channels_last` 的维度顺序（高度、宽度、通道），可以在 `~/.keras/keras.json` Keras 配置文件中设置。
 
+NASNetLarge 默认的输入尺寸是 331x331，NASNetMobile 默认的输入尺寸是 224x224。
 
-The default input size for the NASNetLarge model is 331x331 and for the
-NASNetMobile model is 224x224.
+### 参数
 
-### Arguments
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然对于 NASNetMobile 模型来说，输入形状必须是 `(224, 224, 3)` （`channels_last` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）。输入尺寸必须是三个数字。
+- include_top: 是否包括顶层的全连接层。
+- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
+- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字。
+- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
+    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
+    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化
+- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-- input_shape: optional shape tuple, only to be specified
-    if `include_top` is `False` (otherwise the input shape
-    has to be `(224, 224, 3)` (with `'channels_last'` data format)
-    or `(3, 224, 224)` (with `'channels_first'` data format)
-    for NASNetMobile or `(331, 331, 3)` (with `'channels_last'`
-    data format) or `(3, 331, 331)` (with `'channels_first'`
-    data format) for NASNetLarge.
-    It should have exactly 3 inputs channels,
-    and width and height should be no smaller than 32.
-    E.g. `(200, 200, 3)` would be one valid value.
-- include_top: whether to include the fully-connected
-    layer at the top of the network.
-- weights: `None` (random initialization) or
-    `'imagenet'` (ImageNet weights)
-- input_tensor: optional Keras tensor (i.e. output of
-    `layers.Input()`)
-    to use as image input for the model.
-- pooling: Optional pooling mode for feature extraction
-    when `include_top` is `False`.
-    - `None` means that the output of the model
-    will be the 4D tensor output of the
-        last convolutional layer.
-    - `'avg'` means that global average pooling
-        will be applied to the output of the
-        last convolutional layer, and thus
-        the output of the model will be a
-        2D tensor.
-    - `'max'` means that global max pooling will
-        be applied.
-- classes: optional number of classes to classify images
-    into, only to be specified if `include_top` is `True`, and
-    if no `weights` argument is specified.
+### 返回
 
-### Returns
+一个 Keras `Model` 对象。
 
-A Keras `Model` instance.
-
-### References
+### 参考文献
 
 - [Learning Transferable Architectures for Scalable Image Recognition](https://arxiv.org/abs/1707.07012)
 
 ### License
 
-These weights are released under [the Apache License](https://github.com/tensorflow/models/blob/master/LICENSE).
+预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
