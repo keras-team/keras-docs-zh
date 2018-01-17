@@ -43,10 +43,10 @@ x = np.expand_dims(x, axis=0)
 x = preprocess_input(x)
 
 preds = model.predict(x)
-# decode the results into a list of tuples (class, description, probability)
-# (one such list for each sample in the batch)
+# 把预测结果解码为一个元组数组（类别，描述，概率）
+# （这个列表里有一批数据中的每个样本的结果）
 print('Predicted:', decode_predictions(preds, top=3)[0])
-# Predicted: [(u'n02504013', u'Indian_elephant', 0.82658225), (u'n01871265', u'tusker', 0.1122357), (u'n02504458', u'African_elephant', 0.061040461)]
+# 预测结果：[(u'n02504013', u'Indian_elephant', 0.82658225), (u'n01871265', u'tusker', 0.1122357), (u'n02504458', u'African_elephant', 0.061040461)]
 ```
 
 ### 使用 VGG16 提取特征
@@ -156,8 +156,8 @@ model.fit_generator(...)
 from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Input
 
-# this could also be the output a different Keras model or layer
-input_tensor = Input(shape=(224, 224, 3))  # this assumes K.image_data_format() == 'channels_last'
+# 你也可以把 input_tensor 换成其他的 Keras 模型或 Keras 层
+input_tensor = Input(shape=(224, 224, 3))  # 这里假设 K.image_data_format() == 'channels_last'
 
 model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=True)
 ```
@@ -180,7 +180,7 @@ model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=T
 | [DenseNet201](#densenet) | 80 MB | 0.770 | 0.933 | 20,242,984 | 201
 
 
-The top-1 and top-5 accuracy refers to the model's performance on the ImageNet validation dataset.
+Top-1 准确率和 Top-5 准确率都是在 ImageNet 验证集上的结果。
 
 -----
 
