@@ -2,10 +2,21 @@
 
 The `.md` files in `sources/` should be translated in-place.
 
-## Conventions
+## 排版规范 Typesetting
 
-- The translation is meant target `zh-cn` (simplified characters, mainland China).
-- When encountering the following technical terms, use these conventions: (TODO)
+此文档遵循 [中文排版指南](https://github.com/sparanoid/chinese-copywriting-guidelines) 规范，并在此之上遵守以下约定：
+
+* 英文的左右保持一个空白，避免中英文字黏在一起；
+* 使用全角标点符号；
+* 严格遵循 Markdown 语法；
+* 原文中的双引号（" "）请代换成中文的引号（「」符号怎么打出来见 [这里](http://zhihu.com/question/19755746/answer/27233392)）；
+* 「`加亮`」和「**加粗**」和「[链接]()」都需要在左右保持一个空格。
+
+## 翻译对照列表 Conventions
+
+- 该翻译用于 `zh-cn` （简体中文，中国大陆地区）。
+- 当遇到以下 `专业术语` 的时候，请使用以下列表进行对照翻译。(TODO)
+
 
 | English            | 中文                 |
 |:-------------------|:--------------------|
@@ -22,8 +33,8 @@ The `.md` files in `sources/` should be translated in-place.
 | layer              | 层                  |
 | loss function      | 损失函数             |
 | metrics            | 评估标准             |
-| nD tensor          | n维张量              |
-| Numpy Array        | Numpy矩阵            |
+| nD tensor          | n 维张量              |
+| Numpy Array        | Numpy 矩阵            |
 | objective          | 目标                 |
 | optimizer          | 优化器               |
 | output shape       | 输出尺寸             |
