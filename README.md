@@ -15,7 +15,7 @@ The `.md` files in `sources/` should be translated in-place.
 | deep learning      | 深度学习             |
 | float              | 浮点数               |
 | Functional API     | 函数式 API           |
-| Fuzz factor        | 可选参数             |
+| Fuzz factor        | 模糊因子             |
 | input shape        | 输入尺寸             |
 | index              | 索引                 |
 | int                | 整数                 |
