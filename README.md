@@ -15,7 +15,7 @@ The `.md` files in `sources/` should be translated in-place.
 ## 翻译对照列表 Conventions
 
 - 该翻译用于 `zh-cn` （简体中文，中国大陆地区）。
-- 当遇到以下 `专业术语` 的时候，请使用以下列表进行对照翻译。(TODO)
+- 当遇到以下 `专业术语` 的时候，请使用以下列表进行对照翻译。（未完待续）
 
 
 | English            | 中文                 |
