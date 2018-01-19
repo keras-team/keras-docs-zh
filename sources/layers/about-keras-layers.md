@@ -1,10 +1,10 @@
-# About Keras layers
+# 关于Keras层
 
-All Keras layers have a number of methods in common:
+所有Keras层都有很多共同的函数：
 
-- `layer.get_weights()`: returns the weights of the layer as a list of Numpy arrays.
-- `layer.set_weights(weights)`: sets the weights of the layer from a list of Numpy arrays (with the same shapes as the output of `get_weights`).
-- `layer.get_config()`: returns a dictionary containing the configuration of the layer. The layer can be reinstantiated from its config via:
+- `layer.get_weights()`: 以Numpy矩阵的形式返回层的权重。
+- `layer.set_weights(weights)`: 从Numpy矩阵中设置层的权重（与`get_weights`的输出形状相同）。
+- `layer.get_config()`: 返回包含层配置的字典。此图层可以通过以下方式重置：
 
 ```python
 layer = Dense(32)
@@ -12,7 +12,7 @@ config = layer.get_config()
 reconstructed_layer = Dense.from_config(config)
 ```
 
-Or:
+或:
 
 ```python
 from keras import layers
@@ -22,14 +22,14 @@ layer = layers.deserialize({'class_name': layer.__class__.__name__,
                             'config': config})
 ```
 
-If a layer has a single node (i.e. if it isn't a shared layer), you can get its input tensor, output tensor, input shape and output shape via:
+如果一个层具有单个节点 (i.e. 如果它不是共享层), 你可以得到它的输入张量，输出张量，输入尺寸和输出尺寸:
 
 - `layer.input`
 - `layer.output`
 - `layer.input_shape`
 - `layer.output_shape`
 
-If the layer has multiple nodes (see: [the concept of layer node and shared layers](/getting-started/functional-api-guide/#the-concept-of-layer-node)), you can use the following methods:
+如果层有多个节点 (参见: [层节点和共享层的概念](/getting-started/functional-api-guide/#the-concept-of-layer-node)), 您可以使用以下函数:
 
 - `layer.get_input_at(node_index)`
 - `layer.get_output_at(node_index)`
