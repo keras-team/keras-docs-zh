@@ -1,46 +1,46 @@
-# Keras: The Python Deep Learning library
+# Keras: 基于 Python 的深度学习库
 
 <img src='https://s3.amazonaws.com/keras.io/img/keras-logo-2018-large-1200.png', style='max-width: 600px;'>
 
 
 
-## You have just found Keras.
+## 你恰好发现了 Keras。
 
-Keras is a high-level neural networks API, written in Python and capable of running on top of [TensorFlow](https://github.com/tensorflow/tensorflow), [CNTK](https://github.com/Microsoft/cntk), or [Theano](https://github.com/Theano/Theano). It was developed with a focus on enabling fast experimentation. *Being able to go from idea to result with the least possible delay is key to doing good research.*
+Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow),  [CNTK](https://github.com/Microsoft/cntk), 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
 
-Use Keras if you need a deep learning library that:
+如果你有如下需求，请选择 Keras：
 
-- Allows for easy and fast prototyping (through user friendliness, modularity, and extensibility).
-- Supports both convolutional networks and recurrent networks, as well as combinations of the two.
-- Runs seamlessly on CPU and GPU.
+- 允许简单而快速的原型设计（用户友好，高度模块化，可扩展性）。
+- 同时支持卷积神经网络和循环神经网络，以及两者的组合。
+- 在CPU和GPU上无缝运行与切换。
 
-Read the documentation at [Keras.io](https://keras.io).
+查看文档，请访问 [Keras.io](https://keras.io)。
 
-Keras is compatible with: __Python 2.7-3.6__.
-
-
-------------------
-
-
-## Guiding principles
-
-- __User friendliness.__ Keras is an API designed for human beings, not machines. It puts user experience front and center. Keras follows best practices for reducing cognitive load: it offers consistent & simple APIs, it minimizes the number of user actions required for common use cases, and it provides clear and actionable feedback upon user error.
-
-- __Modularity.__ A model is understood as a sequence or a graph of standalone, fully-configurable modules that can be plugged together with as little restrictions as possible. In particular, neural layers, cost functions, optimizers, initialization schemes, activation functions, regularization schemes are all standalone modules that you can combine to create new models.
-
-- __Easy extensibility.__ New modules are simple to add (as new classes and functions), and existing modules provide ample examples. To be able to easily create new modules allows for total expressiveness, making Keras suitable for advanced research.
-
-- __Work with Python__. No separate models configuration files in a declarative format. Models are described in Python code, which is compact, easier to debug, and allows for ease of extensibility.
+Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 
 ------------------
 
 
-## Getting started: 30 seconds to Keras
+## 指导原则
 
-The core data structure of Keras is a __model__, a way to organize layers. The simplest type of model is the [`Sequential`](https://keras.io/getting-started/sequential-model-guide) model, a linear stack of layers. For more complex architectures, you should use the [Keras functional API](https://keras.io/getting-started/functional-api-guide), which allows to build arbitrary graphs of layers.
+- __User friendliness.__ Keras 是为人类设计的 API，而不是机器。它把用户体验放在首要和中心位置。Keras 遵循减少认知困难的最佳实践： 它提供一致和简单的 API，它将常见用例所需的用户操作数量降至最低，并且在用户错误时提供清晰和可操作的反馈。
 
-Here is the `Sequential` model:
+- __Modularity.__ 模型被理解为由独立的，完全可配置的模块构成的序列或图表。这些模块可以在尽可能少的限制下组装在一起。特别是神经网络层、损失函数、优化器、初始化方法、激活函数、正则化方法，它们都是可以结合起来构建新模型的模块。
+
+- __Easy extensibility.__ 新的模块是很容易添加的（作为新的类和函数），现有的模块已经提供了充足的例子。为能够轻松地创建可以提高表现力的新模块，使 Keras 更加适合高级研究。
+
+- __Work with Python__. Keras 没有特定格式的单独配置文件。模型定义在 Python 代码中，这些代码紧凑，易于调试，并且易于扩展。
+
+
+------------------
+
+
+## 快速开始：30秒上手 Keras
+
+Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/getting-started/sequential-model-guide) 模型，它是由多网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
+
+`Sequential` 模型如下所示：
 
 ```python
 from keras.models import Sequential
@@ -48,7 +48,7 @@ from keras.models import Sequential
 model = Sequential()
 ```
 
-Stacking layers is as easy as `.add()`:
+可以简单地使用 `.add()` 来堆叠模型：
 
 ```python
 from keras.layers import Dense
@@ -57,7 +57,7 @@ model.add(Dense(units=64, activation='relu', input_dim=100))
 model.add(Dense(units=10, activation='softmax'))
 ```
 
-Once your model looks good, configure its learning process with `.compile()`:
+在完成了模型的构建后, 可以使用 `.compile()` 来配置学习过程：
 
 ```python
 model.compile(loss='categorical_crossentropy',
@@ -65,87 +65,89 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 ```
 
-If you need to, you can further configure your optimizer. A core principle of Keras is to make things reasonably simple, while allowing the user to be fully in control when they need to (the ultimate control being the easy extensibility of the source code).
+如果需要，你还可以进一步地配置优化器。Keras 的一个核心原则是使事情变得相当简单，同时又允许用户在需要的时候能够进行完全的控制（终极的控制是源代码的易扩展性）。
+
 ```python
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True))
 ```
 
-You can now iterate on your training data in batches:
+现在，你可以批量地在训练数据上进行迭代了：
 
 ```python
 # x_train and y_train are Numpy arrays --just like in the Scikit-Learn API.
 model.fit(x_train, y_train, epochs=5, batch_size=32)
 ```
 
-Alternatively, you can feed batches to your model manually:
+或者，你可以手动地将批次的数据提供给模型：
 
 ```python
 model.train_on_batch(x_batch, y_batch)
 ```
 
-Evaluate your performance in one line:
+只需一行代码就能评估模型性能：
 
 ```python
 loss_and_metrics = model.evaluate(x_test, y_test, batch_size=128)
 ```
 
-Or generate predictions on new data:
+或者对新的数据生成预测：
 
 ```python
 classes = model.predict(x_test, batch_size=128)
 ```
 
-Building a question answering system, an image classification model, a Neural Turing Machine, or any other model is just as fast. The ideas behind deep learning are simple, so why should their implementation be painful?
+构建一个问答系统，一个图像分类模型，一个神经图灵机，或者其他的任何模型，就是这么的快。深度学习背后的思想很简单，那么它们的实现又何必要那么痛苦呢？
 
-For a more in-depth tutorial about Keras, you can check out:
+有关 Keras 更深入的教程，请查看：
 
-- [Getting started with the Sequential model](https://keras.io/getting-started/sequential-model-guide)
-- [Getting started with the functional API](https://keras.io/getting-started/functional-api-guide)
+- [Sequential 模型入门](https://keras.io/getting-started/sequential-model-guide)
+- [函数式 API 入门](https://keras.io/getting-started/functional-api-guide)
 
-In the [examples folder](https://github.com/keras-team/keras/tree/master/examples) of the repository, you will find more advanced models: question-answering with memory networks, text generation with stacked LSTMs, etc.
+在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统，基于栈式 LSTM 的文本生成等等。
 
 
 ------------------
 
 
-## Installation
+## 安装
 
-Before installing Keras, please install one of its backend engines: TensorFlow, Theano, or CNTK. We recommend the TensorFlow backend.
+在安装 Keras 之前，请安装以下后端引擎之一：TensorFlow， Theano，或者 CNTK。我们推荐 TensorFlow 后端。
 
-- [TensorFlow installation instructions](https://www.tensorflow.org/install/).
-- [Theano installation instructions](http://deeplearning.net/software/theano/install.html#install).
-- [CNTK installation instructions](https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine).
+- [TensorFlow 安装指引](https://www.tensorflow.org/install/)。
+- [Theano 安装指引](http://deeplearning.net/software/theano/install.html#install)。
+- [CNTK 安装指引](https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine)。
 
-You may also consider installing the following **optional dependencies**:
+你也可以考虑安装以下**可选依赖**：
 
-- cuDNN (recommended if you plan on running Keras on GPU).
-- HDF5 and h5py (required if you plan on saving Keras models to disk).
-- graphviz and pydot (used by [visualization utilities](https://keras.io/visualization/) to plot model graphs).
+- cuDNN (如果你计划在 GPU 上运行 Keras，建议安装)。
+- HDF5 和 h5py (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
+- graphviz 和 pydot (被[可视化工具](https://keras.io/visualization/)用来绘制模型图)。
 
-Then, you can install Keras itself. There are two ways to install Keras:
+然后你就可以安装 Keras 本身了。有两种方法安装 Keras：
 
-- **Install Keras from PyPI (recommended):**
+- **使用 PyPI 安装 Keras (推荐)：**
 
 ```sh
 sudo pip install keras
 ```
 
-If you are using a virtualenv, you may want to avoid using sudo:
+如果你使用 virtualenv 虚拟环境, 你可以避免使用 sudo：
 
 ```sh
 pip install keras
 ```
 
-- **Alternatively: install Keras from the Github source:**
+- **或者：使用 Github 源码安装 Keras：**
 
-First, clone Keras using `git`:
+首先，使用 `git` 来克隆 Keras：
 
 ```sh
 git clone https://github.com/keras-team/keras.git
 ```
 
- Then, `cd` to the Keras folder and run the install command:
+然后，`cd` 到 Keras 目录并且运行安装命令：
+
 ```sh
 cd keras
 sudo python setup.py install
@@ -154,32 +156,32 @@ sudo python setup.py install
 ------------------
 
 
-## Switching from TensorFlow to CNTK or Theano
+## 从 TensorFlow 切换到 CNTK 或 Theano
 
-By default, Keras will use TensorFlow as its tensor manipulation library. [Follow these instructions](https://keras.io/backend/) to configure the Keras backend.
-
-------------------
-
-
-## Support
-
-You can ask questions and join the development discussion:
-
-- On the [Keras Google group](https://groups.google.com/forum/#!forum/keras-users).
-- On the [Keras Slack channel](https://kerasteam.slack.com). Use [this link](https://keras-slack-autojoin.herokuapp.com/) to request an invitation to the channel.
-
-You can also post **bug reports and feature requests** (only) in [Github issues](https://github.com/keras-team/keras/issues). Make sure to read [our guidelines](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md) first.
-
+默认情况下，Keras 将使用 TensorFlow 作为张量操作库。请[跟随这些指引](https://keras.io/backend/)来配置其他 Keras 后端。
 
 ------------------
 
 
-## Why this name, Keras?
+## 支持
 
-Keras (κέρας) means _horn_ in Greek. It is a reference to a literary image from ancient Greek and Latin literature, first found in the _Odyssey_, where dream spirits (_Oneiroi_, singular _Oneiros_) are divided between those who deceive men with false visions, who arrive to Earth through a gate of ivory, and those who announce a future that will come to pass, who arrive through a gate of horn. It's a play on the words κέρας (horn) / κραίνω (fulfill), and ἐλέφας (ivory) / ἐλεφαίρομαι (deceive).
+你可以提出问题并参与开发讨论：
 
-Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System).
+- [Keras Google group](https://groups.google.com/forum/#!forum/keras-users)。
+- [Keras Slack channel](https://kerasteam.slack.com)。 使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
 
->_"Oneiroi are beyond our unravelling --who can be sure what tale they tell? Not all that men look for comes to pass. Two gates there are that give passage to fleeting Oneiroi; one is made of horn, one of ivory. The Oneiroi that pass through sawn ivory are deceitful, bearing a message that will not be fulfilled; those that come out through polished horn have truth behind them, to be accomplished for men who see them."_ Homer, Odyssey 19. 562 ff (Shewring translation).
+你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中张贴 **漏洞报告和新功能请求**。注意请先阅读 [规范文档 ](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
+
+
+------------------
+
+
+## 为什么取名为 Keras?
+
+Keras (κέρας) 在希腊语中意为 *号角* 。它来自古希腊和拉丁文学中的一个文学形象，首先发现于 *《奥德赛》* 中， 梦神 (_Oneiroi_, singular _Oneiros_) 从这两类人中分离出来：那些用虚幻的景象欺骗人类，通过象牙之门抵达地球之人，以及那些宣告未来即将到来，通过号角之门抵达之之人。 它类似于文字寓意，κέρας (号角) / κραίνω (履行)，以及 ἐλέφας (象牙) / ἐλεφαίρομαι (欺骗)。
+
+Keras 最初是作为 ONEIROS 项目（开放式神经电子智能机器人操作系统）研究工作的一部分而开发的。
+
+>_"Oneiroi 超出了我们的理解 - 谁能确定他们讲述了什么故事？并不是所有人都能找到。那里有两扇门，就是通往短暂的 Oneiroi 的通道；一个是用号角制造的，一个是用象牙制造的。穿过尖锐的象牙的 Oneiroi 是诡计多端的，他们带有一些不会实现的信息； 那些穿过抛光的喇叭出来的人背后具有真理，对于看到他们的人来说是完成的。"_ Homer, Odyssey 19. 562 ff (Shewring translation).
 
 ------------------
