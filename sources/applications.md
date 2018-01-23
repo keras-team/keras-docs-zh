@@ -447,15 +447,6 @@ model = load_model('mobilenet.h5', custom_objects={
 
 ### 参数
 
-- include_top: 是否包括顶层的全连接层。
-- weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
-- input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
-- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(299, 299, 3)` （`channels_last` 格式）或 `(3, 299, 299)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 139，比如 `(150, 150, 3)` 是一个合法的输入尺寸。
-- pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
-    - `'max'` 代表全局最大池化
-- classes: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 - input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` ，因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字，且宽高必须不小于 32，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
 - alpha: 控制网络的宽度：
     - 如果 `alpha` < 1.0，则同比例减少每层的滤波器个数。
