@@ -382,7 +382,7 @@ output = Dense(1000, activation='softmax')(merged)
 # 最终模型：
 vqa_model = Model(inputs=[image_input, question_input], outputs=output)
 
-# The next stage would be training this model on actual data.
+# 下一步就是在真实数据上训练模型。
 ```
 
 ### 视频问答模型
@@ -394,7 +394,7 @@ from keras.layers import TimeDistributed
 
 video_input = Input(shape=(100, 224, 224, 3))
 # 这是基于之前定义的视觉模型（权重被重用）构建的视频编码
-encoded_frame_sequence = TimeDistributed(vision_model)(video_input)  # the output will be a sequence of vectors
+encoded_frame_sequence = TimeDistributed(vision_model)(video_input)  # 输出为向量的序列
 encoded_video = LSTM(256)(encoded_frame_sequence)  # 输出为一个向量
 
 # 这是问题编码器的模型级表示，重复使用与之前相同的权重：
