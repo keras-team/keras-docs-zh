@@ -1,30 +1,30 @@
-# Keras FAQ: Frequently Asked Keras Questions
+# Keras FAQ: 常见问题解答
 
-- [How should I cite Keras?](#how-should-i-cite-keras)
-- [How can I run Keras on GPU?](#how-can-i-run-keras-on-gpu)
-- [How can I run a Keras model on multiple GPUs?](#how-can-i-run-a-keras-model-on-multiple-gpus)
-- [What does "sample", "batch", "epoch" mean?](#what-does-sample-batch-epoch-mean)
-- [How can I save a Keras model?](#how-can-i-save-a-keras-model)
-- [Why is the training loss much higher than the testing loss?](#why-is-the-training-loss-much-higher-than-the-testing-loss)
-- [How can I obtain the output of an intermediate layer?](#how-can-i-obtain-the-output-of-an-intermediate-layer)
-- [How can I use Keras with datasets that don't fit in memory?](#how-can-i-use-keras-with-datasets-that-dont-fit-in-memory)
-- [How can I interrupt training when the validation loss isn't decreasing anymore?](#how-can-i-interrupt-training-when-the-validation-loss-isnt-decreasing-anymore)
-- [How is the validation split computed?](#how-is-the-validation-split-computed)
-- [Is the data shuffled during training?](#is-the-data-shuffled-during-training)
-- [How can I record the training / validation loss / accuracy at each epoch?](#how-can-i-record-the-training-validation-loss-accuracy-at-each-epoch)
-- [How can I "freeze" layers?](#how-can-i-freeze-keras-layers)
-- [How can I use stateful RNNs?](#how-can-i-use-stateful-rnns)
-- [How can I remove a layer from a Sequential model?](#how-can-i-remove-a-layer-from-a-sequential-model)
-- [How can I use pre-trained models in Keras?](#how-can-i-use-pre-trained-models-in-keras)
-- [How can I use HDF5 inputs with Keras?](#how-can-i-use-hdf5-inputs-with-keras)
-- [Where is the Keras configuration file stored?](#where-is-the-keras-configuration-file-stored)
-- [How can I obtain reproducible results using Keras during development?](#how-can-i-obtain-reproducible-results-using-keras-during-development)
+- [如何引用 Keras?](#how-should-i-cite-keras)
+- [如何在 GPU 上运行 Keras?](#how-can-i-run-keras-on-gpu)
+- [如何在多 GPU 上运行 Keras 模型？](#how-can-i-run-a-keras-model-on-multiple-gpus)
+- ["sample", "batch", "epoch" 分别是什么？](#what-does-sample-batch-epoch-mean)
+- [如何保存 Keras 模型？](#how-can-i-save-a-keras-model)
+- [为什么训练集误差比测试集的误差高很多？](#why-is-the-training-loss-much-higher-than-the-testing-loss)
+- [如何获取中间层的输出？](#how-can-i-obtain-the-output-of-an-intermediate-layer)
+- [如何用 Keras 处理超过内存的数据集？](#how-can-i-use-keras-with-datasets-that-dont-fit-in-memory)
+- [在验证集的误差不再下降时，如何中断训练？](#how-can-i-interrupt-training-when-the-validation-loss-isnt-decreasing-anymore)
+- [验证集划分是如何计算的？](#how-is-the-validation-split-computed)
+- [在训练过程中数据是否会混洗？](#is-the-data-shuffled-during-training)
+- [如何在每个 epoch 后记录训练集和验证集的误差和准确率？](#how-can-i-record-the-training-validation-loss-accuracy-at-each-epoch)
+- [如何「冻结」网络层？](#how-can-i-freeze-keras-layers)
+- [如何使用状态 RNNs (stateful RNNs)?](#how-can-i-use-stateful-rnns)
+- [如何从 Sequential 模型中移除一个层？](#how-can-i-remove-a-layer-from-a-sequential-model)
+- [如何在 Keras 中使用预训练的模型？](#how-can-i-use-pre-trained-models-in-keras)
+- [如何在 Keras 中使用 HDF5 输入？](#how-can-i-use-hdf5-inputs-with-keras)
+- [Keras 配置文件保存在哪里？](#where-is-the-keras-configuration-file-stored)
+- [如何在 Keras 开发过程中获取可复现的结果？](#how-can-i-obtain-reproducible-results-using-keras-during-development)
 
 ---
 
-### How should I cite Keras?
+### 如何引用 Keras?
 
-Please cite Keras in your publications if it helps your research. Here is an example BibTeX entry:
+如果 Keras 有助于您的研究，请在你的出版物中引用它。以下是 BibTeX 条目引用的示例：
 
 ```
 @misc{chollet2015keras,
@@ -38,22 +38,22 @@ Please cite Keras in your publications if it helps your research. Here is an exa
 
 ---
 
-### How can I run Keras on GPU?
+### 如何在 GPU 上运行 Keras?
 
-If you are running on the **TensorFlow** or **CNTK** backends, your code will automatically run on GPU if any available GPU is detected.
+如果你以 TensorFlow 或 CNTK 后端运行，只要检测到任何可用的GPU，那么代码将自动在GPU上运行。
 
-If you are running on the **Theano** backend, you can use one of the following methods:
+如果你以 Theano 后端运行，则可以使用以下方法之一：
 
-**Method 1**: use Theano flags.
+**方法 1**: 使用 Theano flags。
 ```bash
 THEANO_FLAGS=device=gpu,floatX=float32 python my_keras_script.py
 ```
 
-The name 'gpu' might have to be changed depending on your device's identifier (e.g. `gpu0`, `gpu1`, etc).
+"gpu" 可能需要根据你的设备标识符（例如gpu0，gpu1等）进行更改。
 
-**Method 2**: set up your `.theanorc`: [Instructions](http://deeplearning.net/software/theano/library/config.html)
+**方法 2**: 创建 `.theanorc`: [指导教程](http://deeplearning.net/software/theano/library/config.html)
 
-**Method 3**: manually set `theano.config.device`, `theano.config.floatX` at the beginning of your code:
+**方法 3**: 在代码的开头手动设置 `theano.config.device`, `theano.config.floatX`：
 ```python
 import theano
 theano.config.device = 'gpu'
@@ -62,54 +62,53 @@ theano.config.floatX = 'float32'
 
 ---
 
-### How can I run a Keras model on multiple GPUs?
+### 如何在多 GPU 上运行 Keras 模型?
 
-We recommend doing so using the **TensorFlow** backend. There are two ways to run a single model on multiple GPUs: **data parallelism** and **device parallelism**.
+我们建议使用 TensorFlow 后端。有两种方法可在多个 GPU 上运行单个模型：数据并行和设备并行。
 
-In most cases, what you need is most likely data parallelism.
+在大多数情况下，你最需要的是数据并行。
 
-#### Data parallelism
+#### 数据并行
 
-Data parallelism consists in replicating the target model once on each device, and using each replica to process a different fraction of the input data.
-Keras has a built-in utility, `keras.utils.multi_gpu_model`, which can produce a data-parallel version of any model, and achieves quasi-linear speedup on up to 8 GPUs.
+数据并行包括在每个设备上复制一次目标模型，并使用每个模型副本处理不同部分的输入数据。Keras 有一个内置的实用函数 `keras.utils.multi_gpu_model`，它可以生成任何模型的数据并行版本，在多达 8 个 GPU 上实现准线性加速。
 
-For more information, see the documentation for [multi_gpu_model](/utils/#multi_gpu_model). Here is a quick example:
+有关更多信息，请参阅 [multi_gpu_model](/utils/#multi_gpu_model) 的文档。这里是一个简单的例子：
 
 ```python
 from keras.utils import multi_gpu_model
 
-# Replicates `model` on 8 GPUs.
-# This assumes that your machine has 8 available GPUs.
+# 将 `model` 复制到 8 个 GPU 上。
+# 假定你的机器有 8 个可用的 GPU。
 parallel_model = multi_gpu_model(model, gpus=8)
 parallel_model.compile(loss='categorical_crossentropy',
                        optimizer='rmsprop')
 
-# This `fit` call will be distributed on 8 GPUs.
-# Since the batch size is 256, each GPU will process 32 samples.
+# 这个 `fit` 调用将分布在 8 个 GPU 上。
+# 由于 batch size 为 256，每个 GPU 将处理 32 个样本。
 parallel_model.fit(x, y, epochs=20, batch_size=256)
 ```
 
-#### Device parallelism
+#### 设备并行
 
-Device parallelism consists in running different parts of a same model on different devices. It works best for models that have a parallel architecture, e.g. a model with two branches.
+设备并行性包括在不同设备上运行同一模型的不同部分。对于具有并行体系结构的模型，例如有两个分支的模型，这种方式很合适。
 
-This can be achieved by using TensorFlow device scopes. Here is a quick example:
+这种并行可以通过使用 TensorFlow device scopes 来实现。这里是一个简单的例子：
 
 ```python
-# Model where a shared LSTM is used to encode two different sequences in parallel
+# 模型中共享的 LSTM 用于并行编码两个不同的序列
 input_a = keras.Input(shape=(140, 256))
 input_b = keras.Input(shape=(140, 256))
 
 shared_lstm = keras.layers.LSTM(64)
 
-# Process the first sequence on one GPU
+# 在一个 GPU 上处理第一个序列
 with tf.device_scope('/gpu:0'):
     encoded_a = shared_lstm(tweet_a)
-# Process the next sequence on another GPU
+# 在另一个 GPU上 处理下一个序列
 with tf.device_scope('/gpu:1'):
     encoded_b = shared_lstm(tweet_b)
 
-# Concatenate results on CPU
+# 在 CPU 上连接结果
 with tf.device_scope('/cpu:0'):
     merged_vector = keras.layers.concatenate([encoded_a, encoded_b],
                                              axis=-1)
@@ -117,104 +116,103 @@ with tf.device_scope('/cpu:0'):
 
 ---
 
-### What does "sample", "batch", "epoch" mean?
+### "sample", "batch", "epoch" 分别是什么？
 
-Below are some common definitions that are necessary to know and understand to correctly utilize Keras:
+为了正确地使用 Keras，以下是必须了解和理解的一些常见定义：
 
-- **Sample**: one element of a dataset.
-  - *Example:* one image is a **sample** in a convolutional network
-  - *Example:* one audio file is a **sample** for a speech recognition model
-- **Batch**: a set of *N* samples. The samples in a **batch** are processed independently, in parallel. If training, a batch results in only one update to the model.
-  - A **batch** generally approximates the distribution of the input data better than a single input. The larger the batch, the better the approximation; however, it is also true that the batch will take longer to process and will still result in only one update. For inference (evaluate/predict), it is recommended to pick a batch size that is as large as you can afford without going out of memory (since larger batches will usually result in faster evaluating/prediction).
-- **Epoch**: an arbitrary cutoff, generally defined as "one pass over the entire dataset", used to separate training into distinct phases, which is useful for logging and periodic evaluation.
-  - When using `evaluation_data` or `evaluation_split` with the `fit` method of Keras models, evaluation will be run at the end of every **epoch**.
-  - Within Keras, there is the ability to add [callbacks](https://keras.io/callbacks/) specifically designed to be run at the end of an **epoch**. Examples of these are learning rate changes and model checkpointing (saving).
-
+- **Sample**: 样本，数据集中的一个元素，一条数据。
+  - *例1:* 在卷积神经网络中，一张图像是一个样本。
+  - *例2:* 在语音识别模型中，一段音频是一个样本。
+- **Batch**: 批，含有 *N* 个样本的集合。每一个 batch 的样本都是独立并行处理的。在训练时，一个 batch 的结果只会用来更新一次模型。
+  - 一个 **batch** 的样本通常比单个输入更接近于总体输入数据的分布，batch 越大就越近似。然而，每个 batch 将花费更长的时间来处理，并且仍然只更新模型一次。在推理（评估/预测）时，建议条件允许的情况下选择一个尽可能大的 batch，（因为较大的 batch 通常评估/预测的速度会更快）。 
+- **Epoch**: 轮次，通常被定义为 「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
+  - 当在 Keras 模型的 `fit` 方法中使用 `evaluation_data` 或 `evaluation_split` 时，评估将在每个 **epoch** 结束时运行。
+  - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](https://keras.io/callbacks/)。例如学习率变化和模型检查点（保存）。
+ 
 ---
 
-### How can I save a Keras model?
+### 如何保存 Keras 模型？
 
-#### Saving/loading whole models (architecture + weights + optimizer state)
+#### 保存/加载整个模型（结构 + 权重 + 优化器状态）
 
-*It is not recommended to use pickle or cPickle to save a Keras model.*
+*不建议使用 pickle 或 cPickle 来保存 Keras 模型。*
 
-You can use `model.save(filepath)` to save a Keras model into a single HDF5 file which will contain:
+你可以使用 `model.save(filepath)` 将 Keras 模型保存到单个 HDF5 文件中，该文件将包含：
 
-- the architecture of the model, allowing to re-create the model
-- the weights of the model
-- the training configuration (loss, optimizer)
-- the state of the optimizer, allowing to resume training exactly where you left off.
+- 模型的结构，允许重新创建模型
+- 模型的权重
+- 训练配置项（损失函数，优化器）
+- 优化器状态，允许准确地从你上次结束的地方继续训练。
 
-You can then use `keras.models.load_model(filepath)` to reinstantiate your model.
-`load_model` will also take care of compiling the model using the saved training configuration
-(unless the model was never compiled in the first place).
+你可以使用 `keras.models.load_model(filepath)` 重新实例化模型。`load_model` 还将负责使用保存的训练配置项来编译模型（除非模型从未编译过）。
 
-Example:
+例子：
 
 ```python
 from keras.models import load_model
 
-model.save('my_model.h5')  # creates a HDF5 file 'my_model.h5'
-del model  # deletes the existing model
+model.save('my_model.h5')  # 创建 HDF5 文件 'my_model.h5'
+del model  # 删除现有模型
 
-# returns a compiled model
-# identical to the previous one
+# 返回一个编译好的模型
+# 与之前那个相同
 model = load_model('my_model.h5')
 ```
 
-#### Saving/loading only a model's architecture
+#### 只保存/加载 模型的结构
 
-If you only need to save the **architecture of a model**, and not its weights or its training configuration, you can do:
+如果您只需要保存模型的结构，而非其权重或训练配置项，则可以执行以下操作：
 
 ```python
-# save as JSON
+# 保存为 JSON
 json_string = model.to_json()
 
-# save as YAML
+# 保存为 YAML
 yaml_string = model.to_yaml()
 ```
 
-The generated JSON / YAML files are human-readable and can be manually edited if needed.
+生成的 JSON/YAML 文件是人类可读的，如果需要还可以手动编辑。
 
-You can then build a fresh model from this data:
+你可以从这些数据建立一个新的模型：
 
 ```python
-# model reconstruction from JSON:
+# 从 JSON 重建模型：
 from keras.models import model_from_json
 model = model_from_json(json_string)
 
-# model reconstruction from YAML
+# 从 YAML 重建模型：
 from keras.models import model_from_yaml
 model = model_from_yaml(yaml_string)
 ```
 
-#### Saving/loading only a model's weights
+#### 只保存/加载 模型的权重
 
-If you need to save the **weights of a model**, you can do so in HDF5 with the code below.
+如果您只需要 **模型的权重**，可以使用下面的代码以 HDF5 格式进行保存。
 
-Note that you will first need to install HDF5 and the Python library h5py, which do not come bundled with Keras.
+请注意，我们首先需要安装 HDF5 和 Python 库 h5py，它们不包含在 Keras 中。
 
 ```python
 model.save_weights('my_model_weights.h5')
 ```
 
-Assuming you have code for instantiating your model, you can then load the weights you saved into a model with the *same* architecture:
+假设你有用于实例化模型的代码，则可以将保存的权重加载到具有相同结构的模型中：
 
 ```python
 model.load_weights('my_model_weights.h5')
 ```
 
-If you need to load weights into a *different* architecture (with some layers in common), for instance for fine-tuning or transfer-learning, you can load weights by *layer name*:
+如果你需要将权重加载到不同的结构（有一些共同层）的模型中，例如微调或迁移学习，则可以按层的名字来加载权重：
+
 
 ```python
 model.load_weights('my_model_weights.h5', by_name=True)
 ```
 
-For example:
+例如：
 
 ```python
 """
-Assuming the original model looks like this:
+假设原始模型如下所示：
     model = Sequential()
     model.add(Dense(2, input_dim=3, name='dense_1'))
     model.add(Dense(3, name='dense_2'))
@@ -222,27 +220,26 @@ Assuming the original model looks like this:
     model.save_weights(fname)
 """
 
-# new model
+# 新模型
 model = Sequential()
-model.add(Dense(2, input_dim=3, name='dense_1'))  # will be loaded
-model.add(Dense(10, name='new_dense'))  # will not be loaded
+model.add(Dense(2, input_dim=3, name='dense_1'))  # 将被加载
+model.add(Dense(10, name='new_dense'))  # 将不被加载
 
-# load weights from first model; will only affect the first layer, dense_1.
+# 从第一个模型加载权重；只会影响第一层，dense_1
 model.load_weights(fname, by_name=True)
 ```
 
-#### Handling custom layers (or other custom objects) in saved models
+#### 处理已保存模型中的自定义层（或其他自定义对象）
 
-If the model you want to load includes custom layers or other custom classes or functions, 
-you can pass them to the loading mechanism via the `custom_objects` argument: 
+如果要加载的模型包含自定义层或其他自定义类或函数，则可以通过 `custom_objects` 参数将它们传递给加载机制：
 
 ```python
 from keras.models import load_model
-# Assuming your model includes instance of an "AttentionLayer" class
+# 假设你的模型包含一个 AttentionLayer 类的实例
 model = load_model('my_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
 ```
 
-Alternatively, you can use a [custom object scope](https://keras.io/utils/#customobjectscope):
+或者，你可以使用 [自定义对象作用域](https://keras.io/utils/#customobjectscope)：
 
 ```python
 from keras.utils import CustomObjectScope
@@ -251,7 +248,7 @@ with CustomObjectScope({'AttentionLayer': AttentionLayer}):
     model = load_model('my_model.h5')
 ```
 
-Custom objects handling works the same way for `load_model`, `model_from_json`, `model_from_yaml`:
+自定义对象的处理与 `load_model`, `model_from_json`, `model_from_yaml` 的工作方式相同：
 
 ```python
 from keras.models import model_from_json
@@ -260,22 +257,22 @@ model = model_from_json(json_string, custom_objects={'AttentionLayer': Attention
 
 ---
 
-### Why is the training loss much higher than the testing loss?
+### 为什么训练误差比测试误差高很多？
 
-A Keras model has two modes: training and testing. Regularization mechanisms, such as Dropout and L1/L2 weight regularization, are turned off at testing time.
+Keras 模型有两种模式：训练和测试。正则化机制，如 Dropout 和 L1/L2 权重正则化，在测试时是关闭的。
 
-Besides, the training loss is the average of the losses over each batch of training data. Because your model is changing over time, the loss over the first batches of an epoch is generally higher than over the last batches. On the other hand, the testing loss for an epoch is computed using the model as it is at the end of the epoch, resulting in a lower loss.
+此外，训练误差是每批训练数据的平均误差。由于你的模型是随着时间而变化的，一个 epoch 中的第一批数据的误差通常比最后一批的要高。另一方面，测试误差是模型在一个 epoch 训练完后计算的，因而误差较小。
 
 ---
 
-### How can I obtain the output of an intermediate layer?
+### 如何获取中间层的输出？
 
-One simple way is to create a new `Model` that will output the layers that you are interested in:
+一个简单的方法是创建一个新的模型来输出你所感兴趣的层：
 
 ```python
 from keras.models import Model
 
-model = ...  # create the original model
+model = ...  # 创建原始模型
 
 layer_name = 'my_layer'
 intermediate_layer_model = Model(inputs=model.input,
@@ -283,48 +280,47 @@ intermediate_layer_model = Model(inputs=model.input,
 intermediate_output = intermediate_layer_model.predict(data)
 ```
 
-Alternatively, you can build a Keras function that will return the output of a certain layer given a certain input, for example:
+或者，你也可以构建一个 Keras 函数，该函数将在给定输入的情况下返回某个层的输出，例如：
 
 ```python
 from keras import backend as K
 
-# with a Sequential model
+# 以 Sequential 模型为例
 get_3rd_layer_output = K.function([model.layers[0].input],
                                   [model.layers[3].output])
 layer_output = get_3rd_layer_output([x])[0]
 ```
 
-Similarly, you could build a Theano and TensorFlow function directly.
+同样，你可以直接建立一个 Theano 或 TensorFlow 函数。
 
-Note that if your model has a different behavior in training and testing phase (e.g. if it uses `Dropout`, `BatchNormalization`, etc.), you will need
-to pass the learning phase flag to your function:
+注意，如果你的模型在训练和测试阶段有不同的行为（例如，使用 `Dropout`, `BatchNormalization` 等），则需要将学习阶段标志传递给你的函数：
 
 ```python
 get_3rd_layer_output = K.function([model.layers[0].input, K.learning_phase()],
                                   [model.layers[3].output])
 
-# output in test mode = 0
+# 测试模式 = 0 时的输出
 layer_output = get_3rd_layer_output([x, 0])[0]
 
-# output in train mode = 1
+# 测试模式 = 1 时的输出
 layer_output = get_3rd_layer_output([x, 1])[0]
 ```
 
 ---
 
-### How can I use Keras with datasets that don't fit in memory?
+### 如何用 Keras 处理超过内存的数据集？
 
-You can do batch training using `model.train_on_batch(x, y)` and `model.test_on_batch(x, y)`. See the [models documentation](/models/sequential).
+你可以使用 `model.train_on_batch(x，y)` 和 `model.test_on_batch(x，y)` 进行批量训练与测试。请参阅 [模型文档](/models/sequential)。
 
-Alternatively, you can write a generator that yields batches of training data and use the method `model.fit_generator(data_generator, steps_per_epoch, epochs)`.
+或者，你可以编写一个生成批处理训练数据的生成器，然后使用 `model.fit_generator(data_generator，steps_per_epoch，epochs)` 方法。
 
-You can see batch training in action in our [CIFAR10 example](https://github.com/keras-team/keras/blob/master/examples/cifar10_cnn.py).
+你可以在 [CIFAR10 example](https://github.com/keras-team/keras/blob/master/examples/cifar10_cnn.py) 中找到实践代码。
 
 ---
 
-### How can I interrupt training when the validation loss isn't decreasing anymore?
+### 在验证集的误差不再下降时，如何中断训练？
 
-You can use an `EarlyStopping` callback:
+你可以使用 `EarlyStopping` 回调函数：
 
 ```python
 from keras.callbacks import EarlyStopping
@@ -332,30 +328,30 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=2)
 model.fit(x, y, validation_split=0.2, callbacks=[early_stopping])
 ```
 
-Find out more in the [callbacks documentation](/callbacks).
+更多信息请查看 [callbacks 文档](/callbacks)。
 
 ---
 
-### How is the validation split computed?
+### 验证集划分是如何计算的？
 
-If you set the `validation_split` argument in `model.fit` to e.g. 0.1, then the validation data used will be the *last 10%* of the data. If you set it to 0.25, it will be the last 25% of the data, etc. Note that the data isn't shuffled before extracting the validation split, so the validation is literally just the *last* x% of samples in the input you passed.
+如果您将 `model.fit` 中的 `validation_split` 参数设置为 0.1，那么使用的验证数据将是最后 10％ 的数据。如果设置为 0.25，就是最后 25% 的数据。注意，在提取分割验证集之前，数据不会被混洗，因此验证集仅仅是传递的输入中最后一个 x％ 的样本。 
 
-The same validation set is used for all epochs (within a same call to `fit`).
-
----
-
-### Is the data shuffled during training?
-
-Yes, if the `shuffle` argument in `model.fit` is set to `True` (which is the default), the training data will be randomly shuffled at each epoch.
-
-Validation data is never shuffled.
+所有 epoch 都使用相同的验证集（在同一个 `fit` 中调用）。
 
 ---
 
+### 在训练过程中数据是否会混洗？
 
-### How can I record the training / validation loss / accuracy at each epoch?
+是的，如果 `model.fit`中的 `shuffle`参数设置为 True（默认值），则训练数据将在每个 epoch 混洗。
 
-The `model.fit` method returns an `History` callback, which has a `history` attribute containing the lists of successive losses and other metrics.
+验证集永远不会混洗。
+
+---
+
+
+### 如何在每个 epoch 后记录训练集和验证集的误差和准确率？
+
+`model.fit` 方法返回一个 `History` 回调，它具有包含连续误差的列表和其他度量的 `history` 属性。
 
 ```python
 hist = model.fit(x, y, validation_split=0.2)
@@ -364,17 +360,17 @@ print(hist.history)
 
 ---
 
-### How can I "freeze" Keras layers?
+### 如何「冻结」网络层？
 
-To "freeze" a layer means to exclude it from training, i.e. its weights will never be updated. This is useful in the context of fine-tuning a model, or using fixed embeddings for a text input.
+「冻结」一个层意味着将其排除在训练之外，即其权重将永远不会更新。这在微调模型或使用固定的词向量进行文本输入中很有用。
 
-You can pass a `trainable` argument (boolean) to a layer constructor to set a layer to be non-trainable:
+您可以将 `trainable` 参数（布尔值）传递给一个层的构造器，以将该层设置为不可训练的：
 
 ```python
 frozen_layer = Dense(32, trainable=False)
 ```
 
-Additionally, you can set the `trainable` property of a layer to `True` or `False` after instantiation. For this to take effect, you will need to call `compile()` on your model after modifying the `trainable` property. Here's an example:
+另外，可以在实例化之后将网络层的 `trainable` 属性设置为 True 或 False。为了使之生效，在修改 `trainable` 属性之后，需要在模型上调用 `compile()`。这是一个例子：
 
 ```python
 x = Input(shape=(32,))
@@ -383,47 +379,47 @@ layer.trainable = False
 y = layer(x)
 
 frozen_model = Model(x, y)
-# in the model below, the weights of `layer` will not be updated during training
+# 在下面的模型中，训练期间不会更新层的权重
 frozen_model.compile(optimizer='rmsprop', loss='mse')
 
 layer.trainable = True
 trainable_model = Model(x, y)
-# with this model the weights of the layer will be updated during training
-# (which will also affect the above model since it uses the same layer instance)
+# 使用这个模型，训练期间 `layer` 的权重将被更新
+# (这也会影响上面的模型，因为它使用了同一个网络层实例)
 trainable_model.compile(optimizer='rmsprop', loss='mse')
 
-frozen_model.fit(data, labels)  # this does NOT update the weights of `layer`
-trainable_model.fit(data, labels)  # this updates the weights of `layer`
+frozen_model.fit(data, labels)  # 这不会更新 `layer` 的权重
+trainable_model.fit(data, labels)  # 这会更新 `layer` 的权重
 ```
 
 ---
 
-### How can I use stateful RNNs?
+### 如何使用有状态 RNN (stateful RNNs)?
 
-Making a RNN stateful means that the states for the samples of each batch will be reused as initial states for the samples in the next batch.
+使 RNN 具有状态意味着每批样品的状态将被重新用作下一批样品的初始状态。
 
-When using stateful RNNs, it is therefore assumed that:
+当使用有状态 RNN 时，假定：
 
-- all batches have the same number of samples
-- If `x1` and `x2` are successive batches of samples, then `x2[i]` is the follow-up sequence to `x1[i]`, for every `i`.
+- 所有的批次都有相同数量的样本
+- 如果 `x1` 和 `x2` 是连续批次的样本，则 `x2[i]` 是 `x1[i]` 的后续序列，对于每个 `i`。
 
-To use statefulness in RNNs, you need to:
+要在 RNN 中使用状态，你需要:
 
-- explicitly specify the batch size you are using, by passing a `batch_size` argument to the first layer in your model. E.g. `batch_size=32` for a 32-samples batch of sequences of 10 timesteps with 16 features per timestep.
-- set `stateful=True` in your RNN layer(s).
-- specify `shuffle=False` when calling fit().
+- 通过将 `batch_size` 参数传递给模型的第一层来显式指定你正在使用的批大小。例如，对于 10 个时间步长的 32 样本的 batch，每个时间步长具有 16 个特征，`batch_size = 32`。 
+- 在 RNN 层中设置 `stateful = True`。
+- 在调用 `fit()` 时指定 `shuffle = False`。
 
-To reset the states accumulated:
+重置累积状态：
 
-- use `model.reset_states()` to reset the states of all layers in the model
-- use `layer.reset_states()` to reset the states of a specific stateful RNN layer
+- 使用 `model.reset_states()` 来重置模型中所有层的状态
+- 使用 `layer.reset_states()` 来重置指定有状态 RNN 层的状态
 
-Example:
+例子：
 
 ```python
 
-x  # this is our input data, of shape (32, 21, 16)
-# we will feed it to our model in sequences of length 10
+x  # 输入数据，尺寸为 (32, 21, 16)
+# 将步长为 10 的序列输送到模型中
 
 model = Sequential()
 model.add(LSTM(32, input_shape=(10, 16), batch_size=32, stateful=True))
@@ -431,26 +427,26 @@ model.add(Dense(16, activation='softmax'))
 
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-# we train the network to predict the 11th timestep given the first 10:
+# 训练网络，根据给定的前 10 个时间步，来预测第 11 个时间步：
 model.train_on_batch(x[:, :10, :], np.reshape(x[:, 10, :], (32, 16)))
 
-# the state of the network has changed. We can feed the follow-up sequences:
+# 网络的状态已经改变。我们可以提供后续序列：
 model.train_on_batch(x[:, 10:20, :], np.reshape(x[:, 20, :], (32, 16)))
 
-# let's reset the states of the LSTM layer:
+# 重置 LSTM 层的状态：
 model.reset_states()
 
-# another way to do it in this case:
+# 另一种重置方法：
 model.layers[0].reset_states()
 ```
 
-Notes that the methods `predict`, `fit`, `train_on_batch`, `predict_classes`, etc. will *all* update the states of the stateful layers in a model. This allows you to do not only stateful training, but also stateful prediction.
+请注意，`predict`, `fit`, `train_on_batch`, `predict_classes` 等方法 *全部* 都会更新模型中有状态层的状态。这使你不仅可以进行有状态的训练，还可以进行有状态的预测。
 
 ---
 
-### How can I remove a layer from a Sequential model?
+### 如何从 Sequential 模型中移除一个层？
 
-You can remove the last added layer in a Sequential model by calling `.pop()`:
+你可以通过调用 `.pop()` 来删除 `Sequential` 模型中最后添加的层：
 
 ```python
 model = Sequential()
@@ -465,9 +461,9 @@ print(len(model.layers))  # "1"
 
 ---
 
-### How can I use pre-trained models in Keras?
+### 如何在 Keras 中使用预训练的模型？
 
-Code and pre-trained weights are available for the following image classification models:
+我们提供了以下图像分类模型的代码和预训练的权重：
 
 - Xception
 - VGG16
@@ -477,7 +473,7 @@ Code and pre-trained weights are available for the following image classificatio
 - Inception-ResNet v2
 - MobileNet v1
 
-They can be imported from the module `keras.applications`:
+它们可以使用 `keras.applications` 模块进行导入：
 
 ```python
 from keras.applications.xception import Xception
@@ -491,11 +487,11 @@ from keras.applications.mobilenet import MobileNet
 model = VGG16(weights='imagenet', include_top=True)
 ```
 
-For a few simple usage examples, see [the documentation for the Applications module](/applications).
+有关一些简单的用法示例，请参阅 [应用模块的文档](/applications)。
 
-For a detailed example of how to use such a pre-trained model for feature extraction or for fine-tuning, see [this blog post](http://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html).
+有关如何使用此类预训练的模型进行特征提取或微调的详细示例，请参阅 [此博客文章](http://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html)。
 
-The VGG16 model is also the basis for several Keras example scripts:
+VGG16 模型也是以下几个 Keras 示例脚本的基础：
 
 - [Style transfer](https://github.com/keras-team/keras/blob/master/examples/neural_style_transfer.py)
 - [Feature visualization](https://github.com/keras-team/keras/blob/master/examples/conv_filter_visualization.py)
@@ -503,11 +499,11 @@ The VGG16 model is also the basis for several Keras example scripts:
 
 ---
 
-### How can I use HDF5 inputs with Keras?
+### 如何在 Keras 中使用 HDF5 输入？
 
-You can use the `HDF5Matrix` class from `keras.utils.io_utils`. See [the HDF5Matrix documentation](/utils/#hdf5matrix) for details.
+你可以使用 `keras.utils.io_utils` 中的 `HDF5Matrix` 类。有关详细信息，请参阅 [HDF5Matrix文档](/utils/#hdf5matrix)。
 
-You can also directly use a HDF5 dataset:
+你也可以直接使用 HDF5 数据集：
 
 ```python
 import h5py
@@ -518,18 +514,17 @@ with h5py.File('input/file.hdf5', 'r') as f:
 
 ---
 
-### Where is the Keras configuration file stored?
+### Keras 配置文件保存在哪里？
 
-The default directory where all Keras data is stored is:
+所有 Keras 数据存储的默认目录是：
 
 ```bash
 $HOME/.keras/
 ```
 
-Note that Windows users should replace `$HOME` with `%USERPROFILE%`.
-In case Keras cannot create the above directory (e.g. due to permission issues), `/tmp/.keras/` is used as a backup.
+注意，Windows 用户应该将 `$HOME` 替换为 `％USERPROFILE％`。如果 Keras 无法创建上述目录（例如，由于权限问题），则使用 `/tmp/.keras/` 作为备份。
 
-The Keras configuration file is a JSON file stored at `$HOME/.keras/keras.json`. The default configuration file looks like this:
+Keras配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默认的配置文件如下所示：
 
 ```
 {
@@ -540,62 +535,58 @@ The Keras configuration file is a JSON file stored at `$HOME/.keras/keras.json`.
 }
 ```
 
-It contains the following fields:
+它包含以下字段：
 
-- The image data format to be used as default by image processing layers and utilities (either `channels_last` or `channels_first`).
-- The `epsilon` numerical fuzz factor to be used to prevent division by zero in some operations.
-- The default float data type.
-- The default backend. See the [backend documentation](/backend).
+- 图像处理层和实用程序所使用的默认值图像数据格式（`channel_last` 或 `channels_first`）。
+- 用于防止在某些操作中被零除的 `epsilon` 模糊因子。
+- 默认浮点数据类型。
+- 默认后端。详见 [backend 文档](/backend)。
 
-Likewise, cached dataset files, such as those downloaded with [`get_file()`](/utils/#get_file), are stored by default in `$HOME/.keras/datasets/`.
+同样，缓存的数据集文件（如使用 `get_file()` 下载的文件）默认存储在 `$HOME/.keras/datasets/` 中。
 
 ---
 
-### How can I obtain reproducible results using Keras during development?
+### 如何在 Keras 开发过程中获取可复现的结果？
 
-During development of a model, sometimes it is useful to be able to obtain reproducible results from run to run in order to determine if a change in performance is due to an actual model or data modification, or merely a result of a new random sample.  The below snippet of code provides an example of how to obtain reproducible results - this is geared towards a TensorFlow backend for a Python 3 environment.
+在模型的开发过程中，能够在一次次的运行中获得可复现的结果，以确定性能的变化是来自模型还是数据集的变化，或者仅仅是一些新的随机样本点带来的结果，有时候是很有用处的。下面的代码片段提供了一个如何获得可复现结果的例子 - 针对 Python 3 环境的 TensorFlow 后端。
 
 ```python
 import numpy as np
 import tensorflow as tf
 import random as rn
 
-# The below is necessary in Python 3.2.3 onwards to
-# have reproducible behavior for certain hash-based operations.
-# See these references for further details:
+# 以下是 Python 3.2.3 以上所必需的，
+# 为了使某些基于散列的操作可复现。
 # https://docs.python.org/3.4/using/cmdline.html#envvar-PYTHONHASHSEED
 # https://github.com/keras-team/keras/issues/2280#issuecomment-306959926
 
 import os
 os.environ['PYTHONHASHSEED'] = '0'
 
-# The below is necessary for starting Numpy generated random numbers
-# in a well-defined initial state.
+# 以下是 Numpy 在一个明确的初始状态生成固定随机数字所必需的。
 
 np.random.seed(42)
 
-# The below is necessary for starting core Python generated random numbers
-# in a well-defined state.
+# 以下是 Python 在一个明确的初始状态生成固定随机数字所必需的。
 
 rn.seed(12345)
 
-# Force TensorFlow to use single thread.
-# Multiple threads are a potential source of
-# non-reproducible results.
-# For further details, see: https://stackoverflow.com/questions/42022950/which-seeds-have-to-be-set-where-to-realize-100-reproducibility-of-training-res
+# 强制 TensorFlow 使用单线程。
+# 多线程是结果不可复现的一个潜在的来源。
+# 更多详情，见: https://stackoverflow.com/questions/42022950/which-seeds-have-to-be-set-where-to-realize-100-reproducibility-of-training-res
 
 session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
 
 from keras import backend as K
 
-# The below tf.set_random_seed() will make random number generation
-# in the TensorFlow backend have a well-defined initial state.
-# For further details, see: https://www.tensorflow.org/api_docs/python/tf/set_random_seed
+# `tf.set_random_seed()` 将会以 TensorFlow 为后端，
+# 在一个明确的初始状态下生成固定随机数字。
+# 更多详情，见: https://www.tensorflow.org/api_docs/python/tf/set_random_seed
 
 tf.set_random_seed(1234)
 
 sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
 K.set_session(sess)
 
-# Rest of code follows ...
+# 剩余代码 ...
 ```
