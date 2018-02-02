@@ -5,28 +5,27 @@
 keras.layers.GaussianNoise(stddev)
 ```
 
-Apply additive zero-centered Gaussian noise.
+应用以 0 为中心的加性高斯噪声。
 
-This is useful to mitigate overfitting
-(you could see it as a form of random data augmentation).
-Gaussian Noise (GS) is a natural choice as corruption process
-for real valued inputs.
+这对缓解过拟合很有用
+（你可以将其视为随机数据增强的一种形式）。
+高斯噪声（GS）是对真实输入的腐蚀过程的自然选择。
 
-As it is a regularization layer, it is only active at training time.
+由于它是一个正则化层，因此它只在训练时才被激活。
 
-__Arguments__
+__参数__
 
-- __stddev__: float, standard deviation of the noise distribution.
+- __stddev__: float，噪声分布的标准差。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。
+如果将该层作为模型的第一层，则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as input.
+与输入相同。
 
 ----
 
@@ -37,27 +36,26 @@ Same shape as input.
 keras.layers.GaussianDropout(rate)
 ```
 
-Apply multiplicative 1-centered Gaussian noise.
+应用以 1 为中心的 乘性高斯噪声。
 
-As it is a regularization layer, it is only active at training time.
+由于它是一个正则化层，因此它只在训练时才被激活。
 
-__Arguments__
+__参数__
 
-- __rate__: float, drop probability (as with `Dropout`).
-The multiplicative noise will have
-standard deviation `sqrt(rate / (1 - rate))`.
+- __rate__: float，丢弃概率（与 `Dropout` 相同）。
+这个乘性噪声的标准差为 `sqrt(rate / (1 - rate))`。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。
+如果将该层作为模型的第一层，则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as input.
+与输入相同。
 
-__References__
+__参考文献__
 
 - [Dropout: A Simple Way to Prevent Neural Networks from Overfitting Srivastava, Hinton, et al. 2014](http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
 
@@ -70,31 +68,28 @@ __References__
 keras.layers.AlphaDropout(rate, noise_shape=None, seed=None)
 ```
 
-Applies Alpha Dropout to the input.
+将 Alpha Dropout 应用到输入。
 
-Alpha Dropout is a `Dropout` that keeps mean and variance of inputs
-to their original values, in order to ensure the self-normalizing property
-even after this dropout.
-Alpha Dropout fits well to Scaled Exponential Linear Units
-by randomly setting activations to the negative saturation value.
+Alpha Dropout是一种 `Dropout`，它保持输入的平均值和方差与原来的值不变，
+已在 dropout 之后仍然保证数据的自规范性。
+通过随机将激活设置为负饱和值，Alpha Dropout 非常适合按比例缩放的指数线性单元（SELU）。
 
-__Arguments__
+__参数__
 
-- __rate__: float, drop probability (as with `Dropout`).
-The multiplicative noise will have
-standard deviation `sqrt(rate / (1 - rate))`.
-- __seed__: A Python integer to use as random seed.
+- __rate__: float，丢弃概率（与 `Dropout` 相同）。
+这个乘性噪声的标准差为 `sqrt(rate / (1 - rate))`。
+- __seed__: 用作随机种子的 Python 整数。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。
+如果将该层作为模型的第一层，则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as input.
+与输入相同。
 
-__References__
+__参考文献__
 
 - [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
