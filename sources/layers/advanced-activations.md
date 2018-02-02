@@ -5,27 +5,27 @@
 keras.layers.LeakyReLU(alpha=0.3)
 ```
 
-Leaky version of a Rectified Linear Unit.
+带泄漏的修正线性单元。
 
-It allows a small gradient when the unit is not active:
+当神经元未激活时，它仍可以赋予其一个很小的梯度：
 `f(x) = alpha * x for x < 0`,
 `f(x) = x for x >= 0`.
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。如果将该层作为模型的第一层，
+则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as the input.
+与输入相同。
 
-__Arguments__
+__参数__
 
-- __alpha__: float >= 0. Negative slope coefficient.
+- __alpha__: float >= 0。负斜率系数。
 
-__References__
+__参考文献__
 
 - [Rectifier Nonlinearities Improve Neural Network Acoustic Models](https://web.stanford.edu/~awni/papers/relu_hybrid_icml2013_final.pdf)
 
@@ -38,38 +38,34 @@ __References__
 keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None)
 ```
 
-Parametric Rectified Linear Unit.
+参数化的修正线性单元。
 
-It follows:
+形式：
 `f(x) = alpha * x for x < 0`,
 `f(x) = x for x >= 0`,
-where `alpha` is a learned array with the same shape as x.
+其中 `alpha` 是一个可学习的数组，尺寸与 x 相同。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。如果将这一层作为模型的第一层，
+则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as the input.
+与输入相同。
 
-__Arguments__
+__参数__
 
-- __alpha_initializer__: initializer function for the weights.
-- __alpha_regularizer__: regularizer for the weights.
-- __alpha_constraint__: constraint for the weights.
-- __shared_axes__: the axes along which to share learnable
-parameters for the activation function.
-For example, if the incoming feature maps
-are from a 2D convolution
-with output shape `(batch, height, width, channels)`,
-and you wish to share parameters across space
-so that each filter only has one set of parameters,
-set `shared_axes=[1, 2]`.
+- __alpha_initializer__: 权重的初始化函数。
+- __alpha_regularizer__: 权重的正则化方法。
+- __alpha_constraint__: 权重的约束。
+- __shared_axes__: 激活函数共享可学习参数的轴。
+例如，如果输入特征图来自输出形状为 `(batch, height, width, channels)`
+的 2D 卷积层，而且你希望跨空间共享参数，以便每个滤波器只有一组参数，
+可设置 `shared_axes=[1, 2]`。
 
-__References__
+__参考文献__
 
 - [Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification](https://arxiv.org/abs/1502.01852)
 
@@ -81,28 +77,27 @@ __References__
 ```python
 keras.layers.ELU(alpha=1.0)
 ```
+指数线性单元。
 
-Exponential Linear Unit.
-
-It follows:
+形式：
 `f(x) =  alpha * (exp(x) - 1.) for x < 0`,
 `f(x) = x for x >= 0`.
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。如果将这一层作为模型的第一层，
+则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as the input.
+与输入相同。
 
-__Arguments__
+__参数__
 
-- __alpha__: scale for the negative factor.
+- __alpha__: 负因子的尺度。
 
-__References__
+__参考文献__
 
 - [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)](https://arxiv.org/abs/1511.07289v1)
 
@@ -115,27 +110,27 @@ __References__
 keras.layers.ThresholdedReLU(theta=1.0)
 ```
 
-Thresholded Rectified Linear Unit.
+带阈值的修正线性单元。
 
-It follows:
+形式：
 `f(x) = x for x > theta`,
 `f(x) = 0 otherwise`.
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。如果将这一层作为模型的第一层，
+则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as the input.
+与输入相同。
 
-__Arguments__
+__参数__
 
-- __theta__: float >= 0. Threshold location of activation.
+- __theta__: float >= 0。激活的阈值位。
 
-__References__
+__参考文献__
 
 - [Zero-Bias Autoencoders and the Benefits of Co-Adapting Features](http://arxiv.org/abs/1402.3337)
 
@@ -148,18 +143,18 @@ __References__
 keras.layers.Softmax(axis=-1)
 ```
 
-Softmax activation function.
+Softmax 激活函数。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+可以是任意的。如果将这一层作为模型的第一层，
+则需要指定 `input_shape` 参数
+（整数元组，不包含样本数量的维度）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as the input.
+与输入相同。
 
-__Arguments__
+__参数__
 
-- __axis__: Integer, axis along which the softmax normalization is applied.
+- __axis__: 整数，应用 softmax 标准化的轴。

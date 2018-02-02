@@ -5,20 +5,20 @@
 keras.layers.Embedding(input_dim, output_dim, embeddings_initializer='uniform', embeddings_regularizer=None, activity_regularizer=None, embeddings_constraint=None, mask_zero=False, input_length=None)
 ```
 
-Turns positive integers (indexes) into dense vectors of fixed size.
-eg. [[4], [20]] -> [[0.25, 0.1], [0.6, -0.2]]
+将正整数（索引值）转换为固定尺寸的稠密向量。
+例如： [[4], [20]] -> [[0.25, 0.1], [0.6, -0.2]]
 
-This layer can only be used as the first layer in a model.
+该层只能用作模型中的第一层。
 
-__Example__
+__例子__
 
 
 ```python
 model = Sequential()
 model.add(Embedding(1000, 64, input_length=10))
-# the model will take as input an integer matrix of size (batch, input_length).
-# the largest integer (i.e. word index) in the input should be no larger than 999 (vocabulary size).
-# now model.output_shape == (None, 10, 64), where None is the batch dimension.
+# 模型将输入一个大小为 (batch, input_length) 的整数矩阵。
+# 输入中最大的整数（即词索引）不应该大于 999 （词汇表大小）
+# 现在 model.output_shape == (None, 10, 64)，其中 None 是 batch 的维度。
 
 input_array = np.random.randint(1000, size=(32, 10))
 
@@ -27,41 +27,34 @@ output_array = model.predict(input_array)
 assert output_array.shape == (32, 10, 64)
 ```
 
-__Arguments__
+__参数__
 
-- __input_dim__: int > 0. Size of the vocabulary,
-i.e. maximum integer index + 1.
-- __output_dim__: int >= 0. Dimension of the dense embedding.
-- __embeddings_initializer__: Initializer for the `embeddings` matrix
-(see [initializers](../initializers.md)).
-- __embeddings_regularizer__: Regularizer function applied to
-the `embeddings` matrix
-(see [regularizer](../regularizers.md)).
-- __embeddings_constraint__: Constraint function applied to
-the `embeddings` matrix
-(see [constraints](../constraints.md)).
-- __mask_zero__: Whether or not the input value 0 is a special "padding"
-value that should be masked out.
-This is useful when using [recurrent layers](recurrent.md)
-which may take variable length input.
-If this is `True` then all subsequent layers
-in the model need to support masking or an exception will be raised.
-If mask_zero is set to True, as a consequence, index 0 cannot be
-used in the vocabulary (input_dim should equal size of
-vocabulary + 1).
-- __input_length__: Length of input sequences, when it is constant.
-This argument is required if you are going to connect
-`Flatten` then `Dense` layers upstream
-(without it, the shape of the dense outputs cannot be computed).
+- __input_dim__: int > 0。词汇表大小，
+即，最大整数 index + 1。
+- __output_dim__: int >= 0。词向量的维度。
+- __embeddings_initializer__: `embeddings` 矩阵的初始化方法
+(详见 [initializers](../initializers.md))。
+- __embeddings_regularizer__: `embeddings` matrix 的正则化方法
+(详见 [regularizer](../regularizers.md))。
+- __embeddings_constraint__: `embeddings` matrix 的约束函数
+(详见 [constraints](../constraints.md))。
+- __mask_zero__: 是否把 0 看作为一个应该被遮蔽的特殊的 "padding" 值。
+这对于可变长的 [循环神经网络层](recurrent.md) 十分有用。
+如果设定为 `True`，那么接下来的所有层都必须支持 masking，否则就会抛出异常。
+如果 mask_zero 为 `True`，作为结果，索引 0 就不能被用于词汇表中
+（input_dim 应该与 vocabulary + 1 大小相同）。
+- __input_length__: 输入序列的长度，当它是固定的时。
+如果你需要连接 `Flatten` 和 `Dense` 层，则这个参数是必须的
+（没有它，dense 层的输出尺寸就无法计算）。
 
-__Input shape__
+__输入尺寸__
 
-2D tensor with shape: `(batch_size, sequence_length)`.
+尺寸为 `(batch_size, sequence_length)` 的 2D 张量。
 
-__Output shape__
+__输出尺寸__
 
-3D tensor with shape: `(batch_size, sequence_length, output_dim)`.
+尺寸为 `(batch_size, sequence_length, output_dim)` 的 3D 张量。
 
-__References__
+__参考文献__
 
 - [A Theoretically Grounded Application of Dropout in Recurrent Neural Networks](http://arxiv.org/abs/1512.05287)
