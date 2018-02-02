@@ -5,39 +5,38 @@
 keras.layers.TimeDistributed(layer)
 ```
 
-This wrapper applies a layer to every temporal slice of an input.
+这个封装器将一个层应用于输入的每个时间片。
 
-The input should be at least 3D, and the dimension of index one
-will be considered to be the temporal dimension.
+输入至少为 3D，且第一个维度应该是时间所表示的维度。
 
-Consider a batch of 32 samples,
-where each sample is a sequence of 10 vectors of 16 dimensions.
-The batch input shape of the layer is then `(32, 10, 16)`,
-and the `input_shape`, not including the samples dimension, is `(10, 16)`.
+考虑 32 个样本的一个 batch，
+其中每个样本是 10 个 16 维向量的序列。
+那么这个 batch 的输入尺寸为 `(32, 10, 16)`，
+而 `input_shape` 不包含样本数量的维度，为 `(10, 16)`。
 
-You can then use `TimeDistributed` to apply a `Dense` layer
-to each of the 10 timesteps, independently:
+你可以使用 `TimeDistributed` 来将 `Dense` 层独立地应用到
+这 10 个时间步的每一个：
 
 ```python
-# as the first layer in a model
+# 作为模型第一层
 model = Sequential()
 model.add(TimeDistributed(Dense(8), input_shape=(10, 16)))
-# now model.output_shape == (None, 10, 8)
+# 现在 model.output_shape == (None, 10, 8)
 ```
 
-The output will then have shape `(32, 10, 8)`.
+输出的尺寸为 `(32, 10, 8)`。
 
-In subsequent layers, there is no need for the `input_shape`:
+在后续的层中，将不再需要 `input_shape`：
 
 ```python
 model.add(TimeDistributed(Dense(32)))
-# now model.output_shape == (None, 10, 32)
+# 现在 model.output_shape == (None, 10, 32)
 ```
 
-The output will then have shape `(32, 10, 32)`.
+输出的尺寸为 `(32, 10, 32)`。
 
-`TimeDistributed` can be used with arbitrary layers, not just `Dense`,
-for instance with a `Conv2D` layer:
+`TimeDistributed` 可以应用于任意层，不仅仅是 `Dense`，
+例如运用于 `Conv2D` 层：
 
 ```python
 model = Sequential()
@@ -45,9 +44,9 @@ model.add(TimeDistributed(Conv2D(64, (3, 3)),
                           input_shape=(10, 299, 299, 3)))
 ```
 
-__Arguments__
+__参数__
 
-- __layer__: a layer instance.
+- __layer__: 一个网络层实例。
 
 ----
 
@@ -58,22 +57,20 @@ __Arguments__
 keras.layers.Bidirectional(layer, merge_mode='concat', weights=None)
 ```
 
-Bidirectional wrapper for RNNs.
+RNN 的双向封装器，对序列进行前向和后向计算。
 
-__Arguments__
+__参数__
 
-- __layer__: `Recurrent` instance.
-- __merge_mode__: Mode by which outputs of the
-forward and backward RNNs will be combined.
-One of {'sum', 'mul', 'concat', 'ave', None}.
-If None, the outputs will not be combined,
-they will be returned as a list.
+- __layer__: `Recurrent` 实例。
+- __merge_mode__: 前向和后向 RNN 的输出的结合模式。
+为 {'sum', 'mul', 'concat', 'ave', None} 其中之一。
+如果是 None，输出不会被结合，而是作为一个列表被返回。
 
-__Raises__
+__异常__
 
-- __ValueError__: In case of invalid `merge_mode` argument.
+- __ValueError__: 如果参数 `merge_mode` 非法。
 
-__Examples__
+__例__
 
 
 ```python
