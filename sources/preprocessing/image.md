@@ -23,92 +23,69 @@ keras.preprocessing.image.ImageDataGenerator(featurewise_center=False,
     data_format=K.image_data_format())
 ```
 
-Generate batches of tensor image data with real-time data augmentation. The data will be looped over (in batches) indefinitely.
+生成批次的带实时数据增益的张量图像数据。数据将按批次无限循环。
 
-- __Arguments__:
-    - __featurewise_center__: Boolean. Set input mean to 0 over the dataset, feature-wise.
-    - __samplewise_center__: Boolean. Set each sample mean to 0.
-    - __featurewise_std_normalization__: Boolean. Divide inputs by std of the dataset, feature-wise.
-    - __samplewise_std_normalization__: Boolean. Divide each input by its std.
-    - __zca_epsilon__: epsilon for ZCA whitening. Default is 1e-6.
-    - __zca_whitening__: Boolean. Apply ZCA whitening.
-    - __rotation_range__: Int. Degree range for random rotations.
-    - __width_shift_range__: Float (fraction of total width). Range for random horizontal shifts.
-    - __height_shift_range__: Float (fraction of total height). Range for random vertical shifts.
-    - __shear_range__: Float. Shear Intensity (Shear angle in counter-clockwise direction as radians)
-    - __zoom_range__: Float or [lower, upper]. Range for random zoom. If a float, `[lower, upper] = [1-zoom_range, 1+zoom_range]`.
-    - __channel_shift_range__: Float. Range for random channel shifts.
-    - __fill_mode__: One of {"constant", "nearest", "reflect" or "wrap"}.  Points outside the boundaries of the input are filled according to the given mode:
+- __参数__：
+    - __featurewise_center__: 布尔值。将输入数据的均值设置为 0，逐特征进行。
+    - __samplewise_center__: 布尔值。将每个样本的均值设置为 0。
+    - __featurewise_std_normalization__: 布尔值。将输入除以数据标准差，逐特征进行。
+    - __samplewise_std_normalization__: 布尔值。将每个输入除以其标准差。
+    - __zca_epsilon__: ZCA 白化的 epsilon 值，默认为 1e-6。
+    - __zca_whitening__: 布尔值。应用 ZCA 白化。
+    - __rotation_range__: 整数。随机旋转的度数范围。
+    - __width_shift_range__: 浮点数（总宽度的比例）。随机水平移动的范围。
+    - __height_shift_range__: 浮点数（总高度的比例）。随机垂直移动的范围。
+    - __shear_range__: 浮点数。剪切强度（以弧度逆时针方向剪切角度）。
+    - __zoom_range__: 浮点数 或 [lower, upper]。随机缩放范围。如果是浮点数，`[lower, upper] = [1-zoom_range, 1+zoom_range]`。
+    - __channel_shift_range__: 浮点数。随机通道转换的范围。
+    - __fill_mode__: {"constant", "nearest", "reflect" or "wrap"} 之一。输入边界以外的点根据给定的模式填充：
         * "constant": `kkkkkkkk|abcd|kkkkkkkk` (`cval=k`)
         * "nearest":  `aaaaaaaa|abcd|dddddddd`
         * "reflect":  `abcddcba|abcd|dcbaabcd`
         * "wrap":     `abcdabcd|abcd|abcdabcd`
-    - __cval__: Float or Int. Value used for points outside the boundaries when `fill_mode = "constant"`.
-    - __horizontal_flip__: Boolean. Randomly flip inputs horizontally.
-    - __vertical_flip__: Boolean. Randomly flip inputs vertically.
-    - __rescale__: rescaling factor. Defaults to None. If None or 0, no rescaling is applied,
-            otherwise we multiply the data by the value provided (before applying
-            any other transformation).
-    - __preprocessing_function__: function that will be implied on each input.
-            The function will run before any other modification on it.
-            The function should take one argument:
-            one image (Numpy tensor with rank 3),
-            and should output a Numpy tensor with the same shape.
-    - __data_format__: One of {"channels_first", "channels_last"}.
-        "channels_last" mode means that the images should have shape `(samples, height, width, channels)`,
-        "channels_first" mode means that the images should have shape `(samples, channels, height, width)`.
-        It defaults to the `image_data_format` value found in your
-        Keras config file at `~/.keras/keras.json`.
-        If you never set it, then it will be "channels_last".
-
-- __Methods__:
-    - __fit(x)__: Compute the internal data stats related to the data-dependent transformations, based on an array of sample data.
-        Only required if featurewise_center or featurewise_std_normalization or zca_whitening.
-        - __Arguments__:
-            - __x__: sample data. Should have rank 4.
-                In case of grayscale data,
-                the channels axis should have value 1, and in case
-                of RGB data, it should have value 3.
-            - __augment__: Boolean (default: False). Whether to fit on randomly augmented samples.
-            - __rounds__: int (default: 1). If augment, how many augmentation passes over the data to use.
-            - __seed__: int (default: None). Random seed.
-    - __flow(x, y)__: Takes numpy data & label arrays, and generates batches of augmented/normalized data. Yields batches indefinitely, in an infinite loop.
-        - __Arguments__:
-            - __x__: data. Should have rank 4.
-                In case of grayscale data,
-                the channels axis should have value 1, and in case
-                of RGB data, it should have value 3.
-            - __y__: labels.
-            - __batch_size__: int (default: 32).
-            - __shuffle__: boolean (default: True).
-            - __seed__: int (default: None).
-            - __save_to_dir__: None or str (default: None). This allows you to optimally specify a directory to which to save the augmented pictures being generated (useful for visualizing what you are doing).
-            - __save_prefix__: str (default: `''`). Prefix to use for filenames of saved pictures (only relevant if `save_to_dir` is set).
-            - __save_format__: one of "png", "jpeg" (only relevant if `save_to_dir` is set). Default: "png".
-        - __yields__: Tuples of `(x, y)` where `x` is a numpy array of image data and `y` is a numpy array of corresponding labels.
-            The generator loops indefinitely.
-    - __flow_from_directory(directory)__: Takes the path to a directory, and generates batches of augmented/normalized data. Yields batches indefinitely, in an infinite loop.
-        - __Arguments__:
-            - __directory__: path to the target directory. It should contain one subdirectory per class.
-                Any PNG, JPG, BMP or PPM images inside each of the subdirectories directory tree will be included in the generator.
-                See [this script](https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d) for more details.
-            - __target_size__: tuple of integers `(height, width)`, default: `(256, 256)`. 
-                The dimensions to which all images found will be resized.
-            - __color_mode__: one of "grayscale", "rbg". Default: "rgb". Whether the images will be converted to have 1 or 3 color channels.
-            - __classes__: optional list of class subdirectories (e.g. `['dogs', 'cats']`). Default: None. If not provided, the list of classes will be automatically inferred from the subdirectory names/structure under `directory`, where each subdirectory will be treated as a different class (and the order of the classes, which will map to the label indices, will be alphanumeric). The dictionary containing the mapping from class names to class indices can be obtained via the attribute `class_indices`.
-            - __class_mode__: one of "categorical", "binary", "sparse", "input" or None. Default: "categorical". Determines the type of label arrays that are returned: "categorical" will be 2D one-hot encoded labels, "binary" will be 1D binary labels, "sparse" will be 1D integer labels, "input" will be images identical to input images (mainly used to work with autoencoders). If None, no labels are returned (the generator will only yield batches of image data, which is useful to use `model.predict_generator()`, `model.evaluate_generator()`, etc.). Please note that in case of class_mode None, the data still needs to reside in a subdirectory of `directory` for it to work correctly.
-            - __batch_size__: size of the batches of data (default: 32).
-            - __shuffle__: whether to shuffle the data (default: True)
-            - __seed__: optional random seed for shuffling and transformations.
-            - __save_to_dir__: None or str (default: None). This allows you to optimally specify a directory to which to save the augmented pictures being generated (useful for visualizing what you are doing).
-            - __save_prefix__: str. Prefix to use for filenames of saved pictures (only relevant if `save_to_dir` is set).
-            - __save_format__: one of "png", "jpeg" (only relevant if `save_to_dir` is set). Default: "png".
-            - __follow_links__: whether to follow symlinks inside class subdirectories (default: False).
+    - __cval__: 浮点数或整数。用于边界之外的点的值，当 `fill_mode = "constant"` 时。
+    - __horizontal_flip__: 布尔值。随机水平翻转。
+    - __vertical_flip__: 布尔值。随机垂直翻转。
+    - __rescale__: 重缩放因子。默认为 None。如果是 None 或 0，不进行缩放，否则将数据乘以所提供的值（在应用任何其他转换之前）。
+    - __preprocessing_function__: 应用于每个输入的函数。这个函数会在任何其他改变之前运行。这个函数需要一个参数：一张图像（秩为 3 的 Numpy 张量），并且应该输出一个同尺寸的 Numpy 张量。
+    - __data_format__: {"channels_first", "channels_last"} 之一。"channels_last" 模式表示输入尺寸应该为 `(samples, height, width, channels)`，"channels_first" 模式表示输入尺寸应该为 `(samples, channels, height, width)`。默认为 在 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值。如果你从未设置它，那它就是 "channels_last"。
+- __方法__:
+    - __fit(x)__: 根据一组样本数据，计算与数据相关转换有关的内部数据统计信息。当且仅当 featurewise_center 或 featurewise_std_normalization 或 zca_whitening 时才需要。
+        - __参数__:
+            - __x__: 样本数据。秩应该为 4。在灰度数据的情况下，通道轴的值应该为 1，在 RGB 数据的情况下，它应该为 3。
+            - __augment__: 布尔值（默认 False）。是否使用随机样本增益。
+            - __rounds__: 整数（默认 1）。如果 augment，在数据上进行多少次增益。
+            - __seed__: 整数（默认 None）。随机种子。
+    - __flow(x, y)__: 传入 Numpy 数据和标签数组，生成批次的 增益的/标准化的 数据。在生成的批次数据上无限制地无限次循环。
+        - __参数__:
+            - __x__: 数据。秩应该为 4。在灰度数据的情况下，通道轴的值应该为 1，在 RGB 数据的情况下，它应该为 3。
+            - __y__: 标签。
+            - __batch_size__: 整数（默认 32）。
+            - __shuffle__: 布尔值（默认 True）。
+            - __seed__: 整数（默认 None）。
+            - __save_to_dir__: None 或 字符串（默认 None）。这使你可以最佳地指定正在生成的增强图片要保存的目录（用于可视化你在做什么）。
+            - __save_prefix__: 字符串（默认 `''`）。 保存图片的文件名前缀（仅当 `save_to_dir` 设置时可用）。
+            - __save_format__: "png", "jpeg" 之一（仅当 `save_to_dir` 设置时可用）。默认："png"。
+        - __yields__: 元组 `(x, y)`，其中 `x` 是图像数据的 Numpy 数组，`y` 是相应标签的 Numpy 数组。生成器将无限循环。
+    - __flow_from_directory(directory)__: 以目录路径为参数，生成批次的 增益的/标准化的 数据。在生成的批次数据上无限制地无限次循环。
+        - __参数__:
+            - __directory__: 目标目录的路径。每个类应该包含一个子目录。任何在子目录下的 PNG, JPG, BMP 或 PPM 图像，都将被包含在生成器中。更多细节，详见 [此脚本](https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d)。
+            - __target_size__: 整数元组 `(height, width)`，默认：`(256, 256)`。所有的图像将被调整到的尺寸。
+            - __color_mode__: "grayscale", "rbg" 之一。默认："rgb"。图像是否被转换成1或3个颜色通道。
+            - __classes__: 可选的类的子目录列表（例如 `['dogs', 'cats']`）。默认：None。如果未提供，类的列表将自动从“目录”下的子目录名称/结构中推断出来，其中每个子目录都将被作为不同的类（类名将按字典序映射到标签的索引）。包含从类名到类索引的映射的字典可以通过`class_indices`属性获得。
+            - __class_mode__: "categorical", "binary", "sparse", "input" 或 None 之一。默认："categorical"。决定返回的标签数组的类型："categorical" 将是 2D one-hot 编码标签，"binary" 将是 1D 二进制标签，"sparse" 将是 1D 整数标签，"input" 将是与输入图像相同的图像（主要用于与自动编码器一起工作）。如果为 None，不返回标签（生成器将只产生批量的图像数据，对于 `model.predict_generator()`, `model.evaluate_generator()` 等很有用）。请注意，如果 class_mode 为 None，那么数据仍然需要驻留在 `directory` 的子目录中才能正常工作。
+            - __batch_size__: 一批数据的大小（默认 32）。
+            - __shuffle__: 是否混洗数据（默认 True）。
+            - __seed__: 可选随机种子，用于混洗和转换。
+            - __save_to_dir__: None 或 字符串（默认 None）。这使你可以最佳地指定正在生成的增强图片要保存的目录（用于可视化你在做什么）。
+            - __save_prefix__: 字符串。 保存图片的文件名前缀（仅当 `save_to_dir` 设置时可用）。
+            - __save_format__: "png", "jpeg" 之一（仅当 `save_to_dir` 设置时可用）。默认："png"。
+            - __follow_links__: 是否跟踪类子目录下的符号链接（默认 False）。
 
 
-- __Examples__:
+- __例__:
 
-Example of using `.flow(x, y)`:
+使用 `.flow(x, y)` 的例子：
 
 ```python
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -123,15 +100,15 @@ datagen = ImageDataGenerator(
     height_shift_range=0.2,
     horizontal_flip=True)
 
-# compute quantities required for featurewise normalization
-# (std, mean, and principal components if ZCA whitening is applied)
+# 计算特征归一化所需的数量
+# （如果应用 ZCA 白化，将计算标准差，均值，主成分）
 datagen.fit(x_train)
 
-# fits the model on batches with real-time data augmentation:
+# 使用实时数据增益的批数据对模型进行拟合：
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                     steps_per_epoch=len(x_train) / 32, epochs=epochs)
 
-# here's a more "manual" example
+# 这里有一个更 「手动」的例子
 for e in range(epochs):
     print('Epoch', e)
     batches = 0
@@ -139,12 +116,12 @@ for e in range(epochs):
         model.fit(x_batch, y_batch)
         batches += 1
         if batches >= len(x_train) / 32:
-            # we need to break the loop by hand because
-            # the generator loops indefinitely
-            break
+            # 我们需要手动打破循环，
+            # 因为生成器会无限循环
+            break
 ```
 
-Example of using `.flow_from_directory(directory)`:
+使用 `.flow_from_directory(directory)` 的例子：
 
 ```python
 train_datagen = ImageDataGenerator(
@@ -175,10 +152,10 @@ model.fit_generator(
         validation_steps=800)
 ```
 
-Example of transforming images and masks together.
+同时转换图像和蒙版 (mask) 的例子。
 
 ```python
-# we create two instances with the same arguments
+# 创建两个相同参数的实例
 data_gen_args = dict(featurewise_center=True,
                      featurewise_std_normalization=True,
                      rotation_range=90.,
@@ -188,7 +165,7 @@ data_gen_args = dict(featurewise_center=True,
 image_datagen = ImageDataGenerator(**data_gen_args)
 mask_datagen = ImageDataGenerator(**data_gen_args)
 
-# Provide the same seed and keyword arguments to the fit and flow methods
+# 为 fit 和 flow 函数提供相同的种子和关键字参数
 seed = 1
 image_datagen.fit(images, augment=True, seed=seed)
 mask_datagen.fit(masks, augment=True, seed=seed)
@@ -203,7 +180,7 @@ mask_generator = mask_datagen.flow_from_directory(
     class_mode=None,
     seed=seed)
 
-# combine generators into one which yields image and masks
+# 将生成器组合成一个产生图像和蒙版（mask）的生成器
 train_generator = zip(image_generator, mask_generator)
 
 model.fit_generator(
