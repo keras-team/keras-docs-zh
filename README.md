@@ -1,6 +1,10 @@
 # Chinese (zh-cn) translation of the Keras docs
 
-The `.md` files in `sources/` should be translated in-place.
+请访问 [Keras官方中文文档](https://keras.io/zh/)。
+
+文档持续翻译中，欢迎更多的人加入进来。
+
+翻译过程中，请直接将 `sources/` 中 `.md` 文件中的英文替换为中文。
 
 ## 排版规范 Typesetting
 
