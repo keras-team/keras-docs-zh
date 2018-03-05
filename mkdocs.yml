@@ -1,0 +1,56 @@
+site_name: Keras Documentation (zh)
+theme: readthedocs
+docs_dir: sources
+repo_url: http://github.com/keras-team/keras
+site_url: http://keras.io/
+# theme_dir: ../keras/docs/theme
+site_description: 'Documentation for Keras, the Python Deep Learning library.'
+
+dev_addr: '0.0.0.0:8000'
+google_analytics: ['UA-61785484-1', 'keras.io']
+
+
+pages:
+- Home: index.md
+- 为什么选择Keras?: why-use-keras.md
+- Getting started:
+  - 开始使用 Keras 顺序 (Sequential) 模型: getting-started/sequential-model-guide.md
+  - 开始使用 Keras 函数式 API: getting-started/functional-api-guide.md
+  - FAQ: getting-started/faq.md
+- Models:
+  - 关于Keras模型: models/about-keras-models.md
+  - Sequential 模型 API: models/sequential.md
+  - Model 类 API: models/model.md
+- Layers:
+  - 关于Keras层: layers/about-keras-layers.md
+  - Core Layers: layers/core.md
+  - Convolutional Layers: layers/convolutional.md
+  - Pooling Layers: layers/pooling.md
+  - Locally-connected Layers: layers/local.md
+  - Recurrent Layers: layers/recurrent.md
+  - Embedding Layers: layers/embeddings.md
+  - Merge Layers: layers/merge.md
+  - Advanced Activations Layers: layers/advanced-activations.md
+  - Normalization Layers: layers/normalization.md
+  - Noise layers: layers/noise.md
+  - Layer wrappers: layers/wrappers.md
+  - 编写你自己的Keras层: layers/writing-your-own-keras-layers.md
+- Preprocessing:
+  - Sequence Preprocessing: preprocessing/sequence.md
+  - Text Preprocessing: preprocessing/text.md
+  - Image Preprocessing: preprocessing/image.md
+- Losses: losses.md
+- Metrics: metrics.md
+- Optimizers: optimizers.md
+- Activations: activations.md
+- Callbacks: callbacks.md
+- Datasets: datasets.md
+- Applications: applications.md
+- Backend: backend.md
+- Initializers: initializers.md
+- Regularizers: regularizers.md
+- Constraints: constraints.md
+- Visualization: visualization.md
+- Scikit-learn API: scikit-learn-api.md
+- Utils: utils.md
+- Contributing: contributing.md
