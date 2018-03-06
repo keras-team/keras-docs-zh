@@ -11,46 +11,46 @@ google_analytics: ['UA-61785484-1', 'keras.io']
 
 
 pages:
-- Home: index.md
+- 主页: index.md
 - 为什么选择Keras?: why-use-keras.md
-- Getting started:
+- 快速开始:
   - 开始使用 Keras 顺序 (Sequential) 模型: getting-started/sequential-model-guide.md
   - 开始使用 Keras 函数式 API: getting-started/functional-api-guide.md
   - FAQ: getting-started/faq.md
-- Models:
+- 模型:
   - 关于Keras模型: models/about-keras-models.md
-  - Sequential 模型 API: models/sequential.md
-  - Model 类 API: models/model.md
+  - 序贯模型API: models/sequential.md
+  - 函数式API: models/model.md
 - Layers:
   - 关于Keras层: layers/about-keras-layers.md
-  - Core Layers: layers/core.md
-  - Convolutional Layers: layers/convolutional.md
-  - Pooling Layers: layers/pooling.md
-  - Locally-connected Layers: layers/local.md
-  - Recurrent Layers: layers/recurrent.md
-  - Embedding Layers: layers/embeddings.md
-  - Merge Layers: layers/merge.md
-  - Advanced Activations Layers: layers/advanced-activations.md
-  - Normalization Layers: layers/normalization.md
-  - Noise layers: layers/noise.md
-  - Layer wrappers: layers/wrappers.md
-  - 编写你自己的Keras层: layers/writing-your-own-keras-layers.md
-- Preprocessing:
-  - Sequence Preprocessing: preprocessing/sequence.md
-  - Text Preprocessing: preprocessing/text.md
-  - Image Preprocessing: preprocessing/image.md
-- Losses: losses.md
-- Metrics: metrics.md
-- Optimizers: optimizers.md
-- Activations: activations.md
-- Callbacks: callbacks.md
-- Datasets: datasets.md
-- Applications: applications.md
-- Backend: backend.md
-- Initializers: initializers.md
-- Regularizers: regularizers.md
-- Constraints: constraints.md
-- Visualization: visualization.md
-- Scikit-learn API: scikit-learn-api.md
-- Utils: utils.md
-- Contributing: contributing.md
+  - 常用层Core: layers/core.md
+  - 卷积层Convolutional: layers/convolutional.md
+  - 池化Pooling: layers/pooling.md
+  - 局部连接Locally-connected: layers/local.md
+  - 循环层Recurrent: layers/recurrent.md
+  - 嵌入层Embedding: layers/embeddings.md
+  - 融合层Merge: layers/merge.md
+  - 高级激活层Advanced Activations: layers/advanced-activations.md
+  - 规范层Normalization: layers/normalization.md
+  - 噪声层Noise: layers/noise.md
+  - 包装器wrappers: layers/wrappers.md
+  - 编写你自己的层: layers/writing-your-own-keras-layers.md
+- 数据预处理:
+  - 序列预处理: preprocessing/sequence.md
+  - 文本预处理: preprocessing/text.md
+  - 图片预处理: preprocessing/image.md
+- 损失函数Losses: losses.md
+- 性能评估Metrics: metrics.md
+- 优化器Optimizers: optimizers.md
+- 激活函数Activations: activations.md
+- 回调函数Callbacks: callbacks.md
+- 常用数据库Datasets: datasets.md
+- 预训练模型Applications: applications.md
+- 后端Backend: backend.md
+- 初始化方法Initializers: initializers.md
+- 正则项Regularizers: regularizers.md
+- 约束项Constraints: constraints.md
+- 可视化Visualization: visualization.md
+- Scikit-learn接口: scikit-learn-api.md
+- 工具: utils.md
+- 贡献: contributing.md
