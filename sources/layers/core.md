@@ -88,12 +88,12 @@ __输入尺寸__
 任意尺寸。
 当使用此层作为模型中的第一层时，
 使用参数 `input_shape` 
-（整数元组，不包括样本数的轴）
+（整数元组，不包括样本数的轴）。
 
 
 __输出尺寸__
 
-与输入相同
+与输入相同。
 
 ----
 
@@ -214,41 +214,41 @@ model = Model(x, y)
 keras.layers.Reshape(target_shape)
 ```
 
-Reshapes an output to a certain shape.
+将输入重新调整为特定的尺寸。
 
-__Arguments__
+__参数__
 
-- __target_shape__: target shape. Tuple of integers.
-Does not include the batch axis.
+- __target_shape__: 目标尺寸。整数元组。
+不包含表示批量的轴。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary, although all dimensions in the input shaped must be fixed.
-Use the keyword argument `input_shape`
-(tuple of integers, does not include the batch axis)
-when using this layer as the first layer in a model.
+任意，尽管输入尺寸中的所有维度必须是固定的。
+当使用此层作为模型中的第一层时，
+使用参数 `input_shape` 
+（整数元组，不包括样本数的轴）。
 
-__Output shape__
+__输出尺寸__
 
 `(batch_size,) + target_shape`
 
-__Example__
+__例__
 
 
 ```python
-# as first layer in a Sequential model
+# 作为 Sequential 模型的第一层
 model = Sequential()
 model.add(Reshape((3, 4), input_shape=(12,)))
-# now: model.output_shape == (None, 3, 4)
-# note: `None` is the batch dimension
+# 现在：model.output_shape == (None, 3, 4)
+# 注意： `None` 是批表示的维度
 
-# as intermediate layer in a Sequential model
+# 作为 Sequential 模型的中间层
 model.add(Reshape((6, 2)))
-# now: model.output_shape == (None, 6, 2)
+# 现在： model.output_shape == (None, 6, 2)
 
-# also supports shape inference using `-1` as dimension
+# 还支持使用 `-1` 表示维度的尺寸推断
 model.add(Reshape((-1, 2, 2)))
-# now: model.output_shape == (None, 3, 2, 2)
+# 现在： model.output_shape == (None, 3, 2, 2)
 ```
 
 ----
@@ -260,37 +260,35 @@ model.add(Reshape((-1, 2, 2)))
 keras.layers.Permute(dims)
 ```
 
-Permutes the dimensions of the input according to a given pattern.
+根据给定的模式置换输入的维度。
 
-Useful for e.g. connecting RNNs and convnets together.
+在某些场景下很有用，例如将 RNN 和 CNN 连接在一起。
 
-__Example__
+__例__
 
 
 ```python
 model = Sequential()
 model.add(Permute((2, 1), input_shape=(10, 64)))
-# now: model.output_shape == (None, 64, 10)
-# note: `None` is the batch dimension
+# 现在： model.output_shape == (None, 64, 10)
+# 注意： `None` 是批表示的维度
 ```
 
-__Arguments__
+__参数__
 
-- __dims__: Tuple of integers. Permutation pattern, does not include the
-samples dimension. Indexing starts at 1.
-For instance, `(2, 1)` permutes the first and second dimension
-of the input.
+- __dims__: 整数元组。置换模式，不包含样本维度。
+索引从 1 开始。
+例如, `(2, 1)` 置换输入的第一和第二个维度。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+任意。当使用此层作为模型中的第一层时，
+使用参数 `input_shape` 
+（整数元组，不包括样本数的轴）。
 
-__Output shape__
+__输出尺寸__
 
-Same as the input shape, but with the dimensions re-ordered according
-to the specified pattern.
+与输入尺寸相同，但是维度根据指定的模式重新排列。
 
 ----
 
@@ -301,32 +299,32 @@ to the specified pattern.
 keras.layers.RepeatVector(n)
 ```
 
-Repeats the input n times.
+将输入重复 n 次。
 
-__Example__
+__例__
 
 
 ```python
 model = Sequential()
 model.add(Dense(32, input_dim=32))
-# now: model.output_shape == (None, 32)
-# note: `None` is the batch dimension
+# 现在： model.output_shape == (None, 32)
+# 注意： `None` 是批表示的维度
 
 model.add(RepeatVector(3))
-# now: model.output_shape == (None, 3, 32)
+# 现在： model.output_shape == (None, 3, 32)
 ```
 
-__Arguments__
+__参数__
 
-- __n__: integer, repetition factor.
+- __n__: 整数，重复次数。
 
-__Input shape__
+__输入尺寸__
 
-2D tensor of shape `(num_samples, features)`.
+2D 张量，尺寸为 `(num_samples, features)`。
 
-__Output shape__
+__输出尺寸__
 
-3D tensor of shape `(num_samples, n, features)`.
+3D 张量，尺寸为 `(num_samples, n, features)`。
 
 ----
 
@@ -337,19 +335,18 @@ __Output shape__
 keras.layers.Lambda(function, output_shape=None, mask=None, arguments=None)
 ```
 
-Wraps arbitrary expression as a `Layer` object.
+将任意表达式封装为 `Layer` 对象。
 
-__Examples__
+__例__
 
 
 ```python
-# add a x -> x^2 layer
+# 添加一个 x -> x^2 层
 model.add(Lambda(lambda x: x ** 2))
 ```
 ```python
-# add a layer that returns the concatenation
-# of the positive part of the input and
-# the opposite of the negative part
+# 添加一个网络层，返回输入的正数部分
+# 与负数部分的反面的连接
 
 def antirectifier(x):
     x -= K.mean(x, axis=1, keepdims=True)
@@ -368,34 +365,32 @@ model.add(Lambda(antirectifier,
                  output_shape=antirectifier_output_shape))
 ```
 
-__Arguments__
+__参数__
 
-- __function__: The function to be evaluated.
-Takes input tensor as first argument.
-- __output_shape__: Expected output shape from function.
-Only relevant when using Theano.
-Can be a tuple or function.
-If a tuple, it only specifies the first dimension onward;
-sample dimension is assumed either the same as the input:
+- __function__: 需要封装的函数。
+将输入张量作为第一个参数。
+- __output_shape__: 预期的函数输出尺寸。
+只在使用 Theano 时有意义。
+可以是元组或者函数。
+如果是元组，它只指定第一个维度；
+样本维度假设与输入相同：
 `output_shape = (input_shape[0], ) + output_shape`
-or, the input is `None` and
-the sample dimension is also `None`:
+或者，输入是 `None` 且样本维度也是 `None`：
 `output_shape = (None, ) + output_shape`
-If a function, it specifies the entire shape as a function of the
-input shape: `output_shape = f(input_shape)`
-- __arguments__: optional dictionary of keyword arguments to be passed
-to the function.
+如果是函数，它指定整个尺寸为输入尺寸的一个函数：
+`output_shape = f(input_shape)`
+- __arguments__: 可选的需要传递给函数的关键字参数。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument input_shape
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+任意。当使用此层作为模型中的第一层时，
+使用参数 `input_shape` 
+（整数元组，不包括样本数的轴）。
 
 __Output shape__
 
-Specified by `output_shape` argument
-(or auto-inferred when using TensorFlow).
+由 `output_shape` 参数指定
+(或者在使用 TensorFlow 时，自动推理得到)。
 
 ----
 
@@ -406,22 +401,22 @@ Specified by `output_shape` argument
 keras.layers.ActivityRegularization(l1=0.0, l2=0.0)
 ```
 
-Layer that applies an update to the cost function based input activity.
+网络层，对基于代价函数的输入活动应用一个更新。
 
-__Arguments__
+__参数__
 
-- __l1__: L1 regularization factor (positive float).
-- __l2__: L2 regularization factor (positive float).
+- __l1__: L1 正则化因子 (正数浮点型)。
+- __l2__: L2 正则化因子 (正数浮点型)。
 
-__Input shape__
+__输入尺寸__
 
-Arbitrary. Use the keyword argument `input_shape`
-(tuple of integers, does not include the samples axis)
-when using this layer as the first layer in a model.
+任意。当使用此层作为模型中的第一层时，
+使用参数 `input_shape` 
+（整数元组，不包括样本数的轴）。
 
-__Output shape__
+__输出尺寸__
 
-Same shape as input.
+与输入相同。
 
 ----
 
@@ -432,26 +427,25 @@ Same shape as input.
 keras.layers.Masking(mask_value=0.0)
 ```
 
-Masks a sequence by using a mask value to skip timesteps.
+使用覆盖值覆盖序列，以跳过时间步。
 
-For each timestep in the input tensor (dimension #1 in the tensor),
-if all values in the input tensor at that timestep
-are equal to `mask_value`, then the timestep will be masked (skipped)
-in all downstream layers (as long as they support masking).
+对于输入张量的每一个时间步（张量的第一个维度），
+如果所有时间步中输入张量的值与 `mask_value` 相等，
+那么这个时间步将在所有下游层被覆盖 (跳过)
+（只要它们支持覆盖）。
 
-If any downstream layer does not support masking yet receives such
-an input mask, an exception will be raised.
+如果任何下游层不支持覆盖但仍然收到此类输入覆盖信息，会引发异常。
 
-__Example__
+__例__
 
 
-Consider a Numpy data array `x` of shape `(samples, timesteps, features)`,
-to be fed to an LSTM layer.
-You want to mask timestep #3 and #5 because you lack data for
-these timesteps. You can:
+考虑将要喂入一个 LSTM 层的 Numpy 矩阵 `x`，
+尺寸为 `(samples, timesteps, features)`。
+你想要覆盖时间步 #3 和 #5，因为你缺乏这几个
+时间步的数据。你可以：
 
-- set `x[:, 3, :] = 0.` and `x[:, 5, :] = 0.`
-- insert a `Masking` layer with `mask_value=0.` before the LSTM layer:
+- 设置 `x[:, 3, :] = 0.` 以及 `x[:, 5, :] = 0.`
+- 在 LSTM 层之前，插入一个 `mask_value=0` 的 `Masking` 层：
 
 ```python
 model = Sequential()
