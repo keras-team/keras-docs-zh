@@ -14,7 +14,7 @@ Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [Tensor
 - 同时支持卷积神经网络和循环神经网络，以及两者的组合。
 - 在CPU和GPU上无缝运行与切换。
 
-查看文档，请访问 [Keras.io](https://keras.io)。
+查看文档，请访问 [Keras.io](https://keras.io/zh/)。
 
 Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
@@ -38,7 +38,7 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 ## 快速开始：30秒上手 Keras
 
-Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/getting-started/sequential-model-guide) 模型，它是由多网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
+Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 模型，它是由多网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
 
 `Sequential` 模型如下所示：
 
@@ -101,8 +101,8 @@ classes = model.predict(x_test, batch_size=128)
 
 有关 Keras 更深入的教程，请查看：
 
-- [Sequential 模型入门](https://keras.io/getting-started/sequential-model-guide)
-- [函数式 API 入门](https://keras.io/getting-started/functional-api-guide)
+- [Sequential 模型入门](https://keras.io/zh/getting-started/sequential-model-guide)
+- [函数式 API 入门](https://keras.io/zh/getting-started/functional-api-guide)
 
 在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统，基于栈式 LSTM 的文本生成等等。
 
@@ -122,7 +122,7 @@ classes = model.predict(x_test, batch_size=128)
 
 - cuDNN (如果你计划在 GPU 上运行 Keras，建议安装)。
 - HDF5 和 h5py (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
-- graphviz 和 pydot (被[可视化工具](https://keras.io/visualization/)用来绘制模型图)。
+- graphviz 和 pydot (被[可视化工具](https://keras.io/zh/visualization/)用来绘制模型图)。
 
 然后你就可以安装 Keras 本身了。有两种方法安装 Keras：
 
@@ -158,7 +158,7 @@ sudo python setup.py install
 
 ## 从 TensorFlow 切换到 CNTK 或 Theano
 
-默认情况下，Keras 将使用 TensorFlow 作为张量操作库。请[跟随这些指引](https://keras.io/backend/)来配置其他 Keras 后端。
+默认情况下，Keras 将使用 TensorFlow 作为张量操作库。请[跟随这些指引](https://keras.io/zh/backend/)来配置其他 Keras 后端。
 
 ------------------
 

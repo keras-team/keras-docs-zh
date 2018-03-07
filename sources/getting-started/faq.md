@@ -127,7 +127,7 @@ with tf.device_scope('/cpu:0'):
   - 一个 **batch** 的样本通常比单个输入更接近于总体输入数据的分布，batch 越大就越近似。然而，每个 batch 将花费更长的时间来处理，并且仍然只更新模型一次。在推理（评估/预测）时，建议条件允许的情况下选择一个尽可能大的 batch，（因为较大的 batch 通常评估/预测的速度会更快）。 
 - **Epoch**: 轮次，通常被定义为 「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
   - 当在 Keras 模型的 `fit` 方法中使用 `evaluation_data` 或 `evaluation_split` 时，评估将在每个 **epoch** 结束时运行。
-  - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](https://keras.io/callbacks/)。例如学习率变化和模型检查点（保存）。
+  - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](https://keras.io/zh/callbacks/)。例如学习率变化和模型检查点（保存）。
  
 ---
 
@@ -239,7 +239,7 @@ from keras.models import load_model
 model = load_model('my_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
 ```
 
-或者，你可以使用 [自定义对象作用域](https://keras.io/utils/#customobjectscope)：
+或者，你可以使用 [自定义对象作用域](https://keras.io/zh/utils/#customobjectscope)：
 
 ```python
 from keras.utils import CustomObjectScope
