@@ -1,10 +1,10 @@
-site_name: Keras Documentation (zh)
+site_name: Keras 中文文档
 theme: readthedocs
 docs_dir: sources
 repo_url: https://github.com/keras-team/keras-docs-zh
 site_url: http://keras.io/zh/
 # theme_dir: ../keras/docs/theme
-site_description: 'Documentation for Keras, the Python Deep Learning library.'
+site_description: 'Keras，Python 深度学习库中文文档。'
 
 dev_addr: '0.0.0.0:8000'
 google_analytics: ['UA-61785484-1', 'keras.io']
