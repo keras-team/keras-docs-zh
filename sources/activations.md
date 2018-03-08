@@ -156,4 +156,4 @@ linear(x)
 
 ## 高级激活函数
 
-对于简单的Theano/TensorFlow/CNTK不能表达的复杂激活函数，如含有可学习参数的激活函数，可通过[高级激活函数](layers/advanced-activations.md)实现，如PReLU，LeakyReLU等
+对于Theano/TensorFlow/CNTK不能表达的复杂激活函数，如含有可学习参数的激活函数，可通过[高级激活函数](layers/advanced-activations.md)实现，如PReLU，LeakyReLU等
