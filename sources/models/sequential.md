@@ -1,4 +1,4 @@
-# Sequential 模型 API
+# Sequential 顺序模型 API
 
 在阅读这片文档前，请先阅读 [Keras Sequential 模型指引](/getting-started/sequential-model-guide)。
 
