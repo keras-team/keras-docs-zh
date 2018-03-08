@@ -19,7 +19,7 @@ pages:
   - FAQ: getting-started/faq.md
 - 模型:
   - 关于Keras模型: models/about-keras-models.md
-  - 序贯模型API: models/sequential.md
+  - 顺序(Sequential)模型API: models/sequential.md
   - 函数式API: models/model.md
 - Layers:
   - 关于Keras层: layers/about-keras-layers.md
@@ -33,7 +33,7 @@ pages:
   - 高级激活层Advanced Activations: layers/advanced-activations.md
   - 规范层Normalization: layers/normalization.md
   - 噪声层Noise: layers/noise.md
-  - 包装器wrappers: layers/wrappers.md
+  - 封装器wrappers: layers/wrappers.md
   - 编写你自己的层: layers/writing-your-own-keras-layers.md
 - 数据预处理:
   - 序列预处理: preprocessing/sequence.md
