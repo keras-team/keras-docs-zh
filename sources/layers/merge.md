@@ -5,13 +5,13 @@
 keras.layers.Add()
 ```
 
-Layer that adds a list of inputs.
+计算一个列表的输入张量的和。
 
-It takes as input a list of tensors,
-all of the same shape, and returns
-a single tensor (also of the same shape).
+相加层接受一个列表的张量，
+所有的张量必须有相同的输入尺寸，
+然后返回一个张量（和输入张量尺寸相同）。
 
-__Examples__
+__例子__
 
 
 ```python
@@ -21,7 +21,7 @@ input1 = keras.layers.Input(shape=(16,))
 x1 = keras.layers.Dense(8, activation='relu')(input1)
 input2 = keras.layers.Input(shape=(32,))
 x2 = keras.layers.Dense(8, activation='relu')(input2)
-added = keras.layers.Add()([x1, x2])  # equivalent to added = keras.layers.add([x1, x2])
+added = keras.layers.Add()([x1, x2])  # 相当于 added = keras.layers.add([x1, x2])
 
 out = keras.layers.Dense(4)(added)
 model = keras.models.Model(inputs=[input1, input2], outputs=out)
@@ -36,13 +36,13 @@ model = keras.models.Model(inputs=[input1, input2], outputs=out)
 keras.layers.Subtract()
 ```
 
-Layer that subtracts two inputs.
+计算两个输入张量的差。
 
-It takes as input a list of tensors of size 2,
-both of the same shape, and returns a single tensor, (inputs[0] - inputs[1]),
-also of the same shape.
+相减层接受一个长度为 2 的张量列表，
+两个张量必须有相同的尺寸，然后返回一个值为 (inputs[0] - inputs[1]) 的张量，
+输出张量和输入张量尺寸相同。
 
-__Examples__
+__例子__
 
 
 ```python
@@ -52,7 +52,7 @@ input1 = keras.layers.Input(shape=(16,))
 x1 = keras.layers.Dense(8, activation='relu')(input1)
 input2 = keras.layers.Input(shape=(32,))
 x2 = keras.layers.Dense(8, activation='relu')(input2)
-# Equivalent to subtracted = keras.layers.subtract([x1, x2])
+# 相当于 subtracted = keras.layers.subtract([x1, x2])
 subtracted = keras.layers.Subtract()([x1, x2])
 
 out = keras.layers.Dense(4)(subtracted)
@@ -68,11 +68,11 @@ model = keras.models.Model(inputs=[input1, input2], outputs=out)
 keras.layers.Multiply()
 ```
 
-Layer that multiplies (element-wise) a list of inputs.
+计算一个列表的输入张量的（逐元素间的）乘积。
 
-It takes as input a list of tensors,
-all of the same shape, and returns
-a single tensor (also of the same shape).
+相乘层接受一个列表的张量，
+所有的张量必须有相同的输入尺寸，
+然后返回一个张量（和输入张量尺寸相同）。
 
 ----
 
@@ -83,11 +83,11 @@ a single tensor (also of the same shape).
 keras.layers.Average()
 ```
 
-Layer that averages a list of inputs.
+计算一个列表的输入张量的平均值。
 
-It takes as input a list of tensors,
-all of the same shape, and returns
-a single tensor (also of the same shape).
+平均层接受一个列表的张量，
+所有的张量必须有相同的输入尺寸，
+然后返回一个张量（和输入张量尺寸相同）。
 
 ----
 
@@ -98,11 +98,11 @@ a single tensor (also of the same shape).
 keras.layers.Maximum()
 ```
 
-Layer that computes the maximum (element-wise) a list of inputs.
+计算一个列表的输入张量的（逐元素间的）最大值。
 
-It takes as input a list of tensors,
-all of the same shape, and returns
-a single tensor (also of the same shape).
+最大层接受一个列表的张量，
+所有的张量必须有相同的输入尺寸，
+然后返回一个张量（和输入张量尺寸相同）。
 
 ----
 
@@ -113,16 +113,16 @@ a single tensor (also of the same shape).
 keras.layers.Concatenate(axis=-1)
 ```
 
-Layer that concatenates a list of inputs.
+串联一个列表的输入张量。
 
-It takes as input a list of tensors,
-all of the same shape except for the concatenation axis,
-and returns a single tensor, the concatenation of all inputs.
+串联层接受一个列表的张量，
+除了串联轴之外，其他的尺寸都必须相同，
+然后返回一个由所有输入张量串联起来的输出张量。
 
-__Arguments__
+__参数__
 
-- __axis__: Axis along which to concatenate.
-- __**kwargs__: standard layer keyword arguments.
+- __axis__: 串联的轴。
+- __**kwargs__: 层关键字参数。
 
 ----
 
@@ -133,22 +133,19 @@ __Arguments__
 keras.layers.Dot(axes, normalize=False)
 ```
 
-Layer that computes a dot product between samples in two tensors.
+计算两个张量之间样本的点积。
 
-E.g. if applied to two tensors `a` and `b` of shape `(batch_size, n)`,
-the output will be a tensor of shape `(batch_size, 1)`
-where each entry `i` will be the dot product between
-`a[i]` and `b[i]`.
+例如，如果作用于输入尺寸为 `(batch_size, n)` 的两个张量 `a` 和 `b`，
+那么输出结果就会是尺寸为 `(batch_size, 1)` 的一个张量。
+在这个张量中，每一个条目 `i` 是 `a[i]` 和 `b[i]` 之间的点积。
 
-__Arguments__
+__参数__
 
-- __axes__: Integer or tuple of integers,
-axis or axes along which to take the dot product.
-- __normalize__: Whether to L2-normalize samples along the
-dot product axis before taking the dot product.
-If set to True, then the output of the dot product
-is the cosine proximity between the two samples.
-- __**kwargs__: Standard layer keyword arguments.
+- __axes__: 整数或者整数元组，
+一个或者几个进行点积的轴。
+- __normalize__: 是否在点积之前对即将进行点积的轴进行 L2 标准化。
+如果设置成 True，那么输出两个样本之间的余弦相似值。
+- __**kwargs__: 层关键字参数。
 
 ----
 
@@ -159,19 +156,18 @@ is the cosine proximity between the two samples.
 keras.layers.add(inputs)
 ```
 
+`Add` 层的函数式接口。
 
-Functional interface to the `Add` layer.
+__参数__
 
-__Arguments__
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __**kwargs__: 层关键字参数。
 
-- __inputs__: A list of input tensors (at least 2).
-- __**kwargs__: Standard layer keyword arguments.
+__返回__
 
-__Returns__
+一个张量，所有输入张量的和。
 
-A tensor, the sum of the inputs.
-
-__Examples__
+__例子__
 
 
 ```python
@@ -196,19 +192,18 @@ model = keras.models.Model(inputs=[input1, input2], outputs=out)
 keras.layers.subtract(inputs)
 ```
 
+`Subtract` 层的函数式接口。
 
-Functional interface to the `Subtract` layer.
+__参数__
 
-__Arguments__
+- __inputs__: 一个列表的输入张量（列表大小准确为 2）。
+- __**kwargs__: 层的关键字参数。
 
-- __inputs__: A list of input tensors (exactly 2).
-- __**kwargs__: Standard layer keyword arguments.
+__返回__
 
-__Returns__
+一个张量，两个输入张量的差。
 
-A tensor, the difference of the inputs.
-
-__Examples__
+__例子__
 
 
 ```python
@@ -234,16 +229,16 @@ keras.layers.multiply(inputs)
 ```
 
 
-Functional interface to the `Multiply` layer.
+`Multiply` 层的函数式接口。
 
-__Arguments__
+__参数__
 
-- __inputs__: A list of input tensors (at least 2).
-- __**kwargs__: Standard layer keyword arguments.
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __**kwargs__: 层的关键字参数。
 
-__Returns__
+__返回__
 
-A tensor, the element-wise product of the inputs.
+一个张量，所有输入张量的逐元素乘积。
 
 ----
 
@@ -255,16 +250,16 @@ keras.layers.average(inputs)
 ```
 
 
-Functional interface to the `Average` layer.
+`Average` 层的函数式接口。
 
-__Arguments__
+__参数__
 
-- __inputs__: A list of input tensors (at least 2).
-- __**kwargs__: Standard layer keyword arguments.
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __**kwargs__: 层的关键字参数。
 
-__Returns__
+__返回__
 
-A tensor, the average of the inputs.
+一个张量，所有输入张量的平均值。
 
 ----
 
@@ -275,17 +270,16 @@ A tensor, the average of the inputs.
 keras.layers.maximum(inputs)
 ```
 
+`Maximum` 层的函数式接口。
 
-Functional interface to the `Maximum` layer.
+__参数__
 
-__Arguments__
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __**kwargs__: 层的关键字参数。
 
-- __inputs__: A list of input tensors (at least 2).
-- __**kwargs__: Standard layer keyword arguments.
+__返回__
 
-__Returns__
-
-A tensor, the element-wise maximum of the inputs.
+一个张量，所有张量的逐元素的最大值。
 
 ----
 
@@ -297,17 +291,17 @@ keras.layers.concatenate(inputs, axis=-1)
 ```
 
 
-Functional interface to the `Concatenate` layer.
+`Concatenate` 层的函数式接口。
 
-__Arguments__
+__参数__
 
-- __inputs__: A list of input tensors (at least 2).
-- __axis__: Concatenation axis.
-- __**kwargs__: Standard layer keyword arguments.
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __axis__: 串联的轴。
+- __**kwargs__: 层的关键字参数。
 
-__Returns__
+__返回__
 
-A tensor, the concatenation of the inputs alongside axis `axis`.
+一个张量，所有输入张量通过 `axis` 轴串联起来的输出张量。
 
 ----
 
@@ -319,19 +313,17 @@ keras.layers.dot(inputs, axes, normalize=False)
 ```
 
 
-Functional interface to the `Dot` layer.
+`Dot` 层的函数式接口。
 
-__Arguments__
+__参数__
 
-- __inputs__: A list of input tensors (at least 2).
-- __axes__: Integer or tuple of integers,
-axis or axes along which to take the dot product.
-- __normalize__: Whether to L2-normalize samples along the
-dot product axis before taking the dot product.
-If set to True, then the output of the dot product
-is the cosine proximity between the two samples.
-- __**kwargs__: Standard layer keyword arguments.
+- __inputs__: 一个列表的输入张量（列表大小至少为 2）。
+- __axes__: 整数或者整数元组，
+一个或者几个进行点积的轴。
+- __normalize__: 是否在点积之前对即将进行点积的轴进行 L2 标准化。
+如果设置成 True，那么输出两个样本之间的余弦相似值。
+- __**kwargs__: 层的关键字参数。
 
-__Returns__
+__返回__
 
-A tensor, the dot product of the samples from the inputs.
+一个张量，所有输入张量样本之间的点积。
