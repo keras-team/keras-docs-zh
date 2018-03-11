@@ -5,23 +5,24 @@
 keras.layers.MaxPooling1D(pool_size=2, strides=None, padding='valid')
 ```
 
-Max pooling operation for temporal data.
+对于时序数据的最大池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: Integer, size of the max pooling windows.
-- __strides__: Integer, or None. Factor by which to downscale.
-E.g. 2 will halve the input.
-If None, it will default to `pool_size`.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
+- __pool_size__: 整数，最大池化的窗口大小。
+- __strides__: 整数，或者是 `None`。作为缩小比例的因数。
+例如，2 会使得输入张量缩小一半。
+如果是 `None`，那么默认值是 `pool_size`。
+- __padding__: `"valid"` 或者 `"same"` （区分大小写）。
 
-__Input shape__
 
-3D tensor with shape: `(batch_size, steps, features)`.
+__输入尺寸__
 
-__Output shape__
+尺寸是 `(batch_size, steps, features)` 的 3D 张量。
 
-3D tensor with shape: `(batch_size, downsampled_steps, features)`.
+__输出尺寸__
+
+尺寸是 `(batch_size, downsampled_steps, features)` 的 3D 张量。
 
 ----
 
@@ -32,47 +33,35 @@ __Output shape__
 keras.layers.MaxPooling2D(pool_size=(2, 2), strides=None, padding='valid', data_format=None)
 ```
 
-Max pooling operation for spatial data.
+对于空域数据的最大池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: integer or tuple of 2 integers,
-factors by which to downscale (vertical, horizontal).
-(2, 2) will halve the input in both spatial dimension.
-If only one integer is specified, the same window length
-will be used for both dimensions.
-- __strides__: Integer, tuple of 2 integers, or None.
-Strides values.
-If None, it will default to `pool_size`.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, height, width, channels)` while `channels_first`
-corresponds to inputs with shape
-`(batch, channels, height, width)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __pool_size__: 整数，或者 2 个整数元组，（垂直方向，水平方向）缩小比例的因数。（2，2）会把输入张量的两个维度都缩小一半。
+如果只使用一个整数，那么两个维度都会使用同样的窗口长度。
+- __strides__: 整数，整数元组或者是 `None`。
+步长值。
+如果是 `None`，那么默认值是 `pool_size`。
+- __padding__: `"valid"` 或者 `"same"` （区分大小写）。
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, height, width, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, height, width)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, rows, cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, rows, cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, rows, cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, rows, cols)` 的 4D 张量
 
-__Output shape__
+__输出尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, pooled_rows, pooled_cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, pooled_rows, pooled_cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, pooled_rows, pooled_cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, pooled_rows, pooled_cols)` 的 4D 张量
 
 ----
 
@@ -83,43 +72,34 @@ __Output shape__
 keras.layers.MaxPooling3D(pool_size=(2, 2, 2), strides=None, padding='valid', data_format=None)
 ```
 
-Max pooling operation for 3D data (spatial or spatio-temporal).
+对于 3D（空域，或时空域）数据的最大池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: tuple of 3 integers,
-factors by which to downscale (dim1, dim2, dim3).
-(2, 2, 2) will halve the size of the 3D input in each dimension.
-- __strides__: tuple of 3 integers, or None. Strides values.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)`
-while `channels_first` corresponds to inputs with shape
-`(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __pool_size__: 3 个整数的元组，缩小（维度 1，维度 2，维度 3）比例的因数。
+(2, 2, 2) 会把 3D 输入张量的每个维度缩小一半。
+- __strides__: 3 个整数的元组，或者是 `None`。步长值。
+- __padding__: `"valid"` 或者 `"same"`（区分大小写）。
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的输入张量，
+而 `channels_first` 代表尺寸是 `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-5D tensor with shape:
-`(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)`
-- If `data_format='channels_first'`:
-5D tensor with shape:
-`(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的 5D 张量
 
-__Output shape__
+__输出尺寸__
 
-- If `data_format='channels_last'`:
-5D tensor with shape:
-`(batch_size, pooled_dim1, pooled_dim2, pooled_dim3, channels)`
-- If `data_format='channels_first'`:
-5D tensor with shape:
-`(batch_size, channels, pooled_dim1, pooled_dim2, pooled_dim3)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, pooled_dim1, pooled_dim2, pooled_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, pooled_dim1, pooled_dim2, pooled_dim3)` 的 5D 张量
 
 ----
 
@@ -130,23 +110,23 @@ __Output shape__
 keras.layers.AveragePooling1D(pool_size=2, strides=None, padding='valid')
 ```
 
-Average pooling for temporal data.
+对于时序数据的平均池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: Integer, size of the max pooling windows.
-- __strides__: Integer, or None. Factor by which to downscale.
-E.g. 2 will halve the input.
-If None, it will default to `pool_size`.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
+- __pool_size__: 整数，平均池化的窗口大小。
+- __strides__: 整数，或者是 `None	`。作为缩小比例的因数。
+例如，2 会使得输入张量缩小一半。
+如果是 `None`，那么默认值是 `pool_size`。
+- __padding__: `"valid"` 或者 `"same"` （区分大小写）。
 
-__Input shape__
+__输入尺寸__
 
-3D tensor with shape: `(batch_size, steps, features)`.
+尺寸是 `(batch_size, steps, features)` 的 3D 张量。
 
-__Output shape__
+__输出尺寸__
 
-3D tensor with shape: `(batch_size, downsampled_steps, features)`.
+尺寸是 `(batch_size, downsampled_steps, features)` 的 3D 张量。
 
 ----
 
@@ -157,47 +137,35 @@ __Output shape__
 keras.layers.AveragePooling2D(pool_size=(2, 2), strides=None, padding='valid', data_format=None)
 ```
 
-Average pooling operation for spatial data.
+对于空域数据的平均池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: integer or tuple of 2 integers,
-factors by which to downscale (vertical, horizontal).
-(2, 2) will halve the input in both spatial dimension.
-If only one integer is specified, the same window length
-will be used for both dimensions.
-- __strides__: Integer, tuple of 2 integers, or None.
-Strides values.
-If None, it will default to `pool_size`.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, height, width, channels)` while `channels_first`
-corresponds to inputs with shape
-`(batch, channels, height, width)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __pool_size__: 整数，或者 2 个整数元组，（垂直方向，水平方向）缩小比例的因数。（2，2）会把输入张量的两个维度都缩小一半。
+如果只使用一个整数，那么两个维度都会使用同样的窗口长度。
+- __strides__: 整数，整数元组或者是 `None`。
+步长值。
+如果是 `None`，那么默认值是 `pool_size`。
+- __padding__: `"valid"` 或者 `"same"` （区分大小写）。
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, height, width, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, height, width)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, rows, cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, rows, cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, rows, cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, rows, cols)` 的 4D 张量
 
-__Output shape__
+__输出尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, pooled_rows, pooled_cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, pooled_rows, pooled_cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, pooled_rows, pooled_cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, pooled_rows, pooled_cols)` 的 4D 张量
 
 ----
 
@@ -208,43 +176,34 @@ __Output shape__
 keras.layers.AveragePooling3D(pool_size=(2, 2, 2), strides=None, padding='valid', data_format=None)
 ```
 
-Average pooling operation for 3D data (spatial or spatio-temporal).
+对于 3D （空域，或者时空域）数据的平均池化。
 
-__Arguments__
+__参数__
 
-- __pool_size__: tuple of 3 integers,
-factors by which to downscale (dim1, dim2, dim3).
-(2, 2, 2) will halve the size of the 3D input in each dimension.
-- __strides__: tuple of 3 integers, or None. Strides values.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)`
-while `channels_first` corresponds to inputs with shape
-`(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __pool_size__: 3 个整数的元组，缩小（维度 1，维度 2，维度 3）比例的因数。
+(2, 2, 2) 会把 3D 输入张量的每个维度缩小一半。
+- __strides__: 3 个整数的元组，或者是 `None`。步长值。
+- __padding__: `"valid"` 或者 `"same"`（区分大小写）。
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的输入张量，
+而 `channels_first` 代表尺寸是 `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-5D tensor with shape:
-`(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)`
-- If `data_format='channels_first'`:
-5D tensor with shape:
-`(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的 5D 张量
 
-__Output shape__
+__输出尺寸__
 
-- If `data_format='channels_last'`:
-5D tensor with shape:
-`(batch_size, pooled_dim1, pooled_dim2, pooled_dim3, channels)`
-- If `data_format='channels_first'`:
-5D tensor with shape:
-`(batch_size, channels, pooled_dim1, pooled_dim2, pooled_dim3)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, pooled_dim1, pooled_dim2, pooled_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, pooled_dim1, pooled_dim2, pooled_dim3)` 的 5D 张量
 
 ----
 
@@ -255,16 +214,15 @@ __Output shape__
 keras.layers.GlobalMaxPooling1D()
 ```
 
-Global max pooling operation for temporal data.
+对于时序数据的全局最大池化。
 
-__Input shape__
+__输入尺寸__
 
-3D tensor with shape: `(batch_size, steps, features)`.
+尺寸是 `(batch_size, steps, features)` 的 3D 张量。
 
-__Output shape__
+__输出尺寸__
 
-2D tensor with shape:
-`(batch_size, features)`
+尺寸是 `(batch_size, features)` 的 2D 张量。
 
 ----
 
@@ -275,16 +233,15 @@ __Output shape__
 keras.layers.GlobalAveragePooling1D()
 ```
 
-Global average pooling operation for temporal data.
+对于时序数据的全局平均池化。
 
-__Input shape__
+__输入尺寸__
 
-3D tensor with shape: `(batch_size, steps, features)`.
+尺寸是 `(batch_size, steps, features)` 的 3D 张量。
 
-__Output shape__
+__输出尺寸__
 
-2D tensor with shape:
-`(batch_size, features)`
+尺寸是 `(batch_size, features)` 的 2D 张量。
 
 ----
 
@@ -295,34 +252,26 @@ __Output shape__
 keras.layers.GlobalMaxPooling2D(data_format=None)
 ```
 
-Global max pooling operation for spatial data.
+对于空域数据的全局最大池化。
 
-__Arguments__
+__参数__
 
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, height, width, channels)` while `channels_first`
-corresponds to inputs with shape
-`(batch, channels, height, width)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, height, width, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, height, width)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, rows, cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, rows, cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, rows, cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, rows, cols)` 的 4D 张量
 
-__Output shape__
+__输出尺寸__
 
-2D tensor with shape:
-`(batch_size, channels)`
+尺寸是 `(batch_size, channels)` 的 2D 张量
 
 ----
 
@@ -333,31 +282,23 @@ __Output shape__
 keras.layers.GlobalAveragePooling2D(data_format=None)
 ```
 
-Global average pooling operation for spatial data.
+对于空域数据的全局平均池化。
 
-__Arguments__
+__参数__
 
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, height, width, channels)` while `channels_first`
-corresponds to inputs with shape
-`(batch, channels, height, width)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, height, width, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, height, width)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
 
-__Input shape__
+__输入尺寸__
 
-- If `data_format='channels_last'`:
-4D tensor with shape:
-`(batch_size, rows, cols, channels)`
-- If `data_format='channels_first'`:
-4D tensor with shape:
-`(batch_size, channels, rows, cols)`
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, rows, cols, channels)` 的 4D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, rows, cols)` 的 4D 张量
 
-__Output shape__
+__输出尺寸__
 
-2D tensor with shape:
-`(batch_size, channels)`
+尺寸是 `(batch_size, channels)` 的 2D 张量
