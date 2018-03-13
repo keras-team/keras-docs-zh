@@ -17,7 +17,7 @@ keras.preprocessing.text.text_to_word_sequence(text,
   - __filters__: 需要过滤掉的字符列表（或连接）。
   默认：<code>!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n</code>，
   包含基本标点符号、制表符、换行符。
-  - __lower__: 布尔值。是否将文本转换为消协。
+  - __lower__: 布尔值。是否将文本转换为小写。
   - __split__: 字符串。词的分隔符。
 
 ## one_hot
@@ -71,7 +71,7 @@ keras.preprocessing.text.hashing_trick(text,
   - __filters__: 需要过滤掉的字符列表（或连接）。
   默认：<code>!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n</code>，
   包含基本标点符号、制表符、换行符。
-  - __lower__: 布尔值。是否将文本转换为消协。
+  - __lower__: 布尔值。是否将文本转换为小写。
   - __split__: 字符串。词的分隔符。
 
 ## Tokenizer
