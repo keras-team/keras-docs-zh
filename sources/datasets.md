@@ -1,10 +1,10 @@
-# Datasets
+# 数据集
 
-## CIFAR10 small image classification
+## CIFAR10 小图像分类数据集
 
-Dataset of 50,000 32x32 color training images, labeled over 10 categories, and 10,000 test images.
+50,000 张 32x32 彩色训练图像数据，以及 10,000 张测试图像数据，总共分为 10 个类别。
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import cifar10
@@ -12,19 +12,19 @@ from keras.datasets import cifar10
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 ```
 
-- __Returns:__
-    - 2 tuples:
-        - __x_train, x_test__: uint8 array of RGB image data with shape (num_samples, 3, 32, 32).
-        - __y_train, y_test__: uint8 array of category labels (integers in range 0-9) with shape (num_samples,).
+- __返回：__
+  - 2 个元组：
+    - __x_train, x_test__: uint8 数组表示的 RGB 图像数据，尺寸为 (num_samples, 3, 32, 32)。
+    - __y_train, y_test__: uint8 数组表示的类别标签（范围在 0-9 之间的整数），尺寸为 (num_samples,)。
 
 
 ---
 
-## CIFAR100 small image classification
+## CIFAR100 小图像分类数据集
 
-Dataset of 50,000 32x32 color training images, labeled over 100 categories, and 10,000 test images.
+50,000 张 32x32 彩色训练图像数据，以及 10,000 张测试图像数据，总共分为 100 个类别。
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import cifar100
@@ -32,25 +32,24 @@ from keras.datasets import cifar100
 (x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
 ```
 
-- __Returns:__
-    - 2 tuples:
-        - __x_train, x_test__: uint8 array of RGB image data with shape (num_samples, 3, 32, 32).
-        - __y_train, y_test__: uint8 array of category labels with shape (num_samples,).
+- __返回：__
+  - 2 个元组：
+    - __x_train, x_test__: uint8 数组表示的 RGB 图像数据，尺寸为 (num_samples, 3, 32, 32)。
+    - __y_train, y_test__: uint8 数组表示的类别标签（范围在 0-9 之间的整数），尺寸为 (num_samples,)。
 
-- __Arguments:__
-
-    - __label_mode__: "fine" or "coarse".
+- __参数：__
+  - __label_mode__: "fine" 或者 "coarse"
 
 
 ---
 
-## IMDB Movie reviews sentiment classification
+## IMDB 电影评论情感分类数据集
 
-Dataset of 25,000 movies reviews from IMDB, labeled by sentiment (positive/negative). Reviews have been preprocessed, and each review is encoded as a [sequence](preprocessing/sequence.md) of word indexes (integers). For convenience, words are indexed by overall frequency in the dataset, so that for instance the integer "3" encodes the 3rd most frequent word in the data. This allows for quick filtering operations such as: "only consider the top 10,000 most common words, but eliminate the top 20 most common words".
+数据集来自 IMDB 的 25,000 条电影评论，以情绪（正面/负面）标记。每一条评论已经过预处理，并编码为词索引（整数）的[序列](preprocessing/sequence.md)表示。为了方便起见，将词按数据集中出现的频率进行索引，例如整数 3 编码数据中第三个最频繁的词。这允许快速筛选操作，例如：「只考虑前 10,000 个最常用的词，但排除前 20 个最常见的词」。
 
-As a convention, "0" does not stand for a specific word, but instead is used to encode any unknown word.
+作为惯例，0 不代表特定的单词，而是被用于编码任何未知单词。
 
-### Usage:
+### 用法
 
 ```python
 from keras.datasets import imdb
@@ -64,32 +63,29 @@ from keras.datasets import imdb
                                                       oov_char=2,
                                                       index_from=3)
 ```
-- __Returns:__
-    - 2 tuples:
-        - __x_train, x_test__: list of sequences, which are lists of indexes (integers). If the num_words argument was specific, the maximum possible index value is num_words-1. If the maxlen argument was specified, the largest possible sequence length is maxlen.
-        - __y_train, y_test__: list of integer labels (1 or 0). 
+- __返回：__
+  - 2 个元组：
+    - __x_train, x_test__: 序列的列表，即词索引的列表。如果指定了 `num_words` 参数，则可能的最大索引值是 `num_words-1`。如果指定了 `maxlen` 参数，则可能的最大序列长度为 `maxlen`。 
+    - __y_train, y_test__: 整数标签列表 (1 或 0)。
 
-- __Arguments:__
-
-    - __path__: if you do not have the data locally (at `'~/.keras/datasets/' + path`), it will be downloaded to this location.
-    - __num_words__: integer or None. Top most frequent words to consider. Any less frequent word will appear as `oov_char` value in the sequence data.
-    - __skip_top__: integer. Top most frequent words to ignore (they will appear as `oov_char` value in the sequence data).
-    - __maxlen__: int. Maximum sequence length. Any longer sequence will be truncated.
-    - __seed__: int. Seed for reproducible data shuffling.
-    - __start_char__: int. The start of a sequence will be marked with this character.
-        Set to 1 because 0 is usually the padding character.
-    - __oov_char__: int. words that were cut out because of the `num_words`
-        or `skip_top` limit will be replaced with this character.
-    - __index_from__: int. Index actual words with this index and higher.
+- __参数:__
+  - __path__: 如果你本地没有该数据集 (在 `'~/.keras/datasets/' + path`)，它将被下载到此目录。
+  - __num_words__: 整数或 None。要考虑的最常用的词语。任何不太频繁的词将在序列数据中显示为 `oov_char` 值。
+  - __skip_top__: 整数。要忽略的最常见的单词（它们将在序列数据中显示为 `oov_char` 值）。
+  - __maxlen__: 整数。最大序列长度。 任何更长的序列都将被截断。
+  - __seed__: 整数。用于可重现数据混洗的种子。
+  - __start_char__: 整数。序列的开始将用这个字符标记。设置为 1，因为 0 通常作为填充字符。
+  - __oov_char__: 整数。由于 `num_words` 或 `skip_top` 限制而被删除的单词将被替换为此字符。
+  - __index_from__: 整数。使用此数以上更高的索引值实际词汇索引的开始。
 
 
 ---
 
-## Reuters newswire topics classification
+## 路透社新闻主题分类
 
-Dataset of 11,228 newswires from Reuters, labeled over 46 topics. As with the IMDB dataset, each wire is encoded as a sequence of word indexes (same conventions).
+数据集来源于路透社的 11,228 条新闻文本，总共分为 46 个主题。与 IMDB 数据集一样，每条新闻都被编码为一个词索引的序列（相同的约定）。
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import reuters
@@ -105,30 +101,28 @@ from keras.datasets import reuters
                                                          index_from=3)
 ```
 
-The specifications are the same as that of the IMDB dataset, with the addition of:
+规格与 IMDB 数据集的规格相同，但增加了：
 
-- __test_split__: float. Fraction of the dataset to be used as test data.
+- __test_split__: 浮点型。用作测试集的数据比例。
 
-This dataset also makes available the word index used for encoding the sequences:
+该数据集还提供了用于编码序列的词索引：
 
 ```python
 word_index = reuters.get_word_index(path="reuters_word_index.json")
 ```
 
-- __Returns:__ A dictionary where key are words (str) and values are indexes (integer). eg. `word_index["giraffe"]` might return `1234`. 
+- __返回：__ 一个字典，其中键是单词（字符串），值是索引（整数）。 例如，`word_index["giraffe"]` 可能会返回 `1234`。
 
-- __Arguments:__
-
-    - __path__: if you do not have the index file locally (at `'~/.keras/datasets/' + path`), it will be downloaded to this location.
-    
+- __参数：__
+  - __path__: 如果在本地没有索引文件 (at `'~/.keras/datasets/' + path`), 它将被下载到该目录。
 
 ---
 
-## MNIST database of handwritten digits
+## MNIST 手写字符数据集
 
-Dataset of 60,000 28x28 grayscale images of the 10 digits, along with a test set of 10,000 images.
+训练集为 60,000 张 28x28 像素灰度图像，测试集为 10,000 同规格图像，总共 10 类数字标签。
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import mnist
@@ -136,36 +130,35 @@ from keras.datasets import mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 ```
 
-- __Returns:__
-    - 2 tuples:
-        - __x_train, x_test__: uint8 array of grayscale image data with shape (num_samples, 28, 28).
-        - __y_train, y_test__: uint8 array of digit labels (integers in range 0-9) with shape (num_samples,).
+- __返回：__
+  - 2 个元组：
+    - __x_train, x_test__: uint8 数组表示的灰度图像，尺寸为 (num_samples, 28, 28)。
+    - __y_train, y_test__: uint8 数组表示的数字标签（范围在 0-9 之间的整数），尺寸为 (num_samples,)。
 
-- __Arguments:__
-
-    - __path__: if you do not have the index file locally (at `'~/.keras/datasets/' + path`), it will be downloaded to this location.
+- __参数：__
+  - __path__: 如果在本地没有索引文件 (at `'~/.keras/datasets/' + path`), 它将被下载到该目录。
 
 
 ---
 
-## Fashion-MNIST database of fashion articles
+## Fashion-MNIST 时尚物品数据集
 
-Dataset of 60,000 28x28 grayscale images of 10 fashion categories, along with a test set of 10,000 images. This dataset can be used as a drop-in replacement for MNIST. The class labels are:
+训练集为 60,000 张 28x28 像素灰度图像，测试集为 10,000 同规格图像，总共 10 类时尚物品标签。该数据集可以用作 MNIST 的直接替代品。类别标签是：
 
-| Label | Description |
-| --- | --- |
-| 0 | T-shirt/top |
-| 1 | Trouser |
-| 2 | Pullover |
-| 3 | Dress |
-| 4 | Coat |
-| 5 | Sandal |
-| 6 | Shirt |
-| 7 | Sneaker |
-| 8 | Bag |
-| 9 | Ankle boot |
+| 类别 | 描述 | 中文 |
+| --- | --- | --- |
+| 0 | T-shirt/top | T恤/上衣 |
+| 1 | Trouser | 裤子 |
+| 2 | Pullover | 套头衫 |
+| 3 | Dress | 连衣裙 |
+| 4 | Coat | 外套 |
+| 5 | Sandal | 凉鞋 |
+| 6 | Shirt | 衬衫 |
+| 7 | Sneaker | 运动鞋 |
+| 8 | Bag | 背包 |
+| 9 | Ankle boot | 短靴 |
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import fashion_mnist
@@ -173,24 +166,24 @@ from keras.datasets import fashion_mnist
 (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
 ```
 
-- __Returns:__
-    - 2 tuples:
-        - __x_train, x_test__: uint8 array of grayscale image data with shape (num_samples, 28, 28).
-        - __y_train, y_test__: uint8 array of labels (integers in range 0-9) with shape (num_samples,).
+- __返回：__
+  - 2 个元组：
+    - __x_train, x_test__: uint8 数组表示的灰度图像，尺寸为 (num_samples, 28, 28)。
+    - __y_train, y_test__: uint8 数组表示的数字标签（范围在 0-9 之间的整数），尺寸为 (num_samples,)。
 
 
 ---
 
-## Boston housing price regression dataset
+## Boston 房价回归数据集
 
 
-Dataset taken from the StatLib library which is maintained at Carnegie Mellon University. 
+数据集来自卡内基梅隆大学维护的 StatLib 库。
 
-Samples contain 13 attributes of houses at different locations around the Boston suburbs in the late 1970s.
-Targets are the median values of the houses at a location (in k$).
+样本包含 1970 年代的在波士顿郊区不同位置的房屋信息，总共有 13 种房屋属性。
+目标值是一个位置的房屋的中值（单位：k$）。
 
 
-### Usage:
+### 用法：
 
 ```python
 from keras.datasets import boston_housing
@@ -198,12 +191,12 @@ from keras.datasets import boston_housing
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
 ```
 
-- __Arguments:__
-    - __path__: path where to cache the dataset locally
-        (relative to ~/.keras/datasets).
-    - __seed__: Random seed for shuffling the data
-        before computing the test split.
-    - __test_split__: fraction of the data to reserve as test set.
+- __参数：__
+  - __path__: 缓存本地数据集的位置
+  (相对路径 ~/.keras/datasets)。
+  - __seed__: 在计算测试分割之前对数据进行混洗的随机种子。
+  - __test_split__: 需要保留作为测试数据的比例。
 
-- __Returns:__
-    Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
+- __返回：__
+  Numpy 数组的元组: `(x_train, y_train), (x_test, y_test)`。
+    
