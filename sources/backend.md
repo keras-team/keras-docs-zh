@@ -1,30 +1,30 @@
-# Keras backends
+# Keras 后端
 
-## What is a "backend"?
+## 什么是 「后端」？
 
-Keras is a model-level library, providing high-level building blocks for developing deep learning models. It does not handle itself low-level operations such as tensor products, convolutions and so on. Instead, it relies on a specialized, well-optimized tensor manipulation library to do so, serving as the "backend engine" of Keras. Rather than picking one single tensor library and making the implementation of Keras tied to that library, Keras handles the problem in a modular way, and several different backend engines can be plugged seamlessly into Keras.
+Keras 是一个模型级库，为开发深度学习模型提供了高层次的构建模块。它不处理诸如张量乘积和卷积等低级操作。相反，它依赖于一个专门的、优化的张量操作库来完成这个操作，它可以作为 Keras 的「后端引擎」。相比单独地选择一个张量库，而将 Keras 的实现与该库相关联，Keras 以模块方式处理这个问题，并且可以将几个不同的后端引擎无缝嵌入到 Keras 中。
 
-At this time, Keras has three backend implementations available: the **TensorFlow** backend, the **Theano** backend, and the **CNTK** backend.
+目前，Keras 有三个后端实现可用: **TensorFlow** 后端，**Theano** 后端，**CNTK** 后端。
 
-- [TensorFlow](http://www.tensorflow.org/) is an open-source symbolic tensor manipulation framework developed by Google.
-- [Theano](http://deeplearning.net/software/theano/) is an open-source symbolic tensor manipulation framework developed by LISA Lab at Université de Montréal.
-- [CNTK](https://www.microsoft.com/en-us/cognitive-toolkit/) is an open-source toolkit for deep learning developed by Microsoft.
+- [TensorFlow](http://www.tensorflow.org/) 是由 Google 开发的一个开源符号级张量操作框架。
+- [Theano](http://deeplearning.net/software/theano/) 是由蒙特利尔大学的 LISA Lab 开发的一个开源符号级张量操作框架。
+- [CNTK](https://www.microsoft.com/en-us/cognitive-toolkit/) 是由微软开发的一个深度学习开源工具包。
 
-In the future, we are likely to add more backend options.
+将来，我们可能会添加更多后端选项。
 
 ----
 
-## Switching from one backend to another
+## 从一个后端切换到另一个后端
 
-If you have run Keras at least once, you will find the Keras configuration file at:
+如果您至少运行过一次 Keras，您将在以下位置找到 Keras 配置文件：
 
 `$HOME/.keras/keras.json`
 
-If it isn't there, you can create it.
+如果它不在那里，你可以创建它。
 
-**NOTE for Windows Users:** Please replace `$HOME` with `%USERPROFILE%`.
+**Windows用户注意事项：** 请将 `$HOME` 修改为 `%USERPROFILE%`。
 
-The default configuration file looks like this:
+默认的配置文件如下所示：
 
 ```
 {
@@ -35,10 +35,9 @@ The default configuration file looks like this:
 }
 ```
 
-Simply change the field `backend` to `"theano"`, `"tensorflow"`, or `"cntk"`, and Keras will use the new configuration next time you run any Keras code.
+只需将字段 `backend` 更改为 `theano`，`tensorflow` 或 `cntk`，Keras 将在下次运行 Keras 代码时使用新的配置。
 
-You can also define the environment variable ``KERAS_BACKEND`` and this will
-override what is defined in your config file :
+你也可以定义环境变量 ``KERAS_BACKEND``，这会覆盖配置文件中定义的内容：
 
 ```bash
 KERAS_BACKEND=tensorflow python -c "from keras import backend"
@@ -47,10 +46,10 @@ Using TensorFlow backend.
 
 ----
 
-## keras.json details
+## keras.json 详细配置
 
 
-The `keras.json` configuration file contains the following settings:
+The `keras.json` 配置文件包含以下设置：
 
 ```
 {
@@ -61,69 +60,69 @@ The `keras.json` configuration file contains the following settings:
 }
 ```
 
-You can change these settings by editing `$HOME/.keras/keras.json`. 
+您可以通过编辑 `$ HOME / .keras / keras.json` 来更改这些设置。
 
-* `image_data_format`: String, either `"channels_last"` or `"channels_first"`. It specifies which data format convention Keras will follow. (`keras.backend.image_data_format()` returns it.)
-  - For 2D data (e.g. image), `"channels_last"` assumes `(rows, cols, channels)` while `"channels_first"` assumes `(channels, rows, cols)`. 
-  - For 3D data, `"channels_last"` assumes `(conv_dim1, conv_dim2, conv_dim3, channels)` while `"channels_first"` assumes `(channels, conv_dim1, conv_dim2, conv_dim3)`.
-* `epsilon`: Float, a numeric fuzzing constant used to avoid dividing by zero in some operations.
-* `floatx`: String, `"float16"`, `"float32"`, or `"float64"`. Default float precision.
-* `backend`: String, `"tensorflow"`, `"theano"`, or `"cntk"`.
+* `image_data_format`: 字符串，`"channels_last"` 或者 `"channels_first"`。它指定了 Keras 将遵循的数据格式约定。(`keras.backend.image_data_format()` 返回它。)
+  - 对于 2D 数据 (例如图像)，`"channels_last"` 假定为 `(rows, cols, channels)`，而 `"channels_first"` 假定为 `(channels, rows, cols)`。
+  - 对于 3D 数据， `"channels_last"` 假定为 `(conv_dim1, conv_dim2, conv_dim3, channels)`，而 `"channels_first"` 假定为 `(channels, conv_dim1, conv_dim2, conv_dim3)`。
+* `epsilon`: 浮点数，用于避免在某些操作中被零除的数字模糊常量。
+* `floatx`: 字符串，`"float16"`, `"float32"`, 或 `"float64"`。默认浮点精度。
+* `backend`: 字符串， `"tensorflow"`, `"theano"`, 或 `"cntk"`。
 
 ----
 
-## Using the abstract Keras backend to write new code
+## 使用抽象 Keras 后端编写新代码
 
-If you want the Keras modules you write to be compatible with both Theano (`th`) and TensorFlow (`tf`), you have to write them via the abstract Keras backend API. Here's an intro.
+如果你希望你编写的 Keras 模块与 Theano (`th`) 和 TensorFlow (`tf`) 兼容，则必须通过抽象 Keras 后端 API 来编写它们。以下是一个介绍。
 
-You can import the backend module via:
+您可以通过以下方式导入后端模块：
 ```python
 from keras import backend as K
 ```
 
-The code below instantiates an input placeholder. It's equivalent to `tf.placeholder()` or `th.tensor.matrix()`, `th.tensor.tensor3()`, etc.
+下面的代码实例化一个输入占位符。它等价于 `tf.placeholder()` 或 `th.tensor.matrix()`, `th.tensor.tensor3()`, 等等。
 
 ```python
 inputs = K.placeholder(shape=(2, 4, 5))
-# also works:
+# 同样可以：
 inputs = K.placeholder(shape=(None, 4, 5))
-# also works:
+# 同样可以：
 inputs = K.placeholder(ndim=3)
 ```
 
-The code below instantiates a variable. It's equivalent to `tf.Variable()` or `th.shared()`.
+下面的代码实例化一个变量。它等价于 `tf.Variable()` 或 `th.shared()`。
 
 ```python
 import numpy as np
 val = np.random.random((3, 4, 5))
 var = K.variable(value=val)
 
-# all-zeros variable:
+# 全 0 变量：
 var = K.zeros(shape=(3, 4, 5))
-# all-ones:
+# 全 1 变量：
 var = K.ones(shape=(3, 4, 5))
 ```
 
 Most tensor operations you will need can be done as you would in TensorFlow or Theano:
 
 ```python
-# Initializing Tensors with Random Numbers
+# 使用随机数初始化张量
 b = K.random_uniform_variable(shape=(3, 4), low=0, high=1) # Uniform distribution
 c = K.random_normal_variable(shape=(3, 4), mean=0, scale=1) # Gaussian distribution
 d = K.random_normal_variable(shape=(3, 4), mean=0, scale=1)
 
-# Tensor Arithmetic
+# 张量运算
 a = b + c * K.abs(d)
 c = K.dot(a, K.transpose(b))
 a = K.sum(b, axis=1)
 a = K.softmax(b)
 a = K.concatenate([b, c], axis=-1)
-# etc...
+# 等等
 ```
 
 ----
 
-## Backend functions
+## 后端函数
 
 
 ### epsilon
@@ -134,13 +133,13 @@ keras.backend.epsilon()
 ```
 
 
-Returns the value of the fuzz factor used in numeric expressions.
+返回数字表达式中使用的模糊因子的值。
 
-__Returns__
+__返回__
 
-A float.
+一个浮点数。
 
-__Example__
+__例子__
 
 ```python
 >>> keras.backend.epsilon()
@@ -157,13 +156,13 @@ keras.backend.set_epsilon(e)
 ```
 
 
-Sets the value of the fuzz factor used in numeric expressions.
+设置数字表达式中使用的模糊因子的值。
 
-__Arguments__
+__参数__
 
-- __e__: float. New value of epsilon.
+- __e__: 浮点数。新的 epsilon 值。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -184,14 +183,14 @@ keras.backend.floatx()
 ```
 
 
-Returns the default float type, as a string.
-(e.g. 'float16', 'float32', 'float64').
+以字符串形式返回默认的浮点类型。
+(例如，'float16', 'float32', 'float64')。
 
-__Returns__
+__返回__
 
-String, the current default float type.
+字符串，当前默认的浮点类型。
 
-__Example__
+__例子__
 
 ```python
 >>> keras.backend.floatx()
@@ -208,13 +207,13 @@ keras.backend.set_floatx(floatx)
 ```
 
 
-Sets the default float type.
+设置默认的浮点类型。
 
-__Arguments__
+__参数__
 
-- __floatx__: String, 'float16', 'float32', or 'float64'.
+- __floatx__: 字符串，'float16', 'float32', 或 'float64'。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -235,17 +234,17 @@ keras.backend.cast_to_floatx(x)
 ```
 
 
-Cast a Numpy array to the default Keras float type.
+将 Numpy 数组转换为默认的 Keras 浮点类型
 
-__Arguments__
+__参数__
 
-- __x__: Numpy array.
+- __x__: Numpy 数组。
 
-__Returns__
+__返回__
 
-The same Numpy array, cast to its new type.
+相同的 Numpy 数组，转换为它的新类型。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -271,13 +270,13 @@ keras.backend.image_data_format()
 ```
 
 
-Returns the default image data format convention ('channels_first' or 'channels_last').
+返回默认图像数据格式约定 ('channels_first' 或 'channels_last')。
 
-__Returns__
+__返回__
 
-A string, either `'channels_first'` or `'channels_last'`
+一个字符串，`'channels_first'` 或 `'channels_last'`
 
-__Example__
+__例子__
 
 ```python
 >>> keras.backend.image_data_format()
@@ -294,13 +293,13 @@ keras.backend.set_image_data_format(data_format)
 ```
 
 
-Sets the value of the data format convention.
+设置数据格式约定的值。
 
-__Arguments__
+__参数__
 
-- __data_format__: string. `'channels_first'` or `'channels_last'`.
+- __data_format__: 字符串。`'channels_first'` 或 `'channels_last'`。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -321,15 +320,15 @@ keras.backend.get_uid(prefix='')
 ```
 
 
-Get the uid for the default graph.
+获取默认计算图的 uid。
 
-__Arguments__
+__参数__
 
-- __prefix__: An optional prefix of the graph.
+- __prefix__: 图的可选前缀。
 
-__Returns__
+__返回__
 
-A unique identifier for the graph.
+图的唯一标识符。
 
 ----
 
@@ -340,8 +339,8 @@ A unique identifier for the graph.
 keras.backend.reset_uids()
 ```
 
+重置图的标识符。
 
-Reset graph identifiers.
 ----
 
 ### clear_session
@@ -352,9 +351,9 @@ keras.backend.clear_session()
 ```
 
 
-Destroys the current TF graph and creates a new one.
+销毁当前的 TF 图并创建一个新图。
 
-Useful to avoid clutter from old models / layers.
+有用于避免旧模型/网络层混乱。
 
 ----
 
@@ -366,17 +365,15 @@ keras.backend.manual_variable_initialization(value)
 ```
 
 
-Sets the manual variable initialization flag.
+设置变量手动初始化的标志。
 
-This boolean flag determines whether
-variables should be initialized
-as they are instantiated (default), or if
-the user should handle the initialization
-(e.g. via `tf.initialize_all_variables()`).
+这个布尔标志决定了变量是否应该在实例化时初始化（默认），
+或者用户是否应该自己处理初始化
+（例如通过 `tf.initialize_all_variables()`）。
 
-__Arguments__
+__参数__
 
-- __value__: Python boolean.
+- __value__: Python 布尔值。
 
 ----
 
@@ -388,15 +385,15 @@ keras.backend.learning_phase()
 ```
 
 
-Returns the learning phase flag.
+返回学习阶段的标志。
 
-The learning phase flag is a bool tensor (0 = test, 1 = train)
-to be passed as input to any Keras function
-that uses a different behavior at train time and test time.
+学习阶段标志是一个布尔张量（0 = test，1 = train），
+它作为输入传递给任何的 Keras 函数，以在训练和测试
+时执行不同的行为操作。
 
-__Returns__
+__返回__
 
-Learning phase (scalar integer tensor or Python integer).
+学习阶段 (标量整数张量或 python 整数)。
 
 ----
 
@@ -408,15 +405,15 @@ keras.backend.set_learning_phase(value)
 ```
 
 
-Sets the learning phase to a fixed value.
+将学习阶段设置为固定值。
 
-__Arguments__
+__参数__
 
-- __value__: Learning phase value, either 0 or 1 (integers).
+- __value__: 学习阶段的值，0 或 1（整数）。
 
-__Raises__
+__异常__
 
-- __ValueError__: if `value` is neither `0` nor `1`.
+- __ValueError__: 如果 `value` 既不是 `0` 也不是 `1`。
 
 ----
 
@@ -427,18 +424,17 @@ __Raises__
 keras.backend.is_sparse(tensor)
 ```
 
+判断张量是否是稀疏张量。
 
-Returns whether a tensor is a sparse tensor.
+__参数__
 
-__Arguments__
+- __tensor__: 一个张量实例。
 
-- __tensor__: A tensor instance.
+__返回__
 
-__Returns__
+布尔值。
 
-A boolean.
-
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -460,17 +456,17 @@ keras.backend.to_dense(tensor)
 ```
 
 
-Converts a sparse tensor into a dense tensor and returns it.
+将稀疏张量转换为稠密张量并返回。
 
-__Arguments__
+__参数__
 
-- __tensor__: A tensor instance (potentially sparse).
+- __tensor__: 张量实例（可能稀疏）。
 
-__Returns__
+__返回__
 
-A dense tensor.
+一个稠密张量。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -492,21 +488,20 @@ keras.backend.variable(value, dtype=None, name=None, constraint=None)
 ```
 
 
-Instantiates a variable and returns it.
+实例化一个变量并返回它。
 
-__Arguments__
+__参数__
 
-- __value__: Numpy array, initial value of the tensor.
-- __dtype__: Tensor type.
-- __name__: Optional name string for the tensor.
-- __constraint__: Optional projection function to be
-applied to the variable after an optimizer update.
+- __value__: Numpy 数组，张量的初始值。
+- __dtype__: 张量类型。
+- __name__: 张量的可选名称字符串。
+- __constraint__: 在优化器更新后应用于变量的可选投影函数。
 
-__Returns__
+__返回__
 
-A variable instance (with Keras metadata included).
+变量实例（包含 Keras 元数据）
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -531,18 +526,18 @@ keras.backend.constant(value, dtype=None, shape=None, name=None)
 ```
 
 
-Creates a constant tensor.
+创建一个常数张量。
 
-__Arguments__
+__参数__
 
-- __value__: A constant value (or list)
-- __dtype__: The type of the elements of the resulting tensor.
-- __shape__: Optional dimensions of resulting tensor.
-- __name__: Optional name for the tensor.
+- __value__: 一个常数值（或列表）
+- __dtype__: 结果张量的元素类型。
+- __shape__: 可选的结果张量的尺寸。
+- __name__: 可选的张量的名称。
 
-__Returns__
+__返回__
 
-A Constant Tensor.
+一个常数张量。
 
 ----
 
@@ -554,24 +549,23 @@ keras.backend.is_keras_tensor(x)
 ```
 
 
-Returns whether `x` is a Keras tensor.
+判断 `x` 是否是 Keras 张量
 
-A "Keras tensor" is a tensor that was returned by a Keras layer,
-(`Layer` class) or by `Input`.
+「Keras张量」是由 Keras 层（`Layer`类）或 `Input` 返回的张量。
 
-__Arguments__
+__参数__
 
-- __x__: A candidate tensor.
+- __x__: 候选张量。
 
-__Returns__
+__返回__
 
-A boolean: Whether the argument is a Keras tensor.
+布尔值：参数是否是 Keras 张量。
 
-__Raises__
+__异常__
 
-- __ValueError__: In case `x` is not a symbolic tensor.
+- __ValueError__: 如果 `x` 不是一个符号张量。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -606,24 +600,24 @@ keras.backend.placeholder(shape=None, ndim=None, dtype=None, sparse=False, name=
 ```
 
 
-Instantiates a placeholder tensor and returns it.
+实例化一个占位符张量并返回它。
 
-__Arguments__
+__参数__
 
-- __shape__: Shape of the placeholder
-(integer tuple, may include `None` entries).
-- __ndim__: Number of axes of the tensor.
-At least one of {`shape`, `ndim`} must be specified.
-If both are specified, `shape` is used.
-- __dtype__: Placeholder type.
-- __sparse__: Boolean, whether the placeholder should have a sparse type.
-- __name__: Optional name string for the placeholder.
+- __shape__: 占位符尺寸
+(整数元组，可能包含 `None` 项)。
+- __ndim__: 张量的轴数。
+{`shape`, `ndim`} 至少一个需要被指定。
+如果两个都被指定，那么使用 `shape`。
+- __dtype__: 占位符类型。
+- __sparse__: 布尔值，占位符是否应该有一个稀疏类型。
+- __name__: 可选的占位符的名称字符串。
 
-__Returns__
+__返回__
 
-Tensor instance (with Keras metadata included).
+张量实例（包括 Keras 元数据）。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -644,15 +638,15 @@ keras.backend.is_placeholder(x)
 ```
 
 
-Returns whether `x` is a placeholder.
+判断 `x` 是否是占位符。
 
-__Arguments__
+__参数__
 
-- __x__: A candidate placeholder.
+- __x__: 候选占位符。
 
-__Returns__
+__返回__
 
-Boolean.
+布尔值。
 
 ----
 
@@ -664,20 +658,20 @@ keras.backend.shape(x)
 ```
 
 
-Returns the symbolic shape of a tensor or variable.
+返回张量或变量的符号尺寸。
 
-__Arguments__
+__参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
-__Returns__
+__返回__
 
-A symbolic shape (which is itself a tensor).
+符号尺寸（它本身就是张量）。
 
-__Examples__
+__例子__
 
 ```python
-# TensorFlow example
+# TensorFlow 例子
 >>> from keras import backend as K
 >>> tf_session = K.get_session()
 >>> val = np.array([[1, 2], [3, 4]])
@@ -687,7 +681,7 @@ __Examples__
 <tf.Tensor 'Shape_8:0' shape=(2,) dtype=int32>
 >>> K.shape(inputs)
 <tf.Tensor 'Shape_9:0' shape=(3,) dtype=int32>
-# To get integer shape (Instead, you can use K.int_shape(x))
+# 要得到整数尺寸 (相反，你可以使用 K.int_shape(x))
 >>> K.shape(kvar).eval(session=tf_session)
 array([2, 2], dtype=int32)
 >>> K.shape(inputs).eval(session=tf_session)
@@ -704,17 +698,17 @@ keras.backend.int_shape(x)
 ```
 
 
-Returns the shape of tensor or variable as a tuple of int or None entries.
+返回张量或变量的尺寸，作为 int 或 None 项的元组。
 
-__Arguments__
+__参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
-__Returns__
+__返回__
 
-A tuple of integers (or None entries).
+整数元组（或 None 项）。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -737,17 +731,17 @@ keras.backend.ndim(x)
 ```
 
 
-Returns the number of axes in a tensor, as an integer.
+以整数形式返回张量中的轴数。
 
-__Arguments__
+__参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
-__Returns__
+__返回__
 
 Integer (scalar), number of axes.
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -770,17 +764,17 @@ keras.backend.dtype(x)
 ```
 
 
-Returns the dtype of a Keras tensor or variable, as a string.
+以字符串形式返回 Keras 张量或变量的 dtype。
 
-__Arguments__
+__参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
-__Returns__
+__返回__
 
-String, dtype of `x`.
+字符串，`x` 的 dtype。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -790,7 +784,7 @@ __Examples__
 'float32'
 >>> K.dtype(K.placeholder(shape=(2,4,5), dtype='float64'))
 'float64'
-# Keras variable
+# Keras 变量
 >>> kvar = K.variable(np.array([[1, 2], [3, 4]]))
 >>> K.dtype(kvar)
 'float32_ref'
@@ -809,17 +803,17 @@ keras.backend.eval(x)
 ```
 
 
-Evaluates the value of a variable.
+估计一个变量的值。
 
-__Arguments__
+__参数__
 
-- __x__: A variable.
+- __x__: 变量。
 
-__Returns__
+__返回__
 
-A Numpy array.
+Numpy 数组。
 
-__Examples__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -839,21 +833,21 @@ keras.backend.zeros(shape, dtype=None, name=None)
 ```
 
 
-Instantiates an all-zeros variable and returns it.
+实例化一个全零变量并返回它。
 
-__Arguments__
+__参数__
 
-- __shape__: Tuple of integers, shape of returned Keras variable
-- __dtype__: String, data type of returned Keras variable
-- __name__: String, name of returned Keras variable
+- __shape__: 整数元组，返回的Keras变量的尺寸。
+- __dtype__: 字符串，返回的 Keras 变量的数据类型。
+- __name__: 字符串，返回的 Keras 变量的名称。
 
-__Returns__
+__返回__
 
-A variable (including Keras metadata), filled with `0.0`.
-Note that if `shape` was symbolic, we cannot return a variable,
-and will return a dynamically-shaped tensor instead.
+一个变量（包括 Keras 元数据），用 `0.0` 填充。
+请注意，如果 `shape` 是符号化的，我们不能返回一个变量，
+而会返回一个动态尺寸的张量。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -874,21 +868,21 @@ keras.backend.ones(shape, dtype=None, name=None)
 ```
 
 
-Instantiates an all-ones variable and returns it.
+实例化一个全一变量并返回它。
 
-__Arguments__
+__参数__
 
-- __shape__: Tuple of integers, shape of returned Keras variable.
-- __dtype__: String, data type of returned Keras variable.
-- __name__: String, name of returned Keras variable.
+- __shape__: 整数元组，返回的Keras变量的尺寸。
+- __dtype__: 字符串，返回的 Keras 变量的数据类型。
+- __name__: 字符串，返回的 Keras 变量的名称。
 
-__Returns__
+__返回__
 
-A Keras variable, filled with `1.0`.
-Note that if `shape` was symbolic, we cannot return a variable,
-and will return a dynamically-shaped tensor instead.
+一个 Keras 变量，用 `1.0` 填充。
+请注意，如果 `shape` 是符号化的，我们不能返回一个变量，
+而会返回一个动态尺寸的张量。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -909,19 +903,19 @@ keras.backend.eye(size, dtype=None, name=None)
 ```
 
 
-Instantiate an identity matrix and returns it.
+实例化一个单位矩阵并返回它。
 
-__Arguments__
+__参数__
 
-- __size__: Integer, number of rows/columns.
-- __dtype__: String, data type of returned Keras variable.
-- __name__: String, name of returned Keras variable.
+- __size__: 整数，行/列的数目。
+- __dtype__: 字符串，返回的 Keras 变量的数据类型。
+- __name__: 字符串，返回的 Keras 变量的名称。
 
-__Returns__
+__返回__
 
-A Keras variable, an identity matrix.
+Keras 变量，一个单位矩阵。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -943,20 +937,20 @@ keras.backend.zeros_like(x, dtype=None, name=None)
 ```
 
 
-Instantiates an all-zeros variable of the same shape as another tensor.
+实例化与另一个张量相同尺寸的全零变量。
 
-__Arguments__
+__参数__
 
-- __x__: Keras variable or Keras tensor.
-- __dtype__: String, dtype of returned Keras variable.
-None uses the dtype of x.
-- __name__: String, name for the variable to create.
+- __x__: Keras 变量或 Keras 张量。
+- __dtype__: 字符串，返回的 Keras 变量的类型。
+如果为 None，则使用 x 的类型。
+- __name__: 字符串，所创建的变量的名称。
 
-__Returns__
+__返回__
 
-A Keras variable with the shape of x filled with zeros.
+一个 Keras 变量，其形状为 x，用零填充。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -977,20 +971,20 @@ keras.backend.ones_like(x, dtype=None, name=None)
 ```
 
 
-Instantiates an all-ones variable of the same shape as another tensor.
+实例化与另一个张量相同形状的全一变量。
 
-__Arguments__
+__参数__
 
-- __x__: Keras variable or tensor.
-- __dtype__: String, dtype of returned Keras variable.
-None uses the dtype of x.
-- __name__: String, name for the variable to create.
+- __x__: Keras 变量或 Keras 张量。
+- __dtype__: 字符串，返回的 Keras 变量的类型。
+如果为 None，则使用 x 的类型。
+- __name__: 字符串，所创建的变量的名称。
 
-__Returns__
+__返回__
 
-A Keras variable with the shape of x filled with ones.
+一个 Keras 变量，其形状为 x，用一填充。
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -1011,16 +1005,16 @@ keras.backend.identity(x, name=None)
 ```
 
 
-Returns a tensor with the same content as the input tensor.
+返回与输入张量相同内容的张量。
 
-__Arguments__
+__参数__
 
-- __x__: The input tensor.
-- __name__: String, name for the variable to create.
+- __x__: 输入张量。
+- __name__: 字符串，所创建的变量的名称。
 
-__Returns__
+__返回__
 
-A tensor of the same shape, type and content.
+一个相同尺寸、类型和内容的张量。
 
 ----
 
@@ -1034,7 +1028,7 @@ keras.backend.random_uniform_variable(shape, low, high, dtype=None, name=None, s
 
 Instantiates a variable with values drawn from a uniform distribution.
 
-__Arguments__
+__参数__
 
 - __shape__: Tuple of integers, shape of returned Keras variable.
 - __low__: Float, lower boundary of the output interval.
@@ -1043,11 +1037,11 @@ __Arguments__
 - __name__: String, name of returned Keras variable.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A Keras variable, filled with drawn samples.
 
-__Example__
+__例子__
 
 ```python
 # TensorFlow example
@@ -1071,7 +1065,7 @@ keras.backend.random_normal_variable(shape, mean, scale, dtype=None, name=None, 
 
 Instantiates a variable with values drawn from a normal distribution.
 
-__Arguments__
+__参数__
 
 - __shape__: Tuple of integers, shape of returned Keras variable.
 - __mean__: Float, mean of the normal distribution.
@@ -1080,11 +1074,11 @@ __Arguments__
 - __name__: String, name of returned Keras variable.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A Keras variable, filled with drawn samples.
 
-__Example__
+__例子__
 
 ```python
 # TensorFlow example
@@ -1108,16 +1102,16 @@ keras.backend.count_params(x)
 
 Returns the static number of elements in a Keras variable or tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Keras variable or tensor.
 
-__Returns__
+__返回__
 
 Integer, the number of elements in `x`, i.e., the product of the
 array's static dimensions.
 
-__Example__
+__例子__
 
 ```python
 >>> kvar = K.zeros((2,3))
@@ -1142,16 +1136,16 @@ Casts a tensor to a different dtype and returns it.
 
 You can cast a Keras variable but it still returns a Keras tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Keras tensor (or variable).
 - __dtype__: String, either (`'float16'`, `'float32'`, or `'float64'`).
 
-__Returns__
+__返回__
 
 Keras tensor with dtype `dtype`.
 
-__Example__
+__例子__
 
 ```python
 >>> from keras import backend as K
@@ -1181,12 +1175,12 @@ keras.backend.update(x, new_x)
 
 Update the value of `x` to `new_x`.
 
-__Arguments__
+__参数__
 
 - __x__: A `Variable`.
 - __new_x__: A tensor of same shape as `x`.
 
-__Returns__
+__返回__
 
 The variable `x` updated.
 
@@ -1202,12 +1196,12 @@ keras.backend.update_add(x, increment)
 
 Update the value of `x` by adding `increment`.
 
-__Arguments__
+__参数__
 
 - __x__: A `Variable`.
 - __increment__: A tensor of same shape as `x`.
 
-__Returns__
+__返回__
 
 The variable `x` updated.
 
@@ -1223,12 +1217,12 @@ keras.backend.update_sub(x, decrement)
 
 Update the value of `x` by subtracting `decrement`.
 
-__Arguments__
+__参数__
 
 - __x__: A `Variable`.
 - __decrement__: A tensor of same shape as `x`.
 
-__Returns__
+__返回__
 
 The variable `x` updated.
 
@@ -1244,13 +1238,13 @@ keras.backend.moving_average_update(x, value, momentum)
 
 Compute the moving average of a variable.
 
-__Arguments__
+__参数__
 
 - __x__: A `Variable`.
 - __value__: A tensor with the same shape as `x`.
 - __momentum__: The moving average momentum.
 
-__Returns__
+__返回__
 
 An operation to update the variable.
 
@@ -1270,16 +1264,16 @@ When attempting to multiply a nD tensor
 with a nD tensor, it reproduces the Theano behavior.
 (e.g. `(2, 3) * (4, 3, 5) -> (2, 4, 5)`)
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor, dot product of `x` and `y`.
 
-__Examples__
+__例子__
 
 ```python
 # dot product between tensors
@@ -1327,21 +1321,21 @@ Batchwise dot product.
 than the input. If the number of dimensions is reduced to 1,
 we use `expand_dims` to make sure that ndim is at least 2.
 
-__Arguments__
+__参数__
 
 - __x__: Keras tensor or variable with `ndim >= 2`.
 - __y__: Keras tensor or variable with `ndim >= 2`.
 - __axes__: list of (or single) int with target dimensions.
 The lengths of `axes[0]` and `axes[1]` should be the same.
 
-__Returns__
+__返回__
 
 A tensor with shape equal to the concatenation of `x`'s shape
 (less the dimension that was summed over) and `y`'s shape
 (less the batch dimension and the dimension that was summed over).
 If the final rank is 1, we reshape it to `(batch_size, 1)`.
 
-__Examples__
+__例子__
 
 Assume `x = [[1, 2], [3, 4]]` and `y = [[5, 6], [7, 8]]`
 `batch_dot(x, y, axes=1) = [[17], [53]]` which is the main diagonal
@@ -1383,15 +1377,15 @@ keras.backend.transpose(x)
 
 Transposes a tensor and returns it.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
-__Examples__
+__例子__
 
 ```python
 >>> var = K.variable([[1, 2, 3], [4, 5, 6]])
@@ -1427,12 +1421,12 @@ keras.backend.gather(reference, indices)
 
 Retrieves the elements of indices `indices` in the tensor `reference`.
 
-__Arguments__
+__参数__
 
 - __reference__: A tensor.
 - __indices__: An integer tensor of indices.
 
-__Returns__
+__返回__
 
 A tensor of same type as `reference`.
 
@@ -1448,7 +1442,7 @@ keras.backend.max(x, axis=None, keepdims=False)
 
 Maximum value in a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to find maximum values.
@@ -1457,7 +1451,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with maximum values of `x`.
 
@@ -1473,7 +1467,7 @@ keras.backend.min(x, axis=None, keepdims=False)
 
 Minimum value in a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to find minimum values.
@@ -1482,7 +1476,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with miminum values of `x`.
 
@@ -1498,7 +1492,7 @@ keras.backend.sum(x, axis=None, keepdims=False)
 
 Sum of the values in a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to sum over.
@@ -1507,7 +1501,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with sum of `x`.
 
@@ -1523,7 +1517,7 @@ keras.backend.prod(x, axis=None, keepdims=False)
 
 Multiplies the values in a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to compute the product.
@@ -1532,7 +1526,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with the product of elements of `x`.
 
@@ -1548,12 +1542,12 @@ keras.backend.cumsum(x, axis=0)
 
 Cumulative sum of the values in a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to compute the sum.
 
-__Returns__
+__返回__
 
 A tensor of the cumulative sum of values of `x` along `axis`.
 
@@ -1569,12 +1563,12 @@ keras.backend.cumprod(x, axis=0)
 
 Cumulative product of the values in a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to compute the product.
 
-__Returns__
+__返回__
 
 A tensor of the cumulative product of values of `x` along `axis`.
 
@@ -1590,7 +1584,7 @@ keras.backend.var(x, axis=None, keepdims=False)
 
 Variance of a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to compute the variance.
@@ -1599,7 +1593,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with the variance of elements of `x`.
 
@@ -1615,7 +1609,7 @@ keras.backend.std(x, axis=None, keepdims=False)
 
 Standard deviation of a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to compute the standard deviation.
@@ -1624,7 +1618,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`,
 the reduced dimension is retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with the standard deviation of elements of `x`.
 
@@ -1640,7 +1634,7 @@ keras.backend.mean(x, axis=None, keepdims=False)
 
 Mean of a tensor, alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: A list of integer. Axes to compute the mean.
@@ -1649,7 +1643,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1 for each entry in `axis`. If `keepdims` is `True`,
 the reduced dimensions are retained with length 1.
 
-__Returns__
+__返回__
 
 A tensor with the mean of elements of `x`.
 
@@ -1665,13 +1659,13 @@ keras.backend.any(x, axis=None, keepdims=False)
 
 Bitwise reduction (logical OR).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __axis__: axis along which to perform the reduction.
 - __keepdims__: whether the drop or broadcast the reduction axes.
 
-__Returns__
+__返回__
 
 A uint8 tensor (0s and 1s).
 
@@ -1687,13 +1681,13 @@ keras.backend.all(x, axis=None, keepdims=False)
 
 Bitwise reduction (logical AND).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __axis__: axis along which to perform the reduction.
 - __keepdims__: whether the drop or broadcast the reduction axes.
 
-__Returns__
+__返回__
 
 A uint8 tensor (0s and 1s).
 
@@ -1709,12 +1703,12 @@ keras.backend.argmax(x, axis=-1)
 
 Returns the index of the maximum value along an axis.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __axis__: axis along which to perform the reduction.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1730,12 +1724,12 @@ keras.backend.argmin(x, axis=-1)
 
 Returns the index of the minimum value along an axis.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __axis__: axis along which to perform the reduction.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1751,11 +1745,11 @@ keras.backend.square(x)
 
 Element-wise square.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1771,11 +1765,11 @@ keras.backend.abs(x)
 
 Element-wise absolute value.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1791,11 +1785,11 @@ keras.backend.sqrt(x)
 
 Element-wise square root.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1811,11 +1805,11 @@ keras.backend.exp(x)
 
 Element-wise exponential.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1831,11 +1825,11 @@ keras.backend.log(x)
 
 Element-wise log.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1855,7 +1849,7 @@ This function is more numerically stable than log(sum(exp(x))).
 It avoids overflows caused by taking the exp of large inputs and
 underflows caused by taking the log of small inputs.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: An integer, the axis to reduce over.
@@ -1864,7 +1858,7 @@ If `keepdims` is `False`, the rank of the tensor is reduced
 by 1. If `keepdims` is `True`, the reduced dimension is
 retained with length 1.
 
-__Returns__
+__返回__
 
 The reduced tensor.
 
@@ -1882,11 +1876,11 @@ Element-wise rounding to the closest integer.
 
 In case of tie, the rounding mode used is "half to even".
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1902,11 +1896,11 @@ keras.backend.sign(x)
 
 Element-wise sign.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1922,12 +1916,12 @@ keras.backend.pow(x, a)
 
 Element-wise exponentiation.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __a__: Python integer.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1943,13 +1937,13 @@ keras.backend.clip(x, min_value, max_value)
 
 Element-wise value clipping.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __min_value__: Python float or integer.
 - __max_value__: Python float or integer.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -1965,12 +1959,12 @@ keras.backend.equal(x, y)
 
 Element-wise equality between two tensors.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -1986,12 +1980,12 @@ keras.backend.not_equal(x, y)
 
 Element-wise inequality between two tensors.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -2007,12 +2001,12 @@ keras.backend.greater(x, y)
 
 Element-wise truth value of (x > y).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -2028,12 +2022,12 @@ keras.backend.greater_equal(x, y)
 
 Element-wise truth value of (x >= y).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -2049,12 +2043,12 @@ keras.backend.less(x, y)
 
 Element-wise truth value of (x < y).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -2070,12 +2064,12 @@ keras.backend.less_equal(x, y)
 
 Element-wise truth value of (x <= y).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A bool tensor.
 
@@ -2091,12 +2085,12 @@ keras.backend.maximum(x, y)
 
 Element-wise maximum of two tensors.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2112,12 +2106,12 @@ keras.backend.minimum(x, y)
 
 Element-wise minimum of two tensors.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __y__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2133,11 +2127,11 @@ keras.backend.sin(x)
 
 Computes sin of x element-wise.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2153,11 +2147,11 @@ keras.backend.cos(x)
 
 Computes cos of x element-wise.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2173,7 +2167,7 @@ keras.backend.normalize_batch_in_training(x, gamma, beta, reduction_axes, epsilo
 
 Computes mean and std for batch then apply batch_normalization on batch.
 
-__Arguments__
+__参数__
 
 - __x__: Input tensor or variable.
 - __gamma__: Tensor by which to scale the input.
@@ -2182,7 +2176,7 @@ __Arguments__
 axes over which to normalize.
 - __epsilon__: Fuzz factor.
 
-__Returns__
+__返回__
 
 A tuple length of 3, `(normalized_tensor, mean, variance)`.
 
@@ -2201,7 +2195,7 @@ Applies batch normalization on x given mean, var, beta and gamma.
 I.e. returns:
 `output = (x - mean) / (sqrt(var) + epsilon) * gamma + beta`
 
-__Arguments__
+__参数__
 
 - __x__: Input tensor or variable.
 - __mean__: Mean of batch.
@@ -2210,7 +2204,7 @@ __Arguments__
 - __gamma__: Tensor by which to scale the input.
 - __epsilon__: Fuzz factor.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2226,12 +2220,12 @@ keras.backend.concatenate(tensors, axis=-1)
 
 Concatenates a list of tensors alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __tensors__: list of tensors to concatenate.
 - __axis__: concatenation axis.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2247,12 +2241,12 @@ keras.backend.reshape(x, shape)
 
 Reshapes a tensor to the specified shape.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __shape__: Target shape tuple.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2268,13 +2262,13 @@ keras.backend.permute_dimensions(x, pattern)
 
 Permutes axes in a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __pattern__: A tuple of
 dimension indices, e.g. `(0, 2, 1)`.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2290,18 +2284,18 @@ keras.backend.resize_images(x, height_factor, width_factor, data_format)
 
 Resizes the images contained in a 4D tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable to resize.
 - __height_factor__: Positive integer.
 - __width_factor__: Positive integer.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
-__Returns__
+__返回__
 
 A tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 
@@ -2317,7 +2311,7 @@ keras.backend.resize_volumes(x, depth_factor, height_factor, width_factor, data_
 
 Resizes the volume contained in a 5D tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable to resize.
 - __depth_factor__: Positive integer.
@@ -2325,11 +2319,11 @@ __Arguments__
 - __width_factor__: Positive integer.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
-__Returns__
+__返回__
 
 A tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 
@@ -2348,13 +2342,13 @@ Repeats the elements of a tensor along an axis, like `np.repeat`.
 If `x` has shape `(s1, s2, s3)` and `axis` is `1`, the output
 will have shape `(s1, s2 * rep, s3)`.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __rep__: Python integer, number of times to repeat.
 - __axis__: Axis along which to repeat.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2373,12 +2367,12 @@ Repeats a 2D tensor.
 if `x` has shape (samples, dim) and `n` is `2`,
 the output will have shape `(samples, 2, dim)`.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __n__: Python integer, number of times to repeat.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2401,14 +2395,14 @@ it is in fact the "stop" argument.
 The default type of the returned tensor is `'int32'` to
 match TensorFlow's default.
 
-__Arguments__
+__参数__
 
 - __start__: Start value.
 - __stop__: Stop value.
 - __step__: Difference between two successive values.
 - __dtype__: Integer dtype to use.
 
-__Returns__
+__返回__
 
 An integer tensor.
 
@@ -2425,13 +2419,13 @@ keras.backend.tile(x, n)
 
 Creates a tensor by tiling `x` by `n`.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable
 - __n__: A list of integer. The length must be the same as the number of
 dimensions in `x`.
 
-__Returns__
+__返回__
 
 A tiled tensor.
 
@@ -2447,11 +2441,11 @@ keras.backend.flatten(x)
 
 Flatten a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor, reshaped into 1-D
 
@@ -2469,11 +2463,11 @@ Turn a nD tensor into a 2D tensor with same 0th dimension.
 
 In other words, it flattens each data samples of a batch.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2489,12 +2483,12 @@ keras.backend.expand_dims(x, axis=-1)
 
 Adds a 1-sized dimension at index "axis".
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: Position where to add a new axis.
 
-__Returns__
+__返回__
 
 A tensor with expanded dimensions.
 
@@ -2510,12 +2504,12 @@ keras.backend.squeeze(x, axis)
 
 Removes a 1-dimension from the tensor at index "axis".
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __axis__: Axis to drop.
 
-__Returns__
+__返回__
 
 A tensor with the same data as `x` but reduced dimensions.
 
@@ -2531,13 +2525,13 @@ keras.backend.temporal_padding(x, padding=(1, 1))
 
 Pads the middle dimension of a 3D tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __padding__: Tuple of 2 integers, how many zeros to
 add at the start and end of dim 1.
 
-__Returns__
+__返回__
 
 A padded 3D tensor.
 
@@ -2553,17 +2547,17 @@ keras.backend.spatial_2d_padding(x, padding=((1, 1), (1, 1)), data_format=None)
 
 Pads the 2nd and 3rd dimensions of a 4D tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __padding__: Tuple of 2 tuples, padding pattern.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
-__Returns__
+__返回__
 
 A padded 4D tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 
@@ -2587,17 +2581,17 @@ the 2nd, 3rd and 4th dimension will be padded.
 For 'channels_first' data_format,
 the 3rd, 4th and 5th dimension will be padded.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __padding__: Tuple of 3 tuples, padding pattern.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
-__Returns__
+__返回__
 
 A padded 5D tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 
@@ -2614,12 +2608,12 @@ keras.backend.stack(x, axis=0)
 
 Stacks a list of rank `R` tensors into a rank `R+1` tensor.
 
-__Arguments__
+__参数__
 
 - __x__: List of tensors.
 - __axis__: Axis along which to perform stacking.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2635,13 +2629,13 @@ keras.backend.one_hot(indices, num_classes)
 
 Computes the one-hot representation of an integer tensor.
 
-__Arguments__
+__参数__
 
 - __indices__: nD integer tensor of shape
 `(batch_size, dim1, dim2, ... dim(n-1))`
 - __num_classes__: Integer, number of classes to consider.
 
-__Returns__
+__返回__
 
 (n + 1)D one hot representation of the input
 with shape `(batch_size, dim1, dim2, ... dim(n-1), num_classes)`
@@ -2658,13 +2652,13 @@ keras.backend.reverse(x, axes)
 
 Reverse a tensor along the specified axes.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor to reverse.
 - __axes__: Integer or iterable of integers.
 Axes to reverse.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -2680,11 +2674,11 @@ keras.backend.get_value(x)
 
 Returns the value of a variable.
 
-__Arguments__
+__参数__
 
 - __x__: input variable.
 
-__Returns__
+__返回__
 
 A Numpy array.
 
@@ -2700,11 +2694,11 @@ keras.backend.batch_get_value(ops)
 
 Returns the value of more than one tensor variable.
 
-__Arguments__
+__参数__
 
 - __ops__: list of ops to run.
 
-__Returns__
+__返回__
 
 A list of Numpy arrays.
 
@@ -2720,7 +2714,7 @@ keras.backend.set_value(x, value)
 
 Sets the value of a variable, from a Numpy array.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor to set to a new value.
 - __value__: Value to set the tensor to, as a Numpy array
@@ -2738,7 +2732,7 @@ keras.backend.batch_set_value(tuples)
 
 Sets the values of many tensor variables at once.
 
-__Arguments__
+__参数__
 
 - __tuples__: a list of tuples `(tensor, value)`.
 `value` should be a Numpy array.
@@ -2759,18 +2753,18 @@ Note that `print_tensor` returns a new tensor identical to `x`
 which should be used in the following code. Otherwise the
 print operation is not taken into account during evaluation.
 
-__Example__
+__例子__
 
 ```python
 >>> x = K.print_tensor(x, message="x is: ")
 ```
 
-__Arguments__
+__参数__
 
 - __x__: Tensor to print.
 - __message__: Message to print jointly with the tensor.
 
-__Returns__
+__返回__
 
 The same tensor `x`, unchanged.
 
@@ -2786,18 +2780,18 @@ keras.backend.function(inputs, outputs, updates=None)
 
 Instantiates a Keras function.
 
-__Arguments__
+__参数__
 
 - __inputs__: List of placeholder tensors.
 - __outputs__: List of output tensors.
 - __updates__: List of update ops.
 - __**kwargs__: Passed to `tf.Session.run`.
 
-__Returns__
+__返回__
 
 Output values as Numpy arrays.
 
-__Raises__
+__异常__
 
 - __ValueError__: if invalid kwargs are passed in.
 
@@ -2813,12 +2807,12 @@ keras.backend.gradients(loss, variables)
 
 Returns the gradients of `variables` w.r.t. `loss`.
 
-__Arguments__
+__参数__
 
 - __loss__: Scalar tensor to minimize.
 - __variables__: List of variables.
 
-__Returns__
+__返回__
 
 A gradients tensor.
 
@@ -2834,12 +2828,12 @@ keras.backend.stop_gradient(variables)
 
 Returns `variables` but with zero gradient w.r.t. every other variable.
 
-__Arguments__
+__参数__
 
 - __variables__: tensor or list of tensors to consider constant with respect
 to any other variable.
 
-__Returns__
+__返回__
 
 A single tensor or a list of tensors (depending on the passed argument)
 that has constant gradient with respect to any other variable.
@@ -2856,7 +2850,7 @@ keras.backend.rnn(step_function, inputs, initial_states, go_backwards=False, mas
 
 Iterates over the time dimension of a tensor.
 
-__Arguments__
+__参数__
 
 - __step_function__: RNN step function.
 - __Parameters__:
@@ -2864,7 +2858,7 @@ __Arguments__
 representing input for the batch of samples at a certain
 time step.
 - __states__: list of tensors.
-- __Returns__:
+- __返回__:
 - __outputs__: tensor with shape `(samples, output_dim)`
 (no time dimension).
 - __new_states__: list of tensors, same length and shapes
@@ -2885,7 +2879,7 @@ with a zero for every element that is masked.
 - __input_length__: not relevant in the TensorFlow implementation.
 Must be specified if using unrolling with Theano.
 
-__Returns__
+__返回__
 
 A tuple, `(last_output, outputs, new_states)`.
 
@@ -2896,7 +2890,7 @@ at time `t` for sample `s`.
 - __new_states__: list of tensors, latest states returned by
 the step function, of shape `(samples, ...)`.
 
-__Raises__
+__异常__
 
 - __ValueError__: if input dimension is less than 3.
 - __ValueError__: if `unroll` is `True` but input timestep is not a fixed number.
@@ -2918,17 +2912,17 @@ Switches between two operations depending on a scalar value.
 Note that both `then_expression` and `else_expression`
 should be symbolic tensors of the *same shape*.
 
-__Arguments__
+__参数__
 
 - __condition__: tensor (`int` or `bool`).
 - __then_expression__: either a tensor, or a callable that returns a tensor.
 - __else_expression__: either a tensor, or a callable that returns a tensor.
 
-__Returns__
+__返回__
 
 The selected tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: If rank of `condition` is greater than rank of expressions.
 
@@ -2946,7 +2940,7 @@ Selects `x` in train phase, and `alt` otherwise.
 
 Note that `alt` should have the *same shape* as `x`.
 
-__Arguments__
+__参数__
 
 - __x__: What to return in train phase
 (tensor or callable that returns a tensor).
@@ -2956,7 +2950,7 @@ __Arguments__
 (or Python boolean, or Python integer)
 specifying the learning phase.
 
-__Returns__
+__返回__
 
 Either `x` or `alt` based on the `training` flag.
 the `training` flag defaults to `K.learning_phase()`.
@@ -2975,7 +2969,7 @@ Selects `x` in test phase, and `alt` otherwise.
 
 Note that `alt` should have the *same shape* as `x`.
 
-__Arguments__
+__参数__
 
 - __x__: What to return in test phase
 (tensor or callable that returns a tensor).
@@ -2985,7 +2979,7 @@ __Arguments__
 (or Python boolean, or Python integer)
 specifying the learning phase.
 
-__Returns__
+__返回__
 
 Either `x` or `alt` based on `K.learning_phase`.
 
@@ -3003,13 +2997,13 @@ Rectified linear unit.
 
 With default values, it returns element-wise `max(x, 0)`.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 - __alpha__: A scalar, slope of negative section (default=`0.`).
 - __max_value__: Saturation threshold.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3025,12 +3019,12 @@ keras.backend.elu(x, alpha=1.0)
 
 Exponential linear unit.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable to compute the activation function for.
 - __alpha__: A scalar, slope of negative section.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3046,11 +3040,11 @@ keras.backend.softmax(x)
 
 Softmax of a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3066,11 +3060,11 @@ keras.backend.softplus(x)
 
 Softplus of a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3086,11 +3080,11 @@ keras.backend.softsign(x)
 
 Softsign of a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3106,7 +3100,7 @@ keras.backend.categorical_crossentropy(target, output, from_logits=False)
 
 Categorical crossentropy between an output tensor and a target tensor.
 
-__Arguments__
+__参数__
 
 - __target__: A tensor of the same shape as `output`.
 - __output__: A tensor resulting from a softmax
@@ -3115,7 +3109,7 @@ case `output` is expected to be the logits).
 - __from_logits__: Boolean, whether `output` is the
 result of a softmax, or is a tensor of logits.
 
-__Returns__
+__返回__
 
 Output tensor.
 
@@ -3131,7 +3125,7 @@ keras.backend.sparse_categorical_crossentropy(target, output, from_logits=False)
 
 Categorical crossentropy with integer targets.
 
-__Arguments__
+__参数__
 
 - __target__: An integer tensor.
 - __output__: A tensor resulting from a softmax
@@ -3140,7 +3134,7 @@ case `output` is expected to be the logits).
 - __from_logits__: Boolean, whether `output` is the
 result of a softmax, or is a tensor of logits.
 
-__Returns__
+__返回__
 
 Output tensor.
 
@@ -3156,7 +3150,7 @@ keras.backend.binary_crossentropy(target, output, from_logits=False)
 
 Binary crossentropy between an output tensor and a target tensor.
 
-__Arguments__
+__参数__
 
 - __target__: A tensor with the same shape as `output`.
 - __output__: A tensor.
@@ -3164,7 +3158,7 @@ __Arguments__
 By default, we consider that `output`
 encodes a probability distribution.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3180,11 +3174,11 @@ keras.backend.sigmoid(x)
 
 Element-wise sigmoid.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3204,11 +3198,11 @@ Faster than sigmoid.
 Returns `0.` if `x < -2.5`, `1.` if `x > 2.5`.
 In `-2.5 <= x <= 2.5`, returns `0.2 * x + 0.5`.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3224,11 +3218,11 @@ keras.backend.tanh(x)
 
 Element-wise tanh.
 
-__Arguments__
+__参数__
 
 - __x__: A tensor or variable.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3244,7 +3238,7 @@ keras.backend.dropout(x, level, noise_shape=None, seed=None)
 
 Sets entries in `x` to zero at random, while scaling the entire tensor.
 
-__Arguments__
+__参数__
 
 - __x__: tensor
 - __level__: fraction of the entries in the tensor
@@ -3253,7 +3247,7 @@ that will be set to 0.
 must be broadcastable to the shape of `x`
 - __seed__: random seed to ensure determinism.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3269,12 +3263,12 @@ keras.backend.l2_normalize(x, axis=None)
 
 Normalizes a tensor wrt the L2 norm alongside the specified axis.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __axis__: axis along which to perform normalization.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3290,13 +3284,13 @@ keras.backend.in_top_k(predictions, targets, k)
 
 Returns whether the `targets` are in the top `k` `predictions`.
 
-__Arguments__
+__参数__
 
 - __predictions__: A tensor of shape `(batch_size, classes)` and type `float32`.
 - __targets__: A 1D tensor of length `batch_size` and type `int32` or `int64`.
 - __k__: An `int`, number of top elements to consider.
 
-__Returns__
+__返回__
 
 A 1D tensor of length `batch_size` and type `bool`.
 `output[i]` is `True` if `predictions[i, targets[i]]` is within top-`k`
@@ -3314,7 +3308,7 @@ keras.backend.conv1d(x, kernel, strides=1, padding='valid', data_format=None, di
 
 1D convolution.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __kernel__: kernel tensor.
@@ -3323,11 +3317,11 @@ __Arguments__
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 - __dilation_rate__: integer dilate rate.
 
-__Returns__
+__返回__
 
 A tensor, result of 1D convolution.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3343,7 +3337,7 @@ keras.backend.conv2d(x, kernel, strides=(1, 1), padding='valid', data_format=Non
 
 2D convolution.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __kernel__: kernel tensor.
@@ -3354,11 +3348,11 @@ Whether to use Theano or TensorFlow/CNTK data format
 for inputs/kernels/outputs.
 - __dilation_rate__: tuple of 2 integers.
 
-__Returns__
+__返回__
 
 A tensor, result of 2D convolution.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3374,7 +3368,7 @@ keras.backend.conv2d_transpose(x, kernel, output_shape, strides=(1, 1), padding=
 
 2D deconvolution (i.e. transposed convolution).
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __kernel__: kernel tensor.
@@ -3385,11 +3379,11 @@ __Arguments__
 Whether to use Theano or TensorFlow/CNTK data format
 for inputs/kernels/outputs.
 
-__Returns__
+__返回__
 
 A tensor, result of transposed 2D convolution.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3405,7 +3399,7 @@ keras.backend.separable_conv1d(x, depthwise_kernel, pointwise_kernel, strides=1,
 
 1D convolution with separable filters.
 
-__Arguments__
+__参数__
 
 - __x__: input tensor
 - __depthwise_kernel__: convolution kernel for the depthwise convolution.
@@ -3415,11 +3409,11 @@ __Arguments__
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 - __dilation_rate__: integer dilation rate.
 
-__Returns__
+__返回__
 
 Output tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3435,7 +3429,7 @@ keras.backend.separable_conv2d(x, depthwise_kernel, pointwise_kernel, strides=(1
 
 2D convolution with separable filters.
 
-__Arguments__
+__参数__
 
 - __x__: input tensor
 - __depthwise_kernel__: convolution kernel for the depthwise convolution.
@@ -3446,11 +3440,11 @@ __Arguments__
 - __dilation_rate__: tuple of integers,
 dilation rates for the separable convolution.
 
-__Returns__
+__返回__
 
 Output tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3466,7 +3460,7 @@ keras.backend.depthwise_conv2d(x, depthwise_kernel, strides=(1, 1), padding='val
 
 2D convolution with separable filters.
 
-__Arguments__
+__参数__
 
 - __x__: input tensor
 - __depthwise_kernel__: convolution kernel for the depthwise convolution.
@@ -3476,11 +3470,11 @@ __Arguments__
 - __dilation_rate__: tuple of integers,
 dilation rates for the separable convolution.
 
-__Returns__
+__返回__
 
 Output tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3496,7 +3490,7 @@ keras.backend.conv3d(x, kernel, strides=(1, 1, 1), padding='valid', data_format=
 
 3D convolution.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __kernel__: kernel tensor.
@@ -3507,11 +3501,11 @@ Whether to use Theano or TensorFlow/CNTK data format
 for inputs/kernels/outputs.
 - __dilation_rate__: tuple of 3 integers.
 
-__Returns__
+__返回__
 
 A tensor, result of 3D convolution.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3527,7 +3521,7 @@ keras.backend.conv3d_transpose(x, kernel, output_shape, strides=(1, 1, 1), paddi
 
 3D deconvolution (i.e. transposed convolution).
 
-__Arguments__
+__参数__
 
 - __x__: input tensor.
 - __kernel__: kernel tensor.
@@ -3538,11 +3532,11 @@ __Arguments__
 Whether to use Theano or TensorFlow/CNTK data format
 for inputs/kernels/outputs.
 
-__Returns__
+__返回__
 
 A tensor, result of transposed 3D convolution.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3558,7 +3552,7 @@ keras.backend.pool2d(x, pool_size, strides=(1, 1), padding='valid', data_format=
 
 2D Pooling.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __pool_size__: tuple of 2 integers.
@@ -3567,11 +3561,11 @@ __Arguments__
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 - __pool_mode__: string, `"max"` or `"avg"`.
 
-__Returns__
+__返回__
 
 A tensor, result of 2D pooling.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 - __ValueError__: if `pool_mode` is neither `"max"` or `"avg"`.
@@ -3588,7 +3582,7 @@ keras.backend.pool3d(x, pool_size, strides=(1, 1, 1), padding='valid', data_form
 
 3D Pooling.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __pool_size__: tuple of 3 integers.
@@ -3597,11 +3591,11 @@ __Arguments__
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 - __pool_mode__: string, `"max"` or `"avg"`.
 
-__Returns__
+__返回__
 
 A tensor, result of 3D pooling.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
 - __ValueError__: if `pool_mode` is neither `"max"` or `"avg"`.
@@ -3618,17 +3612,17 @@ keras.backend.bias_add(x, bias, data_format=None)
 
 Adds a bias vector to a tensor.
 
-__Arguments__
+__参数__
 
 - __x__: Tensor or variable.
 - __bias__: Bias tensor to add.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
-__Returns__
+__返回__
 
 Output tensor.
 
-__Raises__
+__异常__
 
 - __ValueError__: In one of the two cases below:
 1. invalid `data_format` argument.
@@ -3648,7 +3642,7 @@ keras.backend.random_normal(shape, mean=0.0, stddev=1.0, dtype=None, seed=None)
 
 Returns a tensor with normal distribution of values.
 
-__Arguments__
+__参数__
 
 - __shape__: A tuple of integers, the shape of tensor to create.
 - __mean__: A float, mean of the normal distribution to draw samples.
@@ -3657,7 +3651,7 @@ to draw samples.
 - __dtype__: String, dtype of returned tensor.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3673,7 +3667,7 @@ keras.backend.random_uniform(shape, minval=0.0, maxval=1.0, dtype=None, seed=Non
 
 Returns a tensor with uniform distribution of values.
 
-__Arguments__
+__参数__
 
 - __shape__: A tuple of integers, the shape of tensor to create.
 - __minval__: A float, lower boundary of the uniform distribution
@@ -3683,7 +3677,7 @@ to draw samples.
 - __dtype__: String, dtype of returned tensor.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3699,14 +3693,14 @@ keras.backend.random_binomial(shape, p=0.0, dtype=None, seed=None)
 
 Returns a tensor with random binomial distribution of values.
 
-__Arguments__
+__参数__
 
 - __shape__: A tuple of integers, the shape of tensor to create.
 - __p__: A float, `0. <= p <= 1`, probability of binomial distribution.
 - __dtype__: String, dtype of returned tensor.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3727,7 +3721,7 @@ with specified mean and standard deviation,
 except that values whose magnitude is more than
 two standard deviations from the mean are dropped and re-picked.
 
-__Arguments__
+__参数__
 
 - __shape__: A tuple of integers, the shape of tensor to create.
 - __mean__: Mean of the values.
@@ -3735,7 +3729,7 @@ __Arguments__
 - __dtype__: String, dtype of returned tensor.
 - __seed__: Integer, random seed.
 
-__Returns__
+__返回__
 
 A tensor.
 
@@ -3751,12 +3745,12 @@ keras.backend.ctc_label_dense_to_sparse(labels, label_lengths)
 
 Converts CTC labels from dense to sparse.
 
-__Arguments__
+__参数__
 
 - __labels__: dense CTC labels.
 - __label_lengths__: length of the labels.
 
-__Returns__
+__返回__
 
 A sparse tensor representation of the labels.
 
@@ -3772,7 +3766,7 @@ keras.backend.ctc_batch_cost(y_true, y_pred, input_length, label_length)
 
 Runs CTC loss algorithm on each batch element.
 
-__Arguments__
+__参数__
 
 - __y_true__: tensor `(samples, max_string_length)`
 containing the truth labels.
@@ -3783,7 +3777,7 @@ each batch item in `y_pred`.
 - __label_length__: tensor `(samples, 1)` containing the sequence length for
 each batch item in `y_true`.
 
-__Returns__
+__返回__
 
 Tensor with shape (samples,1) containing the
 CTC loss of each element.
@@ -3803,7 +3797,7 @@ Decodes the output of a softmax.
 Can use either greedy search (also known as best path)
 or a constrained dictionary search.
 
-__Arguments__
+__参数__
 
 - __y_pred__: tensor `(samples, time_steps, num_categories)`
 containing the prediction, or output of the softmax.
@@ -3816,7 +3810,7 @@ with a beam of this width.
 - __top_paths__: if `greedy` is `false`,
 how many of the most probable paths will be returned.
 
-__Returns__
+__返回__
 
 - __Tuple__:
 - __List__: if `greedy` is `true`, returns a list of one element that
@@ -3839,14 +3833,14 @@ keras.backend.map_fn(fn, elems, name=None, dtype=None)
 
 Map the function fn over the elements elems and return the outputs.
 
-__Arguments__
+__参数__
 
 - __fn__: Callable that will be called upon each element in elems
 - __elems__: tensor
 - __name__: A string name for the map node in the graph
 - __dtype__: Output data type.
 
-__Returns__
+__返回__
 
 Tensor with dtype `dtype`.
 
@@ -3862,7 +3856,7 @@ keras.backend.foldl(fn, elems, initializer=None, name=None)
 
 Reduce elems using fn to combine them from left to right.
 
-__Arguments__
+__参数__
 
 - __fn__: Callable that will be called upon each element in elems and an
 accumulator, for instance `lambda acc, x: acc + x`
@@ -3870,7 +3864,7 @@ accumulator, for instance `lambda acc, x: acc + x`
 - __initializer__: The first value used (`elems[0]` in case of None)
 - __name__: A string name for the foldl node in the graph
 
-__Returns__
+__返回__
 
 Tensor with same type and shape as `initializer`.
 
@@ -3886,7 +3880,7 @@ keras.backend.foldr(fn, elems, initializer=None, name=None)
 
 Reduce elems using fn to combine them from right to left.
 
-__Arguments__
+__参数__
 
 - __fn__: Callable that will be called upon each element in elems and an
 accumulator, for instance `lambda acc, x: acc + x`
@@ -3894,7 +3888,7 @@ accumulator, for instance `lambda acc, x: acc + x`
 - __initializer__: The first value used (`elems[-1]` in case of None)
 - __name__: A string name for the foldr node in the graph
 
-__Returns__
+__返回__
 
 Tensor with same type and shape as `initializer`.
 
@@ -3910,7 +3904,7 @@ keras.backend.local_conv1d(inputs, kernel, kernel_size, strides, data_format=Non
 
 Apply 1D conv with un-shared weights.
 
-__Arguments__
+__参数__
 
 - __inputs__: 3D tensor with shape: (batch_size, steps, input_dim)
 - __kernel__: the unshared weight for convolution,
@@ -3921,11 +3915,11 @@ specifying the length of the 1D convolution window
 specifying the stride length of the convolution
 - __data_format__: the data format, channels_first or channels_last
 
-__Returns__
+__返回__
 
 the tensor after 1d conv with un-shared weights, with shape (batch_size, output_length, filters)
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
 
@@ -3941,7 +3935,7 @@ keras.backend.local_conv2d(inputs, kernel, kernel_size, strides, output_shape, d
 
 Apply 2D conv with un-shared weights.
 
-__Arguments__
+__参数__
 
 - __inputs__: 4D tensor with shape:
 (batch_size, filters, new_rows, new_cols)
@@ -3958,7 +3952,7 @@ of the convolution along the width and height.
 - __output_shape__: a tuple with (output_row, output_col)
 - __data_format__: the data format, channels_first or channels_last
 
-__Returns__
+__返回__
 
 A 4d tensor with shape:
 (batch_size, filters, new_rows, new_cols)
@@ -3967,7 +3961,7 @@ or 4D tensor with shape:
 (batch_size, new_rows, new_cols, filters)
 if data_format='channels_last'.
 
-__Raises__
+__异常__
 
 - __ValueError__: if `data_format` is neither
 `channels_last` or `channels_first`.
@@ -3985,11 +3979,11 @@ backend.backend()
 Publicly accessible method
 for determining the current backend.
 
-__Returns__
+__返回__
 
 String, the name of the backend Keras is currently using.
 
-__Example__
+__例子__
 
 ```python
 >>> keras.backend.backend()
