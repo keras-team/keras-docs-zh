@@ -103,7 +103,7 @@ var = K.zeros(shape=(3, 4, 5))
 var = K.ones(shape=(3, 4, 5))
 ```
 
-Most tensor operations you will need can be done as you would in TensorFlow or Theano:
+你需要的大多数张量操作都可以像在 TensorFlow 或 Theano 中那样完成：
 
 ```python
 # 使用随机数初始化张量
@@ -1063,25 +1063,25 @@ keras.backend.random_normal_variable(shape, mean, scale, dtype=None, name=None, 
 ```
 
 
-Instantiates a variable with values drawn from a normal distribution.
+使用从正态分布中抽取的值实例化一个变量。
 
 __参数__
 
-- __shape__: Tuple of integers, shape of returned Keras variable.
-- __mean__: Float, mean of the normal distribution.
-- __scale__: Float, standard deviation of the normal distribution.
-- __dtype__: String, dtype of returned Keras variable.
-- __name__: String, name of returned Keras variable.
-- __seed__: Integer, random seed.
+- __shape__: 整数元组，返回的Keras变量的尺寸。
+- __mean__: 浮点型，正态分布平均值。
+- __scale__: 浮点型，正态分布标准差。
+- __dtype__: 字符串，返回的Keras变量的 dtype。
+- __name__: 字符串，返回的Keras变量的名称。
+- __seed__: 整数，随机种子。
 
 __返回__
 
-A Keras variable, filled with drawn samples.
+一个 Keras 变量，以抽取的样本填充。
 
 __例子__
 
 ```python
-# TensorFlow example
+# TensorFlow 示例
 >>> kvar = K.random_normal_variable((2,3), 0, 1)
 >>> kvar
 <tensorflow.python.ops.variables.Variable object at 0x10ab12dd0>
@@ -1100,16 +1100,15 @@ keras.backend.count_params(x)
 ```
 
 
-Returns the static number of elements in a Keras variable or tensor.
+返回 Keras 变量或张量中的静态元素数。
 
 __参数__
 
-- __x__: Keras variable or tensor.
+- __x__: Keras 变量或张量。
 
 __返回__
 
-Integer, the number of elements in `x`, i.e., the product of the
-array's static dimensions.
+整数，`x` 中的元素数量，即，数组中静态维度的乘积。
 
 __例子__
 
@@ -1132,18 +1131,18 @@ keras.backend.cast(x, dtype)
 ```
 
 
-Casts a tensor to a different dtype and returns it.
+将张量转换到不同的 dtype 并返回。
 
-You can cast a Keras variable but it still returns a Keras tensor.
+你可以转换一个 Keras 变量，但它仍然返回一个 Keras 张量。
 
 __参数__
 
-- __x__: Keras tensor (or variable).
-- __dtype__: String, either (`'float16'`, `'float32'`, or `'float64'`).
+- __x__: Keras 张量（或变量）。
+- __dtype__: 字符串， (`'float16'`, `'float32'` 或 `'float64'`)。
 
 __返回__
 
-Keras tensor with dtype `dtype`.
+Keras 张量，类型为 `dtype`。
 
 __例子__
 
@@ -1173,16 +1172,16 @@ keras.backend.update(x, new_x)
 ```
 
 
-Update the value of `x` to `new_x`.
+将 `x` 的值更新为 `new_x`。
 
 __参数__
 
-- __x__: A `Variable`.
-- __new_x__: A tensor of same shape as `x`.
+- __x__: 一个 `Variable`。
+- __new_x__: 一个与 `x` 尺寸相同的张量。
 
 __返回__
 
-The variable `x` updated.
+更新后的变量 `x`。
 
 ----
 
@@ -1194,16 +1193,16 @@ keras.backend.update_add(x, increment)
 ```
 
 
-Update the value of `x` by adding `increment`.
+通过增加 `increment` 来更新 `x` 的值。
 
 __参数__
 
-- __x__: A `Variable`.
-- __increment__: A tensor of same shape as `x`.
+- __x__: 一个 `Variable`。
+- __increment__: 与 `x` 形状相同的张量。
 
 __返回__
 
-The variable `x` updated.
+更新后的变量 `x`。
 
 ----
 
@@ -1215,16 +1214,16 @@ keras.backend.update_sub(x, decrement)
 ```
 
 
-Update the value of `x` by subtracting `decrement`.
+通过减 `decrement` 来更新 `x` 的值。
 
 __参数__
 
-- __x__: A `Variable`.
-- __decrement__: A tensor of same shape as `x`.
+- __x__: 一个 `Variable`。
+- __decrement__: 与 `x` 形状相同的张量。
 
 __返回__
 
-The variable `x` updated.
+更新后的变量 `x`。
 
 ----
 
@@ -1236,17 +1235,17 @@ keras.backend.moving_average_update(x, value, momentum)
 ```
 
 
-Compute the moving average of a variable.
+计算变量的移动平均值。
 
 __参数__
 
-- __x__: A `Variable`.
-- __value__: A tensor with the same shape as `x`.
-- __momentum__: The moving average momentum.
+- __x__: 一个 `Variable`。
+- __value__: 与 `x` 形状相同的张量。
+- __momentum__: 移动平均动量。
 
 __返回__
 
-An operation to update the variable.
+更新变量的操作。
 
 ----
 
@@ -1258,25 +1257,25 @@ keras.backend.dot(x, y)
 ```
 
 
-Multiplies 2 tensors (and/or variables) and returns a *tensor*.
+将 2 个张量（和/或变量）相乘并返回一个*张量*。
 
-When attempting to multiply a nD tensor
-with a nD tensor, it reproduces the Theano behavior.
-(e.g. `(2, 3) * (4, 3, 5) -> (2, 4, 5)`)
+当试图将 nD 张量与 nD 张量相乘时，
+它会重现 Theano 行为。
+(例如 `(2, 3) * (4, 3, 5) -> (2, 4, 5)`)
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A tensor, dot product of `x` and `y`.
+一个张量，`x` 和 `y` 的点积。
 
 __例子__
 
 ```python
-# dot product between tensors
+# 张量之间的点积
 >>> x = K.placeholder(shape=(2, 3))
 >>> y = K.placeholder(shape=(3, 4))
 >>> xy = K.dot(x, y)
@@ -1285,7 +1284,7 @@ __例子__
 ```
 
 ```python
-# dot product between tensors
+# 张量之间的点积
 >>> x = K.placeholder(shape=(32, 28, 3))
 >>> y = K.placeholder(shape=(3, 4))
 >>> xy = K.dot(x, y)
@@ -1294,7 +1293,7 @@ __例子__
 ```
 
 ```python
-# Theano-like behavior example
+# 类 Theano 行为的例子
 >>> x = K.random_uniform_variable(shape=(2, 3), low=0, high=1)
 >>> y = K.ones((4, 3, 5))
 >>> xy = K.dot(x, y)
@@ -1312,49 +1311,45 @@ keras.backend.batch_dot(x, y, axes=None)
 ```
 
 
-Batchwise dot product.
+批量化的点积。
 
-`batch_dot` is used to compute dot product of `x` and `y` when
-`x` and `y` are data in batch, i.e. in a shape of
-`(batch_size, :)`.
-`batch_dot` results in a tensor or variable with less dimensions
-than the input. If the number of dimensions is reduced to 1,
-we use `expand_dims` to make sure that ndim is at least 2.
+当 `x` 和 `y` 是批量数据时，
+`batch_dot` 用于计算 `x` 和 `y` 的点积，
+即尺寸为 `(batch_size, :)`。
+
+`batch_dot` 产生一个比输入尺寸更小的张量或变量。 
+如果维数减少到 1，我们使用 `expand_dims` 来确保 ndim 至少为 2。
 
 __参数__
 
-- __x__: Keras tensor or variable with `ndim >= 2`.
-- __y__: Keras tensor or variable with `ndim >= 2`.
-- __axes__: list of (or single) int with target dimensions.
-The lengths of `axes[0]` and `axes[1]` should be the same.
+- __x__: `ndim >= 2` 的 Keras 张量或变量。
+- __y__: `ndim >= 2` 的 Keras 张量或变量。
+- __axes__: 表示目标维度的整数或列表。
+`axes[0]` 和 `axes[1]` 的长度必须相同。
 
 __返回__
 
-A tensor with shape equal to the concatenation of `x`'s shape
-(less the dimension that was summed over) and `y`'s shape
-(less the batch dimension and the dimension that was summed over).
-If the final rank is 1, we reshape it to `(batch_size, 1)`.
+一个尺寸等于 `x` 的尺寸（减去总和的维度）和 `y` 的尺寸（减去批次维度和总和的维度）的连接的张量。
+如果最后的秩为 1，我们将它重新转换为 `(batch_size, 1)`。
 
 __例子__
 
-Assume `x = [[1, 2], [3, 4]]` and `y = [[5, 6], [7, 8]]`
-`batch_dot(x, y, axes=1) = [[17], [53]]` which is the main diagonal
-of `x.dot(y.T)`, although we never have to calculate the off-diagonal
-elements.
+假设 `x = [[1, 2], [3, 4]]` 和 `y = [[5, 6], [7, 8]]`，
+`batch_dot(x, y, axes=1) = [[17], [53]]` 是 `x.dot(y.T)` 的主对角线，
+尽管我们不需要计算非对角元素。
 
-Shape inference:
-Let `x`'s shape be `(100, 20)` and `y`'s shape be `(100, 30, 20)`.
-If `axes` is (1, 2), to find the output shape of resultant tensor,
-loop through each dimension in `x`'s shape and `y`'s shape:
+尺寸推断：
+让 `x` 的尺寸为 `(100, 20)`，以及 `y` 的尺寸为 `(100, 30, 20)`。
+如果 `axes` 是 (1, 2)，要找出结果张量的尺寸，
+循环 `x` 和 `y` 的尺寸的每一个维度。
 
-* `x.shape[0]` : 100 : append to output shape
-* `x.shape[1]` : 20 : do not append to output shape,
-dimension 1 of `x` has been summed over. (`dot_axes[0]` = 1)
-* `y.shape[0]` : 100 : do not append to output shape,
-always ignore first dimension of `y`
-* `y.shape[1]` : 30 : append to output shape
-* `y.shape[2]` : 20 : do not append to output shape,
-dimension 2 of `y` has been summed over. (`dot_axes[1]` = 2)
+* `x.shape[0]` : 100 : 附加到输出形状，
+* `x.shape[1]` : 20 : 不附加到输出形状，
+`x` 的第一个维度已经被加和了 (`dot_axes[0]` = 1)。
+* `y.shape[0]` : 100 : 不附加到输出形状，总是忽略 `y` 的第一维
+* `y.shape[1]` : 30 : 附加到输出形状，
+* `y.shape[2]` : 20 : 不附加到输出形状，
+`y` 的第二个维度已经被加和了 (`dot_axes[0]` = 2)。
 `output_shape` = `(100, 30)`
 
 ```python
@@ -1375,15 +1370,15 @@ keras.backend.transpose(x)
 ```
 
 
-Transposes a tensor and returns it.
+将张量转置并返回。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 __例子__
 
@@ -1418,17 +1413,16 @@ array([[ 1.,  4.],
 keras.backend.gather(reference, indices)
 ```
 
-
-Retrieves the elements of indices `indices` in the tensor `reference`.
+在张量 `reference` 中检索索引 `indices` 的元素。
 
 __参数__
 
-- __reference__: A tensor.
-- __indices__: An integer tensor of indices.
+- __reference__: 一个张量。
+- __indices__: 索引的整数张量。
 
 __返回__
 
-A tensor of same type as `reference`.
+与 `reference` 类型相同的张量。
 
 ----
 
@@ -1440,20 +1434,19 @@ keras.backend.max(x, axis=None, keepdims=False)
 ```
 
 
-Maximum value in a tensor.
+张量中的最大值。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to find maximum values.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要在哪个轴寻找最大值。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with maximum values of `x`.
+`x` 中最大值的张量。
 
 ----
 
@@ -1465,20 +1458,19 @@ keras.backend.min(x, axis=None, keepdims=False)
 ```
 
 
-Minimum value in a tensor.
+张量中的最小值。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to find minimum values.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要在哪个轴寻找最大值。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with miminum values of `x`.
+`x` 中最小值的张量。
 
 ----
 
@@ -1489,21 +1481,19 @@ A tensor with miminum values of `x`.
 keras.backend.sum(x, axis=None, keepdims=False)
 ```
 
-
-Sum of the values in a tensor, alongside the specified axis.
+计算张量在某一指定轴的和。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to sum over.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要加和的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with sum of `x`.
+`x` 的和的张量。
 
 ----
 
@@ -1514,21 +1504,19 @@ A tensor with sum of `x`.
 keras.backend.prod(x, axis=None, keepdims=False)
 ```
 
-
-Multiplies the values in a tensor, alongside the specified axis.
+在某一指定轴，计算张量中的值的乘积。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to compute the product.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数需要计算乘积的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with the product of elements of `x`.
+`x` 的元素的乘积的张量。
 
 ----
 
@@ -1539,17 +1527,17 @@ A tensor with the product of elements of `x`.
 keras.backend.cumsum(x, axis=0)
 ```
 
+在某一指定轴，计算张量中的值的累加和。
 
-Cumulative sum of the values in a tensor, alongside the specified axis.
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to compute the sum.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要加和的轴。
 
 __返回__
 
-A tensor of the cumulative sum of values of `x` along `axis`.
+`x` 在 `axis` 轴的累加和的张量。
 
 ----
 
@@ -1560,17 +1548,16 @@ A tensor of the cumulative sum of values of `x` along `axis`.
 keras.backend.cumprod(x, axis=0)
 ```
 
-
-Cumulative product of the values in a tensor, alongside the specified axis.
+在某一指定轴，计算张量中的值的累积乘积。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to compute the product.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要计算乘积的轴。
 
 __返回__
 
-A tensor of the cumulative product of values of `x` along `axis`.
+`x` 在 `axis` 轴的累乘的张量。
 
 ----
 
@@ -1581,21 +1568,19 @@ A tensor of the cumulative product of values of `x` along `axis`.
 keras.backend.var(x, axis=None, keepdims=False)
 ```
 
-
-Variance of a tensor, alongside the specified axis.
+张量在某一指定轴的方差。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to compute the variance.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，要计算方差的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with the variance of elements of `x`.
+`x` 元素的方差的张量。
 
 ----
 
@@ -1607,20 +1592,19 @@ keras.backend.std(x, axis=None, keepdims=False)
 ```
 
 
-Standard deviation of a tensor, alongside the specified axis.
+张量在某一指定轴的标准差。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to compute the standard deviation.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`,
-the reduced dimension is retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，要计算标准差的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with the standard deviation of elements of `x`.
+`x` 元素的标准差的张量。
 
 ----
 
@@ -1632,20 +1616,19 @@ keras.backend.mean(x, axis=None, keepdims=False)
 ```
 
 
-Mean of a tensor, alongside the specified axis.
+张量在某一指定轴的均值。
 
 __参数__
 
 - __x__: A tensor or variable.
-- __axis__: A list of integer. Axes to compute the mean.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1 for each entry in `axis`. If `keepdims` is `True`,
-the reduced dimensions are retained with length 1.
+- __axis__: 整数或列表。需要计算均值的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则 `axis` 中每一项的张量秩减 1。
+如果 `keepdims` 为 `True`，则缩小的维度保留为长度 1。
 
 __返回__
 
-A tensor with the mean of elements of `x`.
+`x` 元素的均值的张量。
 
 ----
 
@@ -1656,18 +1639,19 @@ A tensor with the mean of elements of `x`.
 keras.backend.any(x, axis=None, keepdims=False)
 ```
 
+reduction
 
-Bitwise reduction (logical OR).
+按位归约（逻辑 OR）。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __axis__: axis along which to perform the reduction.
-- __keepdims__: whether the drop or broadcast the reduction axes.
+- __x__: 张量或变量。
+- __axis__: 执行归约操作的轴。
+- __keepdims__: 是否放弃或广播归约的轴。
 
 __返回__
 
-A uint8 tensor (0s and 1s).
+一个 uint8 张量 (0s 和 1s)。
 
 ----
 
@@ -1679,17 +1663,17 @@ keras.backend.all(x, axis=None, keepdims=False)
 ```
 
 
-Bitwise reduction (logical AND).
+按位归约（逻辑 AND）。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __axis__: axis along which to perform the reduction.
-- __keepdims__: whether the drop or broadcast the reduction axes.
+- __x__: 张量或变量。
+- __axis__: 执行归约操作的轴。
+- __keepdims__: 是否放弃或广播归约的轴。
 
 __返回__
 
-A uint8 tensor (0s and 1s).
+一个 uint8 张量 (0s 和 1s)。
 
 ----
 
@@ -1700,17 +1684,16 @@ A uint8 tensor (0s and 1s).
 keras.backend.argmax(x, axis=-1)
 ```
 
-
-Returns the index of the maximum value along an axis.
+返回指定轴的最大值的索引。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __axis__: axis along which to perform the reduction.
+- __x__: 张量或变量。
+- __axis__: 执行归约操作的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1722,16 +1705,16 @@ keras.backend.argmin(x, axis=-1)
 ```
 
 
-Returns the index of the minimum value along an axis.
+返回指定轴的最小值的索引。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __axis__: axis along which to perform the reduction.
+- __x__: 张量或变量。
+- __axis__: 执行归约操作的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1743,15 +1726,15 @@ keras.backend.square(x)
 ```
 
 
-Element-wise square.
+元素级的平方操作。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1763,15 +1746,15 @@ keras.backend.abs(x)
 ```
 
 
-Element-wise absolute value.
+元素级的绝对值操作。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1783,15 +1766,15 @@ keras.backend.sqrt(x)
 ```
 
 
-Element-wise square root.
+元素级的平方根操作。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1803,15 +1786,15 @@ keras.backend.exp(x)
 ```
 
 
-Element-wise exponential.
+元素级的指数运算操作。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1823,15 +1806,15 @@ keras.backend.log(x)
 ```
 
 
-Element-wise log.
+元素级的对数运算操作。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1843,24 +1826,22 @@ keras.backend.logsumexp(x, axis=None, keepdims=False)
 ```
 
 
-Computes log(sum(exp(elements across dimensions of a tensor))).
+计算 log(sum(exp(张量在某一轴的元素)))。
 
-This function is more numerically stable than log(sum(exp(x))).
-It avoids overflows caused by taking the exp of large inputs and
-underflows caused by taking the log of small inputs.
+这个函数在数值上比 log(sum(exp(x))) 更稳定。
+它避免了求大输入的指数造成的上溢，以及求小输入的对数造成的下溢。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: An integer, the axis to reduce over.
-- __keepdims__: A boolean, whether to keep the dimensions or not.
-If `keepdims` is `False`, the rank of the tensor is reduced
-by 1. If `keepdims` is `True`, the reduced dimension is
-retained with length 1.
+- __x__: 张量或变量。
+- __axis__: 一个整数，需要归约的轴。
+- __keepdims__: 布尔值，是否保留原尺寸。
+如果 `keepdims` 为 `False`，则张量的秩减 1。
+如果 `keepdims` 为 `True`，缩小的维度保留为长度 1。
 
 __返回__
 
-The reduced tensor.
+归约后的张量。
 
 ----
 
@@ -1872,17 +1853,17 @@ keras.backend.round(x)
 ```
 
 
-Element-wise rounding to the closest integer.
+元素级地四舍五入到最接近的整数。
 
-In case of tie, the rounding mode used is "half to even".
+在平局的情况下，使用的舍入模式是「偶数的一半」。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1894,15 +1875,15 @@ keras.backend.sign(x)
 ```
 
 
-Element-wise sign.
+元素级的符号运算。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1914,16 +1895,16 @@ keras.backend.pow(x, a)
 ```
 
 
-Element-wise exponentiation.
+元素级的指数运算操作。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __a__: Python integer.
+- __x__: 张量或变量。
+- __a__: Python 整数。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1934,18 +1915,17 @@ A tensor.
 keras.backend.clip(x, min_value, max_value)
 ```
 
-
-Element-wise value clipping.
+元素级裁剪。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __min_value__: Python float or integer.
-- __max_value__: Python float or integer.
+- __x__: 张量或变量。
+- __min_value__: Python 浮点或整数。
+- __max_value__: Python 浮点或整数。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -1957,16 +1937,16 @@ keras.backend.equal(x, y)
 ```
 
 
-Element-wise equality between two tensors.
+逐个元素对比两个张量的相等情况。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -1977,17 +1957,16 @@ A bool tensor.
 keras.backend.not_equal(x, y)
 ```
 
-
-Element-wise inequality between two tensors.
+逐个元素对比两个张量的不相等情况。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -1999,16 +1978,16 @@ keras.backend.greater(x, y)
 ```
 
 
-Element-wise truth value of (x > y).
+逐个元素比对 (x > y) 的真值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -2020,16 +1999,16 @@ keras.backend.greater_equal(x, y)
 ```
 
 
-Element-wise truth value of (x >= y).
+逐个元素比对 (x >= y) 的真值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -2041,16 +2020,16 @@ keras.backend.less(x, y)
 ```
 
 
-Element-wise truth value of (x < y).
+逐个元素比对 (x < y) 的真值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -2062,16 +2041,16 @@ keras.backend.less_equal(x, y)
 ```
 
 
-Element-wise truth value of (x <= y).
+逐个元素比对 (x <= y) 的真值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A bool tensor.
+一个布尔张量。
 
 ----
 
@@ -2083,18 +2062,16 @@ keras.backend.maximum(x, y)
 ```
 
 
-Element-wise maximum of two tensors.
+逐个元素比对两个张量的最大值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A tensor.
-
-----
+一个张量。
 
 ### minimum
 
@@ -2104,16 +2081,16 @@ keras.backend.minimum(x, y)
 ```
 
 
-Element-wise minimum of two tensors.
+逐个元素比对两个张量的最小值。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __y__: Tensor or variable.
+- __x__: 张量或变量。
+- __y__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2125,15 +2102,15 @@ keras.backend.sin(x)
 ```
 
 
-Computes sin of x element-wise.
+逐个元素计算 x 的 sin 值。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2145,15 +2122,15 @@ keras.backend.cos(x)
 ```
 
 
-Computes cos of x element-wise.
+逐个元素计算 x 的 cos 值。
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
