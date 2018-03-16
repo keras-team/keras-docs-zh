@@ -2142,20 +2142,19 @@ keras.backend.normalize_batch_in_training(x, gamma, beta, reduction_axes, epsilo
 ```
 
 
-Computes mean and std for batch then apply batch_normalization on batch.
+计算批次的均值和标准差，然后在批次上应用批次标准化。
 
 __参数__
 
-- __x__: Input tensor or variable.
-- __gamma__: Tensor by which to scale the input.
-- __beta__: Tensor with which to center the input.
-- __reduction_axes__: iterable of integers,
-axes over which to normalize.
-- __epsilon__: Fuzz factor.
+- __x__: 输入张量或变量。
+- __gamma__: 用于缩放输入的张量。
+- __beta__: 用于中心化输入的张量。
+- __reduction_axes__: 整数迭代，需要标准化的轴。
+- __epsilon__: 模糊因子。
 
 __返回__
 
-A tuple length of 3, `(normalized_tensor, mean, variance)`.
+长度为 3 个元组，`(normalized_tensor, mean, variance)`。
 
 ----
 
@@ -2167,23 +2166,23 @@ keras.backend.batch_normalization(x, mean, var, beta, gamma, epsilon=0.001)
 ```
 
 
-Applies batch normalization on x given mean, var, beta and gamma.
+在给定的 mean，var，beta 和 gamma 上应用批量标准化。
 
-I.e. returns:
+即，返回：
 `output = (x - mean) / (sqrt(var) + epsilon) * gamma + beta`
 
 __参数__
 
-- __x__: Input tensor or variable.
-- __mean__: Mean of batch.
-- __var__: Variance of batch.
-- __beta__: Tensor with which to center the input.
-- __gamma__: Tensor by which to scale the input.
-- __epsilon__: Fuzz factor.
+- __x__: 输入张量或变量。
+- __mean__: 批次的均值。
+- __var__: 批次的方差。
+- __beta__: 用于中心化输入的张量。
+- __gamma__: 用于缩放输入的张量。
+- __epsilon__: 模糊因子。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2195,16 +2194,16 @@ keras.backend.concatenate(tensors, axis=-1)
 ```
 
 
-Concatenates a list of tensors alongside the specified axis.
+基于指定的轴，连接张量的列表。
 
 __参数__
 
-- __tensors__: list of tensors to concatenate.
-- __axis__: concatenation axis.
+- __tensors__: 需要连接的张量列表。
+- __axis__: 连接的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2216,16 +2215,16 @@ keras.backend.reshape(x, shape)
 ```
 
 
-Reshapes a tensor to the specified shape.
+将张量重塑为指定的尺寸。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __shape__: Target shape tuple.
+- __x__: 张量或变量。
+- __shape__: 目标尺寸元组。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2237,17 +2236,16 @@ keras.backend.permute_dimensions(x, pattern)
 ```
 
 
-Permutes axes in a tensor.
+重新排列张量的轴。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __pattern__: A tuple of
-dimension indices, e.g. `(0, 2, 1)`.
+- __x__: 张量或变量。
+- __pattern__: 维度索引的元组，例如 `(0, 2, 1)`。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2259,22 +2257,22 @@ keras.backend.resize_images(x, height_factor, width_factor, data_format)
 ```
 
 
-Resizes the images contained in a 4D tensor.
+调整 4D 张量中包含的图像的大小。
 
 __参数__
 
-- __x__: Tensor or variable to resize.
-- __height_factor__: Positive integer.
-- __width_factor__: Positive integer.
-- __data_format__: string, `"channels_last"` or `"channels_first"`.
+- __x__: 需要调整的张量或变量。
+- __height_factor__: 正整数。
+- __width_factor__: 正整数。
+- __data_format__: 字符串，`"channels_last"` 或 `"channels_first"`。
 
 __返回__
 
-A tensor.
+一个张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `"channels_last"` 也不是 `"channels_first"`。
 
 ----
 
@@ -2286,23 +2284,23 @@ keras.backend.resize_volumes(x, depth_factor, height_factor, width_factor, data_
 ```
 
 
-Resizes the volume contained in a 5D tensor.
+调整 5D 张量中包含的体积。
 
 __参数__
 
-- __x__: Tensor or variable to resize.
-- __depth_factor__: Positive integer.
-- __height_factor__: Positive integer.
-- __width_factor__: Positive integer.
-- __data_format__: string, `"channels_last"` or `"channels_first"`.
+- __x__: 需要调整的张量或变量。
+- __depth_factor__: 正整数。
+- __height_factor__: 正整数。
+- __width_factor__: 正整数。
+- __data_format__: 字符串，`"channels_last"` 或 `"channels_first"`。
 
 __返回__
 
-A tensor.
+一个张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `"channels_last"` 也不是 `"channels_first"`。
 
 ----
 
@@ -2314,20 +2312,20 @@ keras.backend.repeat_elements(x, rep, axis)
 ```
 
 
-Repeats the elements of a tensor along an axis, like `np.repeat`.
+沿某一轴重复张量的元素，如 `np.repeat`。
 
-If `x` has shape `(s1, s2, s3)` and `axis` is `1`, the output
-will have shape `(s1, s2 * rep, s3)`.
+如果 `x` 的尺寸为 `(s1，s2，s3)` 而 `axis` 为 `1`，
+则输出尺寸为 `(s1，s2 * rep，s3）`。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __rep__: Python integer, number of times to repeat.
-- __axis__: Axis along which to repeat.
+- __x__: 张量或变量。
+- __rep__: Python 整数，重复次数。
+- __axis__: 需要重复的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2339,19 +2337,19 @@ keras.backend.repeat(x, n)
 ```
 
 
-Repeats a 2D tensor.
+重复一个 2D 张量。
 
-if `x` has shape (samples, dim) and `n` is `2`,
-the output will have shape `(samples, 2, dim)`.
+如果 `x` 的尺寸为 `(samples, dim)` 并且 `n` 为 `2`，
+则输出的尺寸为 `(samples, 2, dim)`。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __n__: Python integer, number of times to repeat.
+- __x__: 张量或变量。
+- __n__: Python 整数，重复次数。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2363,25 +2361,23 @@ keras.backend.arange(start, stop=None, step=1, dtype='int32')
 ```
 
 
-Creates a 1D tensor containing a sequence of integers.
+创建一个包含整数序列的 1D 张量。
 
-The function arguments use the same convention as
-Theano's arange: if only one argument is provided,
-it is in fact the "stop" argument.
+该函数参数与 Theano 的 `arange` 函数的约定相同：
+如果只提供了一个参数，那它就是 `stop` 参数。
 
-The default type of the returned tensor is `'int32'` to
-match TensorFlow's default.
+返回的张量的默认类型是 `int32`，以匹配 TensorFlow 的默认值。
 
 __参数__
 
-- __start__: Start value.
-- __stop__: Stop value.
-- __step__: Difference between two successive values.
-- __dtype__: Integer dtype to use.
+- __start__: 起始值。
+- __stop__: 结束值。
+- __step__: 两个连续值之间的差。
+- __dtype__: 要使用的整数类型。
 
 __返回__
 
-An integer tensor.
+一个整数张量。
 
 
 ----
@@ -2393,18 +2389,16 @@ An integer tensor.
 keras.backend.tile(x, n)
 ```
 
-
-Creates a tensor by tiling `x` by `n`.
+创建一个用 `n` 平铺 的 `x` 张量。
 
 __参数__
 
-- __x__: A tensor or variable
-- __n__: A list of integer. The length must be the same as the number of
-dimensions in `x`.
+- __x__: 张量或变量。
+- __n__: 整数列表。长度必须与 `x` 中的维数相同。
 
 __返回__
 
-A tiled tensor.
+一个平铺的张量。
 
 ----
 
@@ -2416,15 +2410,15 @@ keras.backend.flatten(x)
 ```
 
 
-Flatten a tensor.
+展平一个张量。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor, reshaped into 1-D
+一个重新调整为 1D 的张量。
 
 ----
 
@@ -2435,18 +2429,17 @@ A tensor, reshaped into 1-D
 keras.backend.batch_flatten(x)
 ```
 
+将一个 nD 张量变成一个 第 0 维相同的 2D 张量。
 
-Turn a nD tensor into a 2D tensor with same 0th dimension.
-
-In other words, it flattens each data samples of a batch.
+换句话说，它将批次中的每一个样本展平。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2457,17 +2450,16 @@ A tensor.
 keras.backend.expand_dims(x, axis=-1)
 ```
 
-
-Adds a 1-sized dimension at index "axis".
+在索引 `axis` 轴，添加 1 个尺寸的维度。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: Position where to add a new axis.
+- __x__: 张量或变量。
+- __axis__: 需要添加新的轴的位置。
 
 __返回__
 
-A tensor with expanded dimensions.
+一个扩展维度的轴。
 
 ----
 
@@ -2479,16 +2471,16 @@ keras.backend.squeeze(x, axis)
 ```
 
 
-Removes a 1-dimension from the tensor at index "axis".
+在索引 `axis` 轴，移除 1 个尺寸的维度。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __axis__: Axis to drop.
+- __x__: 张量或变量。
+- __axis__: 需要丢弃的轴。
 
 __返回__
 
-A tensor with the same data as `x` but reduced dimensions.
+一个与 `x` 数据相同但维度降低的张量。
 
 ----
 
@@ -2500,17 +2492,15 @@ keras.backend.temporal_padding(x, padding=(1, 1))
 ```
 
 
-Pads the middle dimension of a 3D tensor.
+填充 3D 张量的中间维度。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __padding__: Tuple of 2 integers, how many zeros to
-add at the start and end of dim 1.
-
+- __x__: 张量或变量。
+- __padding__: 2 个整数的元组，在第一个维度的开始和结束处添加多少个零。
 __返回__
 
-A padded 3D tensor.
+一个填充的 3D 张量。
 
 ----
 
@@ -2521,22 +2511,21 @@ A padded 3D tensor.
 keras.backend.spatial_2d_padding(x, padding=((1, 1), (1, 1)), data_format=None)
 ```
 
-
-Pads the 2nd and 3rd dimensions of a 4D tensor.
+填充 4D 张量的第二维和第三维。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __padding__: Tuple of 2 tuples, padding pattern.
-- __data_format__: string, `"channels_last"` or `"channels_first"`.
+- __x__: 张量或变量。
+- __padding__: 2 元组的元组，填充模式。
+- __data_format__: 字符串，`"channels_last"` 或 `"channels_first"`。
 
 __返回__
 
-A padded 4D tensor.
+一个填充的 4D 张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `"channels_last"` 也不是 `"channels_first"`。
 
 ----
 
@@ -2548,29 +2537,28 @@ keras.backend.spatial_3d_padding(x, padding=((1, 1), (1, 1), (1, 1)), data_forma
 ```
 
 
-Pads 5D tensor with zeros along the depth, height, width dimensions.
+沿着深度、高度宽度三个维度填充 5D 张量。
 
-Pads these dimensions with respectively
-"padding[0]", "padding[1]" and "padding[2]" zeros left and right.
+分别使用 "padding[0]", "padding[1]" 和 "padding[2]" 来左右填充这些维度。
 
-For 'channels_last' data_format,
-the 2nd, 3rd and 4th dimension will be padded.
-For 'channels_first' data_format,
-the 3rd, 4th and 5th dimension will be padded.
+对于 'channels_last' 数据格式，
+第 2、3、4 维将被填充。
+对于 'channels_first' 数据格式，
+第 3、4、5 维将被填充。
 
 __参数__
 
-- __x__: Tensor or variable.
-- __padding__: Tuple of 3 tuples, padding pattern.
-- __data_format__: string, `"channels_last"` or `"channels_first"`.
+- __x__: 张量或变量。
+- __padding__: 3 元组的元组，填充模式。
+- __data_format__: 字符串，`"channels_last"` 或 `"channels_first"`。
 
 __返回__
 
-A padded 5D tensor.
+一个填充的 5D 张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `"channels_last"` 也不是 `"channels_first"`。
 
 
 ----
@@ -2582,17 +2570,16 @@ __异常__
 keras.backend.stack(x, axis=0)
 ```
 
-
-Stacks a list of rank `R` tensors into a rank `R+1` tensor.
+将秩 为 `R` 的张量列表堆叠成秩为 `R + 1` 的张量。
 
 __参数__
 
-- __x__: List of tensors.
-- __axis__: Axis along which to perform stacking.
+- __x__: 张量列表。
+- __axis__: 需要执行堆叠的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2604,18 +2591,18 @@ keras.backend.one_hot(indices, num_classes)
 ```
 
 
-Computes the one-hot representation of an integer tensor.
+计算一个整数张量的 one-hot 表示。
 
 __参数__
 
-- __indices__: nD integer tensor of shape
+- __indices__: nD 整数，尺寸为
 `(batch_size, dim1, dim2, ... dim(n-1))`
-- __num_classes__: Integer, number of classes to consider.
+- __num_classes__: 整数，需要考虑的类别数。
 
 __返回__
 
-(n + 1)D one hot representation of the input
-with shape `(batch_size, dim1, dim2, ... dim(n-1), num_classes)`
+输入的 (n + 1)D one-hot 表示，
+尺寸为 `(batch_size, dim1, dim2, ... dim(n-1), num_classes)`。
 
 ----
 
@@ -2627,17 +2614,16 @@ keras.backend.reverse(x, axes)
 ```
 
 
-Reverse a tensor along the specified axes.
+沿指定的轴反转张量。
 
 __参数__
 
-- __x__: Tensor to reverse.
-- __axes__: Integer or iterable of integers.
-Axes to reverse.
+- __x__: 需要反转的张量。
+- __axes__: 整数或整数迭代。需要反转的轴。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2649,15 +2635,15 @@ keras.backend.get_value(x)
 ```
 
 
-Returns the value of a variable.
+返回一个变量的值。
 
 __参数__
 
-- __x__: input variable.
+- __x__: 输入变量。
 
 __返回__
 
-A Numpy array.
+一个 Numpy 数组。
 
 ----
 
@@ -2669,15 +2655,15 @@ keras.backend.batch_get_value(ops)
 ```
 
 
-Returns the value of more than one tensor variable.
+返回多个张量变量的值。
 
 __参数__
 
-- __ops__: list of ops to run.
+- __ops__: 要运行的操作列表。
 
 __返回__
 
-A list of Numpy arrays.
+一个 Numpy 数组的列表。
 
 ----
 
@@ -2689,13 +2675,13 @@ keras.backend.set_value(x, value)
 ```
 
 
-Sets the value of a variable, from a Numpy array.
+使用 Numpy 数组设置变量的值。
 
 __参数__
 
-- __x__: Tensor to set to a new value.
-- __value__: Value to set the tensor to, as a Numpy array
-(of the same shape).
+- __x__: 需要设置新值的张量。
+- __value__: 需要设置的值，
+一个尺寸相同的 Numpy 数组。
 
 ----
 
@@ -2707,12 +2693,12 @@ keras.backend.batch_set_value(tuples)
 ```
 
 
-Sets the values of many tensor variables at once.
+一次设置多个张量变量的值。
 
 __参数__
 
-- __tuples__: a list of tuples `(tensor, value)`.
-`value` should be a Numpy array.
+- __tuples__: 元组 `(tensor, value)` 的列表。
+`value` 应该是一个 Numpy 数组。
 
 ----
 
@@ -2723,12 +2709,9 @@ __参数__
 keras.backend.print_tensor(x, message='')
 ```
 
+在评估时打印 `message` 和张量的值。
 
-Prints `message` and the tensor value when evaluated.
-
-Note that `print_tensor` returns a new tensor identical to `x`
-which should be used in the following code. Otherwise the
-print operation is not taken into account during evaluation.
+请注意，`print_tensor` 返回一个与 `x` 相同的新张量，应该在后面的代码中使用它。否则在评估过程中不会考虑打印操作。
 
 __例子__
 
@@ -2738,12 +2721,12 @@ __例子__
 
 __参数__
 
-- __x__: Tensor to print.
-- __message__: Message to print jointly with the tensor.
+- __x__: 需要打印的张量。
+- __message__: 需要与张量一起打印的消息。
 
 __返回__
 
-The same tensor `x`, unchanged.
+同一个不变的张量 `x`。
 
 ----
 
@@ -2755,22 +2738,22 @@ keras.backend.function(inputs, outputs, updates=None)
 ```
 
 
-Instantiates a Keras function.
+实例化 Keras 函数。
 
 __参数__
 
-- __inputs__: List of placeholder tensors.
-- __outputs__: List of output tensors.
-- __updates__: List of update ops.
-- __**kwargs__: Passed to `tf.Session.run`.
+- __inputs__: 占位符张量列表。
+- __outputs__: 输出张量列表。
+- __updates__: 更新操作列表。
+- __**kwargs__: 需要传递给 `tf.Session.run` 的参数。
 
 __返回__
 
-Output values as Numpy arrays.
+输出值为 Numpy 数组。
 
 __异常__
 
-- __ValueError__: if invalid kwargs are passed in.
+- __ValueError__: 如果无效的 kwargs 被传入。
 
 ----
 
@@ -2782,16 +2765,16 @@ keras.backend.gradients(loss, variables)
 ```
 
 
-Returns the gradients of `variables` w.r.t. `loss`.
+返回 `variables` 在 `loss` 上的梯度。
 
 __参数__
 
-- __loss__: Scalar tensor to minimize.
-- __variables__: List of variables.
+- __loss__: 需要最小化的标量张量。
+- __variables__: 变量列表。
 
 __返回__
 
-A gradients tensor.
+一个梯度张量。
 
 ----
 
@@ -2802,18 +2785,17 @@ A gradients tensor.
 keras.backend.stop_gradient(variables)
 ```
 
-
-Returns `variables` but with zero gradient w.r.t. every other variable.
+返回 `variables`，但是对于其他变量，其梯度为零。
 
 __参数__
 
-- __variables__: tensor or list of tensors to consider constant with respect
-to any other variable.
+- __variables__: 需要考虑的张量或张量列表，任何的其他变量保持不变。
 
 __返回__
 
-A single tensor or a list of tensors (depending on the passed argument)
-that has constant gradient with respect to any other variable.
+单个张量或张量列表（取决于传递的参数），
+与任何其他变量具有恒定的梯度。
+
 
 ----
 
@@ -2970,19 +2952,19 @@ keras.backend.relu(x, alpha=0.0, max_value=None)
 ```
 
 
-Rectified linear unit.
+ReLU 整流线性单位。
 
-With default values, it returns element-wise `max(x, 0)`.
+默认情况下，它返回逐个元素的 `max(x, 0)` 值。
 
 __参数__
 
-- __x__: A tensor or variable.
-- __alpha__: A scalar, slope of negative section (default=`0.`).
-- __max_value__: Saturation threshold.
+- __x__: 一个张量或变量。
+- __alpha__: 一个标量，负数部分的斜率（默认为 `0.`）。
+- __max_value__: 饱和度阈值。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -2994,16 +2976,16 @@ keras.backend.elu(x, alpha=1.0)
 ```
 
 
-Exponential linear unit.
+指数线性单元。
 
 __参数__
 
-- __x__: A tensor or variable to compute the activation function for.
-- __alpha__: A scalar, slope of negative section.
+- __x__: 用于计算激活函数的张量或变量。
+- __alpha__: 一个标量，负数部分的斜率。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3015,15 +2997,15 @@ keras.backend.softmax(x)
 ```
 
 
-Softmax of a tensor.
+张量的 Softmax 值。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3035,15 +3017,15 @@ keras.backend.softplus(x)
 ```
 
 
-Softplus of a tensor.
+张量的 Softplus 值。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3055,15 +3037,15 @@ keras.backend.softsign(x)
 ```
 
 
-Softsign of a tensor.
+张量的 Softsign 值。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3075,20 +3057,20 @@ keras.backend.categorical_crossentropy(target, output, from_logits=False)
 ```
 
 
-Categorical crossentropy between an output tensor and a target tensor.
+输出张量与目标张量之间的分类交叉熵。
 
 __参数__
 
-- __target__: A tensor of the same shape as `output`.
-- __output__: A tensor resulting from a softmax
-(unless `from_logits` is True, in which
-case `output` is expected to be the logits).
-- __from_logits__: Boolean, whether `output` is the
-result of a softmax, or is a tensor of logits.
+- __target__: 与 `output` 尺寸相同的张量。
+- __output__: 由 softmax 产生的张量
+(除非 `from_logits` 为 True，
+在这种情况下 `output` 应该是对数形式)。
+- __from_logits__: 布尔值，`output` 是 softmax 的结果，
+还是对数形式的张量。
 
 __返回__
 
-Output tensor.
+输出张量。
 
 ----
 
@@ -3100,20 +3082,20 @@ keras.backend.sparse_categorical_crossentropy(target, output, from_logits=False)
 ```
 
 
-Categorical crossentropy with integer targets.
+稀疏表示的整数值目标的分类交叉熵。
 
 __参数__
 
-- __target__: An integer tensor.
-- __output__: A tensor resulting from a softmax
-(unless `from_logits` is True, in which
-case `output` is expected to be the logits).
-- __from_logits__: Boolean, whether `output` is the
-result of a softmax, or is a tensor of logits.
+- __target__: 一个整数张量。
+- __output__: 由 softmax 产生的张量
+(除非 `from_logits` 为 True，
+在这种情况下 `output` 应该是对数形式)。
+- __from_logits__: 布尔值，`output` 是 softmax 的结果，
+还是对数形式的张量。
 
 __返回__
 
-Output tensor.
+输出张量。
 
 ----
 
@@ -3125,19 +3107,18 @@ keras.backend.binary_crossentropy(target, output, from_logits=False)
 ```
 
 
-Binary crossentropy between an output tensor and a target tensor.
+输出张量与目标张量之间的二进制交叉熵。
 
 __参数__
 
-- __target__: A tensor with the same shape as `output`.
-- __output__: A tensor.
-- __from_logits__: Whether `output` is expected to be a logits tensor.
-By default, we consider that `output`
-encodes a probability distribution.
+- __target__: 与 `output` 尺寸相同的张量。
+- __output__: 一个张量。
+- __from_logits__: `output` 是否是对数张量。
+默认情况下，我们认为 `output` 编码了概率分布。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3149,15 +3130,15 @@ keras.backend.sigmoid(x)
 ```
 
 
-Element-wise sigmoid.
+逐个元素求 sigmoid 值。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 一个张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3169,19 +3150,19 @@ keras.backend.hard_sigmoid(x)
 ```
 
 
-Segment-wise linear approximation of sigmoid.
+分段的 sigmoid 线性近似。速度比 sigmoid 更快。
 
-Faster than sigmoid.
-Returns `0.` if `x < -2.5`, `1.` if `x > 2.5`.
-In `-2.5 <= x <= 2.5`, returns `0.2 * x + 0.5`.
+- 如果 `x < -2.5`，返回 `0`。
+- 如果 `x > 2.5`，返回 `1`。
+- 如果 `-2.5 <= x <= 2.5`，返回 `0.2 * x + 0.5`。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 一个张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3193,15 +3174,15 @@ keras.backend.tanh(x)
 ```
 
 
-Element-wise tanh.
+逐个元素求 tanh 值。
 
 __参数__
 
-- __x__: A tensor or variable.
+- __x__: 一个张量或变量。
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3226,7 +3207,7 @@ must be broadcastable to the shape of `x`
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3242,12 +3223,12 @@ Normalizes a tensor wrt the L2 norm alongside the specified axis.
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __axis__: axis along which to perform normalization.
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3287,7 +3268,7 @@ keras.backend.conv1d(x, kernel, strides=1, padding='valid', data_format=None, di
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __kernel__: kernel tensor.
 - __strides__: stride integer.
 - __padding__: string, `"same"`, `"causal"` or `"valid"`.
@@ -3300,7 +3281,7 @@ A tensor, result of 1D convolution.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3316,7 +3297,7 @@ keras.backend.conv2d(x, kernel, strides=(1, 1), padding='valid', data_format=Non
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __kernel__: kernel tensor.
 - __strides__: strides tuple.
 - __padding__: string, `"same"` or `"valid"`.
@@ -3331,7 +3312,7 @@ A tensor, result of 2D convolution.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3347,7 +3328,7 @@ keras.backend.conv2d_transpose(x, kernel, output_shape, strides=(1, 1), padding=
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __kernel__: kernel tensor.
 - __output_shape__: 1D int tensor for the output shape.
 - __strides__: strides tuple.
@@ -3362,7 +3343,7 @@ A tensor, result of transposed 2D convolution.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3388,11 +3369,11 @@ __参数__
 
 __返回__
 
-Output tensor.
+输出张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3419,11 +3400,11 @@ dilation rates for the separable convolution.
 
 __返回__
 
-Output tensor.
+输出张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3449,11 +3430,11 @@ dilation rates for the separable convolution.
 
 __返回__
 
-Output tensor.
+输出张量。
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3469,7 +3450,7 @@ keras.backend.conv3d(x, kernel, strides=(1, 1, 1), padding='valid', data_format=
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __kernel__: kernel tensor.
 - __strides__: strides tuple.
 - __padding__: string, `"same"` or `"valid"`.
@@ -3484,7 +3465,7 @@ A tensor, result of 3D convolution.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3515,7 +3496,7 @@ A tensor, result of transposed 3D convolution.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3531,7 +3512,7 @@ keras.backend.pool2d(x, pool_size, strides=(1, 1), padding='valid', data_format=
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __pool_size__: tuple of 2 integers.
 - __strides__: tuple of 2 integers.
 - __padding__: string, `"same"` or `"valid"`.
@@ -3544,7 +3525,7 @@ A tensor, result of 2D pooling.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 - __ValueError__: if `pool_mode` is neither `"max"` or `"avg"`.
 
 ----
@@ -3561,7 +3542,7 @@ keras.backend.pool3d(x, pool_size, strides=(1, 1, 1), padding='valid', data_form
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __pool_size__: tuple of 3 integers.
 - __strides__: tuple of 3 integers.
 - __padding__: string, `"same"` or `"valid"`.
@@ -3574,7 +3555,7 @@ A tensor, result of 3D pooling.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `"channels_last"` or `"channels_first"`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 - __ValueError__: if `pool_mode` is neither `"max"` or `"avg"`.
 
 ----
@@ -3591,13 +3572,13 @@ Adds a bias vector to a tensor.
 
 __参数__
 
-- __x__: Tensor or variable.
+- __x__: 张量或变量。
 - __bias__: Bias tensor to add.
 - __data_format__: string, `"channels_last"` or `"channels_first"`.
 
 __返回__
 
-Output tensor.
+输出张量。
 
 __异常__
 
@@ -3630,7 +3611,7 @@ to draw samples.
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3656,7 +3637,7 @@ to draw samples.
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3679,7 +3660,7 @@ __参数__
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3708,7 +3689,7 @@ __参数__
 
 __返回__
 
-A tensor.
+一个张量。
 
 ----
 
@@ -3898,7 +3879,7 @@ the tensor after 1d conv with un-shared weights, with shape (batch_size, output_
 
 __异常__
 
-- __ValueError__: if `data_format` is neither `channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
@@ -3940,8 +3921,7 @@ if data_format='channels_last'.
 
 __异常__
 
-- __ValueError__: if `data_format` is neither
-`channels_last` or `channels_first`.
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
 
 ----
 
