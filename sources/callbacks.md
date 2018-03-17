@@ -1,6 +1,6 @@
-## Usage of callbacks
+## 回调函数使用
 
-A callback is a set of functions to be applied at given stages of the training procedure. You can use callbacks to get a view on internal states and statistics of the model during training. You can pass a list of callbacks (as the keyword argument `callbacks`) to the `.fit()` method of the `Sequential` or `Model` classes. The relevant methods of the callbacks will then be called at each stage of the training. 
+回调函数是一个函数的合集，会在训练的阶段中所使用。你可以使用回调函数来查看训练模型的内在状态和统计。你可以传递一个列表的回调函数（作为 `callbacks` 关键字参数）到 `Sequential` 或 `Model` 类型的 `.fit()` 方法。在训练时，相应的回调函数的方法就会被在各自的阶段被调用。
 
 ---
 
@@ -11,31 +11,22 @@ A callback is a set of functions to be applied at given stages of the training p
 keras.callbacks.Callback()
 ```
 
-Abstract base class used to build new callbacks.
+用来组建新的回调函数的抽象基类。
 
-__Properties__
+__属性__
 
-- __params__: dict. Training parameters
-(eg. verbosity, batch size, number of epochs...).
-- __model__: instance of `keras.models.Model`.
-Reference of the model being trained.
+- __params__: 字典。训练参数，
+(例如，verbosity, batch size, number of epochs...)。
+- __model__: `keras.models.Model` 的实例。
+指代被训练模型。
 
-The `logs` dictionary that callback methods
-take as argument will contain keys for quantities relevant to
-the current batch or epoch.
+被回调函数作为参数的 `logs` 字典，它会含有于当前批量或训练周期相关数据的键。
 
-Currently, the `.fit()` method of the `Sequential` model class
-will include the following quantities in the `logs` that
-it passes to its callbacks:
+目前，`Sequential` 模型类的 `.fit()` 方法会在传入到回调函数的 `logs` 里面包含以下的数据：
 
-- __on_epoch_end__: logs include `acc` and `loss`, and
-optionally include `val_loss`
-(if validation is enabled in `fit`), and `val_acc`
-(if validation and accuracy monitoring are enabled).
-- __on_batch_begin__: logs include `size`,
-the number of samples in the current batch.
-- __on_batch_end__: logs include `loss`, and optionally `acc`
-(if accuracy monitoring is enabled).
+- __on_epoch_end__: 包括 `acc` 和 `loss` 的日志， 也可以选择性的包括 `val_loss`（如果在 `fit` 中启用验证），和 `val_acc`（如果启用验证和监测精确值）。
+- __on_batch_begin__: 包括 `size` 的日志，在当前批量内的样本数量。
+- __on_batch_end__: 包括 `loss` 的日志，也可以选择性的包括 `acc`（如果启用监测精确值）。
 
 ----
 
@@ -46,9 +37,9 @@ the number of samples in the current batch.
 keras.callbacks.BaseLogger()
 ```
 
-Callback that accumulates epoch averages of metrics.
+会积累训练周期平均评估的回调函数。
 
-This callback is automatically applied to every Keras model.
+这个回调函数被自动应用到每一个 Keras 模型上面。
 
 ----
 
@@ -59,7 +50,7 @@ This callback is automatically applied to every Keras model.
 keras.callbacks.TerminateOnNaN()
 ```
 
-Callback that terminates training when a NaN loss is encountered.
+当遇到 NaN 损失会停止训练的回调函数。
 
 ----
 
@@ -70,17 +61,16 @@ Callback that terminates training when a NaN loss is encountered.
 keras.callbacks.ProgbarLogger(count_mode='samples')
 ```
 
-Callback that prints metrics to stdout.
+会把评估以标准输出打印的回调函数。
 
-__Arguments__
+__参数__
 
-- __count_mode__: One of "steps" or "samples".
-Whether the progress bar should
-count samples seen or steps (batches) seen.
+- __count_mode__: "steps" 或者 "samples"。
+进度条是否应该计数看见的样本或步骤（批量）。
 
-__Raises__
+__触发__
 
-- __ValueError__: In case of invalid `count_mode`.
+- __ValueError__: 防止不正确的 `count_mode`
 
 ----
 
@@ -91,11 +81,9 @@ __Raises__
 keras.callbacks.History()
 ```
 
-Callback that records events into a `History` object.
+把所有事件都记录到 `History` 对象的回调函数。
 
-This callback is automatically applied to
-every Keras model. The `History` object
-gets returned by the `fit` method of models.
+这个回调函数被自动启用到每一个 Keras 模型。`History` 对象会被模型的 `fit` 方法返回。
 
 ----
 
@@ -106,36 +94,27 @@ gets returned by the `fit` method of models.
 keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
 ```
 
-Save the model after every epoch.
+在每个训练期之后保存模型。
 
-`filepath` can contain named formatting options,
-which will be filled the value of `epoch` and
-keys in `logs` (passed in `on_epoch_end`).
+`filepath` 可以包括命名格式选项，可以由 `epoch` 的值和 `logs` 的键（由 `on_epoch_end` 参数传递）来填充。
 
-For example: if `filepath` is `weights.{epoch:02d}-{val_loss:.2f}.hdf5`,
-then the model checkpoints will be saved with the epoch number and
-the validation loss in the filename.
+例如：如果 `filepath` 是 `weights.{epoch:02d}-{val_loss:.2f}.hdf5`，
+那么模型被保存的的文件名就会有训练周期数和验证损失。
 
-__Arguments__
+__参数__
 
-- __filepath__: string, path to save the model file.
-- __monitor__: quantity to monitor.
-- __verbose__: verbosity mode, 0 or 1.
-- __save_best_only__: if `save_best_only=True`,
-the latest best model according to
-the quantity monitored will not be overwritten.
-- __mode__: one of {auto, min, max}.
-If `save_best_only=True`, the decision
-to overwrite the current save file is made
-based on either the maximization or the
-minimization of the monitored quantity. For `val_acc`,
-this should be `max`, for `val_loss` this should
-be `min`, etc. In `auto` mode, the direction is
-automatically inferred from the name of the monitored quantity.
-- __save_weights_only__: if True, then only the model's weights will be
-saved (`model.save_weights(filepath)`), else the full model
-is saved (`model.save(filepath)`).
-- __period__: Interval (number of epochs) between checkpoints.
+- __filepath__: 字符串，保存模型的路径。
+- __monitor__: 被监测的数据。
+- __verbose__: 详细信息模式，0 或者 1 。
+- __save_best_only__: 如果 `save_best_only=True`，
+被监测数据的最佳模型就不会被覆盖。
+- __mode__: {auto, min, max} 的其中之一。
+如果 `save_best_only=True`，那么是否覆盖保存文件的决定就取决于被监测数据的最大或者最小值。
+对于 `val_acc`，模式就会是 `max`，而对于 `val_loss`，模式就需要是 `min`，等等。
+在 `auto` 模式中，方向会自动从被监测的数据的名字中判断出来。
+- __save_weights_only__: 如果 True，那么只有模型的参数会被保存 (`model.save_weights(filepath)`)，
+否则的话，整个模型会被保存 (`model.save(filepath)`)。
+- __period__: 每个检查点之间的间隔（训练周期数）。
 
 ----
 
@@ -146,25 +125,19 @@ is saved (`model.save(filepath)`).
 keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
 ```
 
-Stop training when a monitored quantity has stopped improving.
+当被监测的数量不再优化，则停止训练。
 
-__Arguments__
+__参数__
 
-- __monitor__: quantity to be monitored.
-- __min_delta__: minimum change in the monitored quantity
-to qualify as an improvement, i.e. an absolute
-change of less than min_delta, will count as no
-improvement.
-- __patience__: number of epochs with no improvement
-after which training will be stopped.
-- __verbose__: verbosity mode.
-- __mode__: one of {auto, min, max}. In `min` mode,
-training will stop when the quantity
-monitored has stopped decreasing; in `max`
-mode it will stop when the quantity
-monitored has stopped increasing; in `auto`
-mode, the direction is automatically inferred
-from the name of the monitored quantity.
+- __monitor__: 被监测的数据。
+- __min_delta__: 在被监测的数据中被认为是优化的最小变化，
+例如，小于 min_delta 的绝对变化会被认为没有优化。
+- __patience__: 没有优化的训练周期数，在这之后训练就会被停止。
+- __verbose__: 详细信息模式。
+- __mode__: {auto, min, max} 其中之一。 在 `min` 模式中，
+当被监测的数据停止下降，训练就会停止；在 `max`
+模式中，当被监测的数据停止上升，训练就会停止；在 `auto`
+模式中，方向会自动从被监测的数据的名字中判断出来。
 
 ----
 
