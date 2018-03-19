@@ -2807,54 +2807,43 @@ keras.backend.rnn(step_function, inputs, initial_states, go_backwards=False, mas
 ```
 
 
-Iterates over the time dimension of a tensor.
+在张量的时间维度迭代。
 
 __参数__
 
-- __step_function__: RNN step function.
-- __Parameters__:
-- __inputs__: tensor with shape `(samples, ...)` (no time dimension),
-representing input for the batch of samples at a certain
-time step.
-- __states__: list of tensors.
-- __返回__:
-- __outputs__: tensor with shape `(samples, output_dim)`
-(no time dimension).
-- __new_states__: list of tensors, same length and shapes
-as 'states'. The first state in the list must be the
-output tensor at the previous timestep.
-- __inputs__: tensor of temporal data of shape `(samples, time, ...)`
-(at least 3D).
-- __initial_states__: tensor with shape (samples, output_dim)
-(no time dimension),
-containing the initial values for the states used in
-the step function.
-- __go_backwards__: boolean. If True, do the iteration over the time
-dimension in reverse order and return the reversed sequence.
-- __mask__: binary tensor with shape `(samples, time, 1)`,
-with a zero for every element that is masked.
-- __constants__: a list of constant values passed at each step.
-- __unroll__: whether to unroll the RNN or to use a symbolic loop (`while_loop` or `scan` depending on backend).
-- __input_length__: not relevant in the TensorFlow implementation.
-Must be specified if using unrolling with Theano.
+- __step_function__: RNN 步骤函数，
+- __inputs__: 尺寸为 `(samples, ...)` 的张量
+(不含时间维度), 表示批次样品在某个时间步的输入。
+- __states__: 张量列表。
+- __outputs__: 尺寸为 `(samples, output_dim)` 的张量
+(不含时间维度)
+- __new_states__: 张量列表，与 `states` 长度和尺寸相同。
+列表中的第一个状态必须是前一个时间步的输出张量。
+- __inputs__: 时序数据张量 `(samples, time, ...)`
+(最少 3D)。
+- __initial_states__: 尺寸为 `(samples, output_dim)` 的张量
+(不含时间维度)，包含步骤函数中使用的状态的初始值。
+- __go_backwards__: 布尔值。如果为 True，以相反的顺序在时间维上进行迭代并返回相反的序列。
+- __mask__: 尺寸为 `(samples, time, 1)` 的二进制张量，对于被屏蔽的每个元素都为零。
+- __constants__: 每个步骤传递的常量值列表。
+- __unroll__: 是否展开 RNN 或使用符号循环（依赖于后端的 `while_loop`或 `scan`）。
+- __input_length__: 与 TensorFlow 实现不相关。如果使用 Theano 展开，则必须指定。
 
 __返回__
 
-A tuple, `(last_output, outputs, new_states)`.
+一个元组，`(last_output, outputs, new_states)`。
 
-- __last_output__: the latest output of the rnn, of shape `(samples, ...)`
-- __outputs__: tensor with shape `(samples, time, ...)` where each
-entry `outputs[s, t]` is the output of the step function
-at time `t` for sample `s`.
-- __new_states__: list of tensors, latest states returned by
-the step function, of shape `(samples, ...)`.
+- __last_output__: rnn 的最后输出，尺寸为 `(samples, ...)`。
+- __outputs__: 尺寸为 `(samples, time, ...)` 的张量，其中
+每一项 `outputs[s, t]` 是样本 `s` 在时间 `t` 的步骤函数输出值。
+- __new_states__: 张量列表，有步骤函数返回的最后状态，
+尺寸为 `(samples, ...)`。
 
 __异常__
 
-- __ValueError__: if input dimension is less than 3.
-- __ValueError__: if `unroll` is `True` but input timestep is not a fixed number.
-- __ValueError__: if `mask` is provided (not `None`) but states is not provided
-(`len(states)` == 0).
+- __ValueError__: 如果输入的维度小于 3。
+- __ValueError__: 如果 `unroll` 为 `True` 但输入时间步并不是固定的数字。
+- __ValueError__: 如果提供了 `mask` (非 `None`) 但未提供 `states` (`len(states)` == 0)。
 
 ----
 
@@ -2866,24 +2855,24 @@ keras.backend.switch(condition, then_expression, else_expression)
 ```
 
 
-Switches between two operations depending on a scalar value.
+根据一个标量值在两个操作之间切换。
 
-Note that both `then_expression` and `else_expression`
-should be symbolic tensors of the *same shape*.
+请注意，`then_expression` 和 `else_expression` 
+都应该是*相同尺寸*的符号张量。
 
 __参数__
 
-- __condition__: tensor (`int` or `bool`).
-- __then_expression__: either a tensor, or a callable that returns a tensor.
-- __else_expression__: either a tensor, or a callable that returns a tensor.
+- __condition__: 张量 (`int` 或 `bool`)。
+- __then_expression__: 张量或返回张量的可调用函数。
+- __else_expression__: 张量或返回张量的可调用函数。
 
 __返回__
 
-The selected tensor.
+选择的张量。
 
 __异常__
 
-- __ValueError__: If rank of `condition` is greater than rank of expressions.
+- __ValueError__: 如果 `condition` 的秩大于两个表达式的秩序。
 
 ----
 
@@ -2895,24 +2884,24 @@ keras.backend.in_train_phase(x, alt, training=None)
 ```
 
 
-Selects `x` in train phase, and `alt` otherwise.
+在训练阶段选择 `x`，其他阶段选择 `alt`。
 
-Note that `alt` should have the *same shape* as `x`.
+请注意 `alt` 应该与 `x` 尺寸相同。
 
 __参数__
 
-- __x__: What to return in train phase
-(tensor or callable that returns a tensor).
-- __alt__: What to return otherwise
-(tensor or callable that returns a tensor).
-- __training__: Optional scalar tensor
-(or Python boolean, or Python integer)
-specifying the learning phase.
+- __x__: 在训练阶段需要返回的 x 
+(张量或返回张量的可调用函数)。
+- __alt__: 在其他阶段需要返回的 alt 
+(张量或返回张量的可调用函数)。
+- __training__: 可选的标量张量
+(或 Python 布尔值，或者 Python 整数)，
+以指定学习阶段。
 
 __返回__
 
-Either `x` or `alt` based on the `training` flag.
-the `training` flag defaults to `K.learning_phase()`.
+基于 `training` 标志，要么返回 `x`，要么返回 `alt`。
+`training` 标志默认为 `K.learning_phase()`。
 
 ----
 
@@ -2924,23 +2913,23 @@ keras.backend.in_test_phase(x, alt, training=None)
 ```
 
 
-Selects `x` in test phase, and `alt` otherwise.
+在测试阶段选择 `x`，其他阶段选择 `alt`。
 
-Note that `alt` should have the *same shape* as `x`.
+请注意 `alt` 应该与 `x` 尺寸相同。
 
 __参数__
 
-- __x__: What to return in test phase
-(tensor or callable that returns a tensor).
-- __alt__: What to return otherwise
-(tensor or callable that returns a tensor).
-- __training__: Optional scalar tensor
-(or Python boolean, or Python integer)
-specifying the learning phase.
+- __x__: 在训练阶段需要返回的 x 
+(张量或返回张量的可调用函数)。
+- __alt__: 在其他阶段需要返回的 alt 
+(张量或返回张量的可调用函数)。
+- __training__: 可选的标量张量
+(或 Python 布尔值，或者 Python 整数)，
+以指定学习阶段。
 
 __返回__
 
-Either `x` or `alt` based on `K.learning_phase`.
+基于 `K.learning_phase`，要么返回 `x`，要么返回 `alt`。
 
 ----
 
@@ -3194,16 +3183,15 @@ keras.backend.dropout(x, level, noise_shape=None, seed=None)
 ```
 
 
-Sets entries in `x` to zero at random, while scaling the entire tensor.
+将 `x` 中的某些项随机设置为零，同时缩放整个张量。
 
 __参数__
 
-- __x__: tensor
-- __level__: fraction of the entries in the tensor
-that will be set to 0.
-- __noise_shape__: shape for randomly generated keep/drop flags,
-must be broadcastable to the shape of `x`
-- __seed__: random seed to ensure determinism.
+- __x__: 张量
+- __level__: 张量中将被设置为 0 的项的比例。
+- __noise_shape__: 随机生成的 保留/丢弃 标志的尺寸，
+必须可以广播到 `x` 的尺寸。
+- __seed__: 保证确定性的随机种子。
 
 __返回__
 
@@ -3219,12 +3207,12 @@ keras.backend.l2_normalize(x, axis=None)
 ```
 
 
-Normalizes a tensor wrt the L2 norm alongside the specified axis.
+在指定的轴使用 L2 范式 标准化一个张量。
 
 __参数__
 
 - __x__: 张量或变量。
-- __axis__: axis along which to perform normalization.
+- __axis__: 需要执行标准化的轴。
 
 __返回__
 
@@ -3240,19 +3228,20 @@ keras.backend.in_top_k(predictions, targets, k)
 ```
 
 
-Returns whether the `targets` are in the top `k` `predictions`.
+判断 `targets` 是否在 `predictions` 的前 `k` 个中。
 
 __参数__
 
-- __predictions__: A tensor of shape `(batch_size, classes)` and type `float32`.
-- __targets__: A 1D tensor of length `batch_size` and type `int32` or `int64`.
-- __k__: An `int`, number of top elements to consider.
+- __predictions__: 一个张量，尺寸为 `(batch_size, classes)`，类型为 `float32`。
+- __targets__: 一个 1D 张量，长度为 `batch_size`，类型为 `int32` 或 `int64`。
+- __k__: 一个 `int`，要考虑的顶部元素的数量。
 
 __返回__
 
-A 1D tensor of length `batch_size` and type `bool`.
-`output[i]` is `True` if `predictions[i, targets[i]]` is within top-`k`
-values of `predictions[i]`.
+一个 1D 张量，长度为 `batch_size`，类型为 `bool`。
+如果 `predictions[i, targets[i]]` 在 
+`predictions[i]` 的 top-`k` 值中，
+则 `output[i]` 为 `True`。
 
 ----
 
@@ -3701,16 +3690,16 @@ keras.backend.ctc_label_dense_to_sparse(labels, label_lengths)
 ```
 
 
-Converts CTC labels from dense to sparse.
+将 CTC 标签从密集转换为稀疏表示。
 
 __参数__
 
-- __labels__: dense CTC labels.
-- __label_lengths__: length of the labels.
+- __labels__: 密集 CTC 标签。
+- __label_lengths__: 标签长度。
 
 __返回__
 
-A sparse tensor representation of the labels.
+一个表示标签的稀疏张量。
 
 ----
 
@@ -3722,23 +3711,22 @@ keras.backend.ctc_batch_cost(y_true, y_pred, input_length, label_length)
 ```
 
 
-Runs CTC loss algorithm on each batch element.
+在每个批次元素上运行 CTC 损失算法。
 
 __参数__
 
-- __y_true__: tensor `(samples, max_string_length)`
-containing the truth labels.
-- __y_pred__: tensor `(samples, time_steps, num_categories)`
-containing the prediction, or output of the softmax.
-- __input_length__: tensor `(samples, 1)` containing the sequence length for
-each batch item in `y_pred`.
-- __label_length__: tensor `(samples, 1)` containing the sequence length for
-each batch item in `y_true`.
+- __y_true__: 张量 `(samples, max_string_length)`，
+包含真实标签。
+- __y_pred__: 张量 `(samples, time_steps, num_categories)`，
+包含预测值，或 softmax 输出。
+- __input_length__: 张量 `(samples, 1)`，
+包含 `y_pred` 中每个批次样本的序列长度。
+- __label_length__: 张量 `(samples, 1)`，
+包含 `y_true` 中每个批次样本的序列长度。
 
 __返回__
 
-Tensor with shape (samples,1) containing the
-CTC loss of each element.
+尺寸为 (samples,1) 的张量，包含每一个元素的 CTC 损失。
 
 ----
 
@@ -3750,34 +3738,27 @@ keras.backend.ctc_decode(y_pred, input_length, greedy=True, beam_width=100, top_
 ```
 
 
-Decodes the output of a softmax.
+解码 softmax 的输出。
 
-Can use either greedy search (also known as best path)
-or a constrained dictionary search.
+可以使用贪心搜索（也称为最优路径）或受限字典搜索。
 
 __参数__
 
-- __y_pred__: tensor `(samples, time_steps, num_categories)`
-containing the prediction, or output of the softmax.
-- __input_length__: tensor `(samples, )` containing the sequence length for
-each batch item in `y_pred`.
-- __greedy__: perform much faster best-path search if `true`.
-This does not use a dictionary.
-- __beam_width__: if `greedy` is `false`: a beam search decoder will be used
-with a beam of this width.
-- __top_paths__: if `greedy` is `false`,
-how many of the most probable paths will be returned.
+- __y_pred__: 张量 `(samples, time_steps, num_categories)`，
+包含预测值，或 softmax 输出。
+- __input_length__: 张量 `(samples,)`，
+包含 `y_pred` 中每个批次样本的序列长度。
+- __greedy__: 如果为 `True`，则执行更快速的最优路径搜索，而不使用字典。
+- __beam_width__: 如果 `greedy` 为 `false`，将使用该宽度的 beam 搜索解码器搜索。
+- __top_paths__: 如果 `greedy` 为 `false`，
+将返回多少条最可能的路径。
 
 __返回__
 
 - __Tuple__:
-- __List__: if `greedy` is `true`, returns a list of one element that
-contains the decoded sequence.
-If `false`, returns the `top_paths` most probable
-decoded sequences.
-- __Important__: blank labels are returned as `-1`.
-Tensor `(top_paths, )` that contains
-the log probability of each decoded sequence.
+- __List__: 如果 `greedy` 为 `true`，返回包含解码序列的一个元素的列表。
+如果为 `false`，返回最可能解码序列的 `top_paths`。
+- __Important__: 空白标签返回为 `-1`。包含每个解码序列的对数概率的张量 `(top_paths,)`。
 
 ----
 
@@ -3789,18 +3770,18 @@ keras.backend.map_fn(fn, elems, name=None, dtype=None)
 ```
 
 
-Map the function fn over the elements elems and return the outputs.
+将函数fn映射到元素 `elems` 上并返回输出。
 
 __参数__
 
-- __fn__: Callable that will be called upon each element in elems
-- __elems__: tensor
-- __name__: A string name for the map node in the graph
-- __dtype__: Output data type.
+- __fn__: 将在每个元素上调用的可调用函数。
+- __elems__: 张量。
+- __name__: 映射节点在图中的字符串名称。
+- __dtype__: 输出数据格式。
 
 __返回__
 
-Tensor with dtype `dtype`.
+数据类型为 `dtype` 的张量。
 
 ----
 
@@ -3811,20 +3792,18 @@ Tensor with dtype `dtype`.
 keras.backend.foldl(fn, elems, initializer=None, name=None)
 ```
 
-
-Reduce elems using fn to combine them from left to right.
+使用 fn 归约 elems，以从左到右组合它们。
 
 __参数__
 
-- __fn__: Callable that will be called upon each element in elems and an
-accumulator, for instance `lambda acc, x: acc + x`
-- __elems__: tensor
-- __initializer__: The first value used (`elems[0]` in case of None)
-- __name__: A string name for the foldl node in the graph
+- __fn__: 将在每个元素和一个累加器上调用的可调用函数，例如 `lambda acc, x: acc + x`。
+- __elems__: 张量。
+- __initializer__: 第一个使用的值 (如果为 None，使用`elems[0]`)。
+- __name__: foldl 节点在图中的字符串名称。
 
 __返回__
 
-Tensor with same type and shape as `initializer`.
+与 `initializer` 类型和尺寸相同的张量。
 
 ----
 
@@ -3836,19 +3815,18 @@ keras.backend.foldr(fn, elems, initializer=None, name=None)
 ```
 
 
-Reduce elems using fn to combine them from right to left.
+使用 fn 归约 elems，以从右到左组合它们。
 
 __参数__
 
-- __fn__: Callable that will be called upon each element in elems and an
-accumulator, for instance `lambda acc, x: acc + x`
-- __elems__: tensor
-- __initializer__: The first value used (`elems[-1]` in case of None)
-- __name__: A string name for the foldr node in the graph
+- __fn__: 将在每个元素和一个累加器上调用的可调用函数，例如 `lambda acc, x: acc + x`。
+- __elems__: 张量。
+- __initializer__: 第一个使用的值 (如果为 None，使用`elems[-1]`)。
+- __name__: foldr 节点在图中的字符串名称。
 
 __返回__
 
-Tensor with same type and shape as `initializer`.
+与 `initializer` 类型和尺寸相同的张量。
 
 ----
 
@@ -3860,22 +3838,22 @@ keras.backend.local_conv1d(inputs, kernel, kernel_size, strides, data_format=Non
 ```
 
 
-Apply 1D conv with un-shared weights.
+在不共享权值的情况下，运用 1D 卷积。
 
 __参数__
 
-- __inputs__: 3D tensor with shape: (batch_size, steps, input_dim)
-- __kernel__: the unshared weight for convolution,
-with shape (output_length, feature_dim, filters)
-- __kernel_size__: a tuple of a single integer,
-specifying the length of the 1D convolution window
-- __strides__: a tuple of a single integer,
-specifying the stride length of the convolution
-- __data_format__: the data format, channels_first or channels_last
+- __inputs__: 3D 张量，尺寸为 (batch_size, steps, input_dim)
+- __kernel__: 卷积的非共享权重,
+尺寸为 (output_items, feature_dim, filters)
+- __kernel_size__: 一个整数的元组，
+指定 1D 卷积窗口的长度。
+- __strides__: 一个整数的元组，
+指定卷积步长。
+- __data_format__: 数据格式，channels_first 或 channels_last。
 
 __返回__
 
-the tensor after 1d conv with un-shared weights, with shape (batch_size, output_length, filters)
+运用不共享权重的 1D 卷积之后的张量，尺寸为 (batch_size, output_length, filters)。
 
 __异常__
 
@@ -3891,33 +3869,30 @@ keras.backend.local_conv2d(inputs, kernel, kernel_size, strides, output_shape, d
 ```
 
 
-Apply 2D conv with un-shared weights.
+在不共享权值的情况下，运用 2D 卷积。
 
 __参数__
 
-- __inputs__: 4D tensor with shape:
-(batch_size, filters, new_rows, new_cols)
-if data_format='channels_first'
-or 4D tensor with shape:
-(batch_size, new_rows, new_cols, filters)
-if data_format='channels_last'.
-- __kernel__: the unshared weight for convolution,
-with shape (output_items, feature_dim, filters)
-- __kernel_size__: a tuple of 2 integers, specifying the
-width and height of the 2D convolution window.
-- __strides__: a tuple of 2 integers, specifying the strides
-of the convolution along the width and height.
-- __output_shape__: a tuple with (output_row, output_col)
-- __data_format__: the data format, channels_first or channels_last
+- __inputs__: 如果 `data_format='channels_first'`，
+则为尺寸为 (batch_size, filters, new_rows, new_cols) 的 4D 张量。
+如果 `data_format='channels_last'`，
+则为尺寸为 (batch_size, new_rows, new_cols, filters) 的 4D 张量。
+- __kernel__: 卷积的非共享权重,
+尺寸为 (output_items, feature_dim, filters)
+- __kernel_size__: 2 个整数的元组，
+指定 2D 卷积窗口的宽度和高度。
+- __strides__: 2 个整数的元组，
+指定 2D 卷积沿宽度和高度方向的步长。
+- __output_shape__: 元组 (output_row, output_col) 。
+- __data_format__: 数据格式，channels_first 或 channels_last。
 
 __返回__
 
-A 4d tensor with shape:
-(batch_size, filters, new_rows, new_cols)
-if data_format='channels_first'
-or 4D tensor with shape:
-(batch_size, new_rows, new_cols, filters)
-if data_format='channels_last'.
+一个 4D 张量。
+
+- 如果 `data_format='channels_first'`，尺寸为 (batch_size, filters, new_rows, new_cols)。
+- 如果 `data_format='channels_last'`，尺寸为 (batch_size, new_rows, new_cols, filters)
+
 
 __异常__
 
@@ -3932,13 +3907,11 @@ __异常__
 backend.backend()
 ```
 
-
-Publicly accessible method
-for determining the current backend.
+公开可用的方法，以确定当前后端。
 
 __返回__
 
-String, the name of the backend Keras is currently using.
+字符串，Keras 目前正在使用的后端名。
 
 __例子__
 
@@ -3946,9 +3919,3 @@ __例子__
 >>> keras.backend.backend()
 'tensorflow'
 ```
-
-
-
-
-
-
