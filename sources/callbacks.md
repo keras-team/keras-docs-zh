@@ -20,7 +20,7 @@ __属性__
 - __model__: `keras.models.Model` 的实例。
 指代被训练模型。
 
-被回调函数作为参数的 `logs` 字典，它会含有于当前批量或训练周期相关数据的键。
+被回调函数作为参数的 `logs` 字典，它会含有于当前批量或训练轮相关数据的键。
 
 目前，`Sequential` 模型类的 `.fit()` 方法会在传入到回调函数的 `logs` 里面包含以下的数据：
 
@@ -37,7 +37,7 @@ __属性__
 keras.callbacks.BaseLogger()
 ```
 
-会积累训练周期平均评估的回调函数。
+会积累训练轮平均评估的回调函数。
 
 这个回调函数被自动应用到每一个 Keras 模型上面。
 
@@ -99,7 +99,7 @@ keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_be
 `filepath` 可以包括命名格式选项，可以由 `epoch` 的值和 `logs` 的键（由 `on_epoch_end` 参数传递）来填充。
 
 例如：如果 `filepath` 是 `weights.{epoch:02d}-{val_loss:.2f}.hdf5`，
-那么模型被保存的的文件名就会有训练周期数和验证损失。
+那么模型被保存的的文件名就会有训练轮数和验证损失。
 
 __参数__
 
@@ -112,9 +112,9 @@ __参数__
 如果 `save_best_only=True`，那么是否覆盖保存文件的决定就取决于被监测数据的最大或者最小值。
 对于 `val_acc`，模式就会是 `max`，而对于 `val_loss`，模式就需要是 `min`，等等。
 在 `auto` 模式中，方向会自动从被监测的数据的名字中判断出来。
-- __save_weights_only__: 如果 True，那么只有模型的参数会被保存 (`model.save_weights(filepath)`)，
+- __save_weights_only__: 如果 True，那么只有模型的权重会被保存 (`model.save_weights(filepath)`)，
 否则的话，整个模型会被保存 (`model.save(filepath)`)。
-- __period__: 每个检查点之间的间隔（训练周期数）。
+- __period__: 每个检查点之间的间隔（训练轮数）。
 
 ----
 
@@ -125,14 +125,14 @@ __参数__
 keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
 ```
 
-当被监测的数量不再优化，则停止训练。
+当被监测的数量不再提升，则停止训练。
 
 __参数__
 
 - __monitor__: 被监测的数据。
-- __min_delta__: 在被监测的数据中被认为是优化的最小变化，
-例如，小于 min_delta 的绝对变化会被认为没有优化。
-- __patience__: 没有优化的训练周期数，在这之后训练就会被停止。
+- __min_delta__: 在被监测的数据中被认为是提升的最小变化，
+例如，小于 min_delta 的绝对变化会被认为没有提升。
+- __patience__: 没有进步的训练轮数，在这之后训练就会被停止。
 - __verbose__: 详细信息模式。
 - __mode__: {auto, min, max} 其中之一。 在 `min` 模式中，
 当被监测的数据停止下降，训练就会停止；在 `max`
@@ -148,19 +148,18 @@ __参数__
 keras.callbacks.RemoteMonitor(root='http://localhost:9000', path='/publish/epoch/end/', field='data', headers=None)
 ```
 
-Callback used to stream events to a server.
+将事件数据流到服务器的回调函数。
 
-Requires the `requests` library.
-Events are sent to `root + '/publish/epoch/end/'` by default. Calls are
-HTTP POST, with a `data` argument which is a
-JSON-encoded dictionary of event data.
+需要 `requests` 库。
+事件被默认发送到 `root + '/publish/epoch/end/'`。
+采用 HTTP POST ，其中的 `data` 参数是以 JSON 编码的事件数据字典。
 
-__Arguments__
+__参数__
 
-- __root__: String; root url of the target server.
-- __path__: String; path relative to `root` to which the events will be sent.
-- __field__: String; JSON field under which the data will be stored.
-- __headers__: Dictionary; optional custom HTTP headers.
+- __root__: 字符串；目标服务器的根地址。
+- __path__: 字符串；相对于 `root` 的路径，事件数据被送达的地址。
+- __field__: 字符串；JSON ，数据被保存的领域。
+- __headers__: 字典；可选自定义的 HTTP 的头字段。
 
 ----
 
@@ -171,14 +170,13 @@ __Arguments__
 keras.callbacks.LearningRateScheduler(schedule, verbose=0)
 ```
 
-Learning rate scheduler.
+学习速率定时器。
 
-__Arguments__
+__参数__
 
-- __schedule__: a function that takes an epoch index as input
-(integer, indexed from 0) and returns a new
-learning rate as output (float).
-- __verbose__: int. 0: quiet, 1: update messages.
+- __schedule__: 一个函数，接受轮索引数作为输入（整数，从 0 开始迭代）
+然后返回一个学习速率作为输出（浮点数）。
+- __verbose__: 整数。 0：安静，1：更新信息。
 
 ----
 
@@ -189,48 +187,38 @@ learning rate as output (float).
 keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
 ```
 
-Tensorboard basic visualizations.
+Tensorboard 基本可视化。
 
 [TensorBoard](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
-is a visualization tool provided with TensorFlow.
+是由 Tensorflow 提供的一个可视化工具。
 
-This callback writes a log for TensorBoard, which allows
-you to visualize dynamic graphs of your training and test
-metrics, as well as activation histograms for the different
-layers in your model.
+这个回调函数为 Tensorboard 编写一个日志，
+这样你可以可视化测试和训练的标准评估的动态图像，
+也可以可视化模型中不同层的激活值直方图。
 
-If you have installed TensorFlow with pip, you should be able
-to launch TensorBoard from the command line:
+如果你已经使用 pip 安装了 Tensorflow，你应该可以从命令行启动 Tensorflow：
 ```sh
 tensorboard --logdir=/full_path_to_your_logs
 ```
 
-__Arguments__
+__参数__
 
-- __log_dir__: the path of the directory where to save the log
-files to be parsed by TensorBoard.
-- __histogram_freq__: frequency (in epochs) at which to compute activation
-and weight histograms for the layers of the model. If set to 0,
-histograms won't be computed. Validation data (or split) must be
-specified for histogram visualizations.
-- __write_graph__: whether to visualize the graph in TensorBoard.
-The log file can become quite large when
-write_graph is set to True.
-- __write_grads__: whether to visualize gradient histograms in TensorBoard.
-`histogram_freq` must be greater than 0.
-- __batch_size__: size of batch of inputs to feed to the network
-for histograms computation.
-- __write_images__: whether to write model weights to visualize as
-image in TensorBoard.
-- __embeddings_freq__: frequency (in epochs) at which selected embedding
-layers will be saved.
-- __embeddings_layer_names__: a list of names of layers to keep eye on. If
-None or empty list all the embedding layer will be watched.
-- __embeddings_metadata__: a dictionary which maps layer name to a file name
-in which metadata for this embedding layer is saved. See the
-[details](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
-about metadata files format. In case if the same metadata file is
-used for all embedding layers, string can be passed.
+- __log_dir__: 用来保存被 TensorBoard 分析的日志文件的文件名。
+- __histogram_freq__: 对于模型中各个层计算激活值和模型权重直方图的频率（训练轮数中）。
+如果设置成 0 ，直方图不会被计算。对于直方图可视化的验证数据（或分离数据）一定要明确的指出。
+- __write_graph__: 是否在 TensorBoard 中可视化图像。
+如果 write_graph 被设置为 True，日志文件会变得非常大。
+- __write_grads__: 是否在 TensorBoard  中可视化梯度值直方图。
+`histogram_freq` 必须要大于 0 。
+- __batch_size__: 用以直方图计算的传入神经元网络输入批的大小。
+- __write_images__: 是否在 TensorBoard 中将模型权重以图片可视化。
+- __embeddings_freq__: 被选中的嵌入层会被保存的频率（在训练轮中）。
+- __embeddings_layer_names__: 一个列表，会被监测层的名字。
+如果是 None 或空列表，那么所有的嵌入层都会被监测。
+- __embeddings_metadata__: 一个字典，对应层的名字到保存有这个嵌入层元数据文件的名字。
+查看 [详情](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
+关于元数据的数据格式。
+以防同样的元数据被用于所用的嵌入层，字符串可以被传入。
 
 ----
 
@@ -241,14 +229,13 @@ used for all embedding layers, string can be passed.
 keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
 ```
 
-Reduce learning rate when a metric has stopped improving.
+当标准评估已经停止时，降低学习速率。
 
-Models often benefit from reducing the learning rate by a factor
-of 2-10 once learning stagnates. This callback monitors a
-quantity and if no improvement is seen for a 'patience' number
-of epochs, the learning rate is reduced.
+当学习停止时，模型总是会受益于降低 2-10 倍的学习速率。
+这个回调函数监测一个数据并且当这个数据在一定「有耐心」的训练轮之后还没有进步，
+那么学习速率就会被降低。
 
-__Example__
+__例__
 
 
 ```python
@@ -257,26 +244,18 @@ reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
 model.fit(X_train, Y_train, callbacks=[reduce_lr])
 ```
 
-__Arguments__
+__参数__
 
-- __monitor__: quantity to be monitored.
-- __factor__: factor by which the learning rate will
-be reduced. new_lr = lr * factor
-- __patience__: number of epochs with no improvement
-after which learning rate will be reduced.
-- __verbose__: int. 0: quiet, 1: update messages.
-- __mode__: one of {auto, min, max}. In `min` mode,
-lr will be reduced when the quantity
-monitored has stopped decreasing; in `max`
-mode it will be reduced when the quantity
-monitored has stopped increasing; in `auto`
-mode, the direction is automatically inferred
-from the name of the monitored quantity.
-- __epsilon__: threshold for measuring the new optimum,
-to only focus on significant changes.
-- __cooldown__: number of epochs to wait before resuming
-normal operation after lr has been reduced.
-- __min_lr__: lower bound on the learning rate.
+- __monitor__: 被监测的数据。
+- __factor__: 学习速率被降低的因数。新的学习速率 = 学习速率 * 因数
+- __patience__: 没有进步的训练轮数，在这之后训练速率会被降低。
+- __verbose__: 整数。0：安静，1：更新信息。
+- __mode__: {auto, min, max} 其中之一。如果是 `min` 模式，学习速率会被降低如果被监测的数据已经停止下降；
+在 `max` 模式，学习塑料会被降低如果被监测的数据已经停止上升；
+在 `auto` 模式，方向会被从被监测的数据中自动推断出来。
+- __epsilon__: 对于测量新的最优化的阀值，只关注巨大的改变。
+- __cooldown__: 在学习速率被降低之后，重新恢复正常操作之前等待的训练轮数量。
+- __min_lr__: 学习速率的下边界。
 
 ----
 
@@ -287,12 +266,11 @@ normal operation after lr has been reduced.
 keras.callbacks.CSVLogger(filename, separator=',', append=False)
 ```
 
-Callback that streams epoch results to a csv file.
+把训练轮结果数据流到 csv 文件的回调函数。
 
-Supports all values that can be represented as a string,
-including 1D iterables such as np.ndarray.
+支持所有可以被作为字符串表示的值，包括 1D 可迭代数据，例如，np.ndarray。
 
-__Example__
+__例__
 
 
 ```python
@@ -300,12 +278,11 @@ csv_logger = CSVLogger('training.log')
 model.fit(X_train, Y_train, callbacks=[csv_logger])
 ```
 
-__Arguments__
+__参数__
 
-- __filename__: filename of the csv file, e.g. 'run/log.csv'.
-- __separator__: string used to separate elements in the csv file.
-- __append__: True: append if file exists (useful for continuing
-training). False: overwrite existing file,
+- __filename__: csv 文件的文件名，例如 'run/log.csv'。
+- __separator__: 用来隔离 csv 文件中元素的字符串。
+- __append__: True：如果文件存在则增加（可以被用于继续训练）。False：覆盖存在的文件。
 
 ----
 
@@ -316,38 +293,37 @@ training). False: overwrite existing file,
 keras.callbacks.LambdaCallback(on_epoch_begin=None, on_epoch_end=None, on_batch_begin=None, on_batch_end=None, on_train_begin=None, on_train_end=None)
 ```
 
-Callback for creating simple, custom callbacks on-the-fly.
+在训练进行中创建简单，自定义的回调函数的回调函数。
 
-This callback is constructed with anonymous functions that will be called
-at the appropriate time. Note that the callbacks expects positional
-arguments, as:
+这个回调函数和匿名函数在合适的时间被创建。
+需要注意的是回调函数要求位置型参数，如下：
 
-- `on_epoch_begin` and `on_epoch_end` expect two positional arguments:
+- `on_epoch_begin` 和 `on_epoch_end` 要求两个位置型的参数：
 `epoch`, `logs`
-- `on_batch_begin` and `on_batch_end` expect two positional arguments:
+- `on_batch_begin` 和 `on_batch_end` 要求两个位置型的参数：
 `batch`, `logs`
-- `on_train_begin` and `on_train_end` expect one positional argument:
+- `on_train_begin` 和 `on_train_end` 要求一个位置型的参数：
 `logs`
 
-__Arguments__
+__参数__
 
-- __on_epoch_begin__: called at the beginning of every epoch.
-- __on_epoch_end__: called at the end of every epoch.
-- __on_batch_begin__: called at the beginning of every batch.
-- __on_batch_end__: called at the end of every batch.
-- __on_train_begin__: called at the beginning of model training.
-- __on_train_end__: called at the end of model training.
+- __on_epoch_begin__: 在每轮开始时被调用。
+- __on_epoch_end__: 在每轮结束时被调用。
+- __on_batch_begin__: 在每批开始时被调用。
+- __on_batch_end__: 在每批结束时被调用。
+- __on_train_begin__: 在模型训练开始时被调用。
+- __on_train_end__: 在模型训练结束时被调用。
 
-__Example__
+__例__
 
 
 ```python
-# Print the batch number at the beginning of every batch.
+# 在每一个批开始时，打印出批数。
 batch_print_callback = LambdaCallback(
     on_batch_begin=lambda batch,logs: print(batch))
 
-# Stream the epoch loss to a file in JSON format. The file content
-# is not well-formed JSON but rather has a JSON object per line.
+# 把训练轮损失数据流到 JSON 格式的文件。文件的内容
+# 不是完美的 JSON 格式，但是时每一行都是 JSON 对象。
 import json
 json_log = open('loss_log.json', mode='wt', buffering=1)
 json_logging_callback = LambdaCallback(
@@ -356,7 +332,7 @@ json_logging_callback = LambdaCallback(
     on_train_end=lambda logs: json_log.close()
 )
 
-# Terminate some processes after having finished model training.
+# 在完成模型训练之后，结束一些进程。
 processes = ...
 cleanup_callback = LambdaCallback(
     on_train_end=lambda logs: [
@@ -372,11 +348,13 @@ model.fit(...,
 ---
 
 
-# Create a callback
+# 创建一个回调函数
 
-You can create a custom callback by extending the base class `keras.callbacks.Callback`. A callback has access to its associated model through the class property `self.model`.
+你可以通过扩展 `keras.callbacks.Callback` 基类来创建一个自定义的回调函数。
+通过类的属性 `self.model`，回调函数可以获得它所联系的模型。
 
-Here's a simple example saving a list of losses over each batch during training:
+下面是一个简单的例子，在训练时，保存一个列表的批量损失值：
+
 ```python
 class LossHistory(keras.callbacks.Callback):
     def on_train_begin(self, logs={}):
@@ -388,7 +366,7 @@ class LossHistory(keras.callbacks.Callback):
 
 ---
 
-### Example: recording loss history
+### 例: 记录损失历史
 
 ```python
 class LossHistory(keras.callbacks.Callback):
@@ -407,7 +385,7 @@ history = LossHistory()
 model.fit(x_train, y_train, batch_size=128, epochs=20, verbose=0, callbacks=[history])
 
 print(history.losses)
-# outputs
+# 输出
 '''
 [0.66047596406559383, 0.3547245744908703, ..., 0.25953155204159617, 0.25901699725311789]
 '''
@@ -415,7 +393,7 @@ print(history.losses)
 
 ---
 
-### Example: model checkpoints
+### 例: 模型检查点
 
 ```python
 from keras.callbacks import ModelCheckpoint
@@ -426,7 +404,7 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
 '''
-saves the model weights after each epoch if the validation loss decreased
+如果验证损失下降， 那么在每个训练轮之后保存模型。
 '''
 checkpointer = ModelCheckpoint(filepath='/tmp/weights.hdf5', verbose=1, save_best_only=True)
 model.fit(x_train, y_train, batch_size=128, epochs=20, verbose=0, validation_data=(X_test, Y_test), callbacks=[checkpointer])
