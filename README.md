@@ -51,3 +51,13 @@
 | testing            | 测试                 |
 | training           | 训练                 |
 | wrapper            | 封装器               |
+
+
+## 剩余翻译页面
+
+1. [Keras Utils](https://github.com/keras-team/keras-docs-zh/blob/master/sources/utils.md)
+2. [Keras Convolutional Layers](https://github.com/keras-team/keras-docs-zh/blob/master/sources/layers/convolutional.md)
+3. [Keras Recurrent Layers](https://github.com/keras-team/keras-docs-zh/blob/master/sources/layers/recurrent.md)
+4. [Keras Locally Connected Layers](https://github.com/keras-team/keras-docs-zh/blob/master/sources/layers/local.md)
+
+Welcome to contribute!!!
