@@ -1,9 +1,9 @@
 ## 初始化器的用法
 
 
-初始化定义了设置Keras各层权重随机初始值的方法。
+初始化定义了设置 Keras 各层权重随机初始值的方法。
 
-用来将初始化器传入keras层的参数名取决于具体的层。通常关键字为`kernel_initializer` and `bias_initializer`:
+用来将初始化器传入 Keras 层的参数名取决于具体的层。通常关键字为 `kernel_initializer` 和 `bias_initializer`:
 
 ```python
 model.add(Dense(64,
@@ -13,7 +13,7 @@ model.add(Dense(64,
 
 ## 可用的初始化器
 
-下面这些是可用的内置初始化器，是`keras.initializers`模块的一部分:
+下面这些是可用的内置初始化器，是 `keras.initializers` 模块的一部分:
 
 <span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L14)</span>
 ### Initializer
@@ -33,7 +33,7 @@ keras.initializers.Initializer()
 keras.initializers.Zeros()
 ```
 
-将张量初始值设为0的初始化器。
+将张量初始值设为 0 的初始化器。
 
 ----
 
@@ -59,7 +59,7 @@ keras.initializers.Constant(value=0)
 
 __参数__
 
-- __value__: 浮点数; 生成的张量的值。
+- __value__: 浮点数，生成的张量的值。
 
 ----
 
@@ -74,9 +74,9 @@ keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
 
 __参数__
 
-- __mean__: 一个python标量或者一个标量张量。要生成的随机值的平均数。
-- __stddev__: 一个python标量或者一个标量张量。要生成的随机值的标准差。
-- __seed__: 一个Python整数。用于设置随机数种子。
+- __mean__: 一个 Python 标量或者一个标量张量。要生成的随机值的平均数。
+- __stddev__: 一个 Python 标量或者一个标量张量。要生成的随机值的标准差。
+- __seed__: 一个 Python 整数。用于设置随机数种子。
 
 ----
 
@@ -91,9 +91,9 @@ keras.initializers.RandomUniform(minval=-0.05, maxval=0.05, seed=None)
 
 __参数__
 
-- __minval__: 一个python标量或者一个标量张量。要生成的随机值的范围下限。
-- __maxval__: 一个python标量或者一个标量张量。要生成的随机值的范围下限。默认为浮点类型的1。
-- __seed__: 一个Python整数。用于设置随机数种子。
+- __minval__: 一个 Python 标量或者一个标量张量。要生成的随机值的范围下限。
+- __maxval__: 一个 Python 标量或者一个标量张量。要生成的随机值的范围下限。默认为浮点类型的 1。
+- __seed__: 一个 Python 整数。用于设置随机数种子。
 
 ----
 
@@ -106,13 +106,13 @@ keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 
 按照截尾正态分布生成随机张量的初始化器。
 
-生成的随机值与`RandomNormal`生成的类似，但是在距离平均值两个标准差之外的随机值将被丢弃并重新生成。这是用来生成神经网络权重和滤波器的推荐初始化器。
+生成的随机值与 `RandomNormal` 生成的类似，但是在距离平均值两个标准差之外的随机值将被丢弃并重新生成。这是用来生成神经网络权重和滤波器的推荐初始化器。
 
 __Arguments__
 
-- __mean__: 一个python标量或者一个标量张量。要生成的随机值的平均数。
-- __stddev__: 一个python标量或者一个标量张量。要生成的随机值的标准差。
-- __seed__: 一个Python整数。用于设置随机数种子。
+- __mean__: 一个 Python 标量或者一个标量张量。要生成的随机值的平均数。
+- __stddev__: 一个 Python 标量或者一个标量张量。要生成的随机值的标准差。
+- __seed__: 一个 Python 整数。用于设置随机数种子。
 
 ----
 
@@ -123,30 +123,26 @@ __Arguments__
 keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='normal', seed=None)
 ```
 
-Initializer capable of adapting its scale to the shape of weights.
+初始化器能够根据权值的尺寸调整其规模。
 
-With `distribution="normal"`, samples are drawn from a truncated normal
-distribution centered on zero, with `stddev = sqrt(scale / n)` where n is:
+使用 `distribution="normal"` 时，样本是从一个以 0 为中心的截断正态分布中抽取的，`stddev = sqrt(scale / n)`，其中 n 是：
 
-- number of input units in the weight tensor, if mode = "fan_in"
-- number of output units, if mode = "fan_out"
-- average of the numbers of input and output units, if mode = "fan_avg"
+- 权值张量中输入单元的数量，如果 mode = "fan_in"。
+- 输出单元的数量，如果 mode = "fan_out"。
+- 输入和输出单位数量的平均数，如果 mode = "fan_avg"。
 
-With `distribution="uniform"`,
-samples are drawn from a uniform distribution
-within [-limit, limit], with `limit = sqrt(3 * scale / n)`.
+使用 `distribution="uniform"` 时，样本是从 [-limit，limit] 内的均匀分布中抽取的，其中 `limit = sqrt(3 * scale / n)`。
 
-__Arguments__
+__参数__
 
-- __scale__: Scaling factor (positive float).
-- __mode__: One of "fan_in", "fan_out", "fan_avg".
-- __distribution__: Random distribution to use. One of "normal", "uniform".
-- __seed__: A Python integer. Used to seed the random generator.
+- __scale__: 缩放因子（正浮点数）。
+- __mode__: "fan_in", "fan_out", "fan_avg" 之一。
+- __distribution__: 使用的随机分布。"normal", "uniform" 之一。
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Raises__
+__异常__
 
-- __ValueError__: In case of an invalid value for the "scale", mode" or
-"distribution" arguments.
+- __ValueError__: 如果 "scale", mode" 或 "distribution" 参数无效。
 
 ----
 
@@ -157,14 +153,14 @@ __Raises__
 keras.initializers.Orthogonal(gain=1.0, seed=None)
 ```
 
-Initializer that generates a random orthogonal matrix.
+生成一个随机正交矩阵的初始化器。
 
-__Arguments__
+__参数__
 
-- __gain__: Multiplicative factor to apply to the orthogonal matrix.
-- __seed__: A Python integer. Used to seed the random generator.
+- __gain__: 适用于正交矩阵的乘法因子。
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__References__
+__参考文献__
 
 Saxe et al., http://arxiv.org/abs/1312.6120
 
@@ -177,13 +173,13 @@ Saxe et al., http://arxiv.org/abs/1312.6120
 keras.initializers.Identity(gain=1.0)
 ```
 
-Initializer that generates the identity matrix.
+生成单位矩阵的初始化器。
 
-Only use for square 2D matrices.
+仅用于 2D 方阵。
 
-__Arguments__
+__参数__
 
-- __gain__: Multiplicative factor to apply to the identity matrix.
+- __gain__: 适用于单位矩阵的乘法因子。
 
 ----
 
@@ -195,21 +191,21 @@ lecun_uniform(seed=None)
 ```
 
 
-LeCun uniform initializer.
+LeCun 均匀初始化器。
 
-It draws samples from a uniform distribution within [-limit, limit]
-where `limit` is `sqrt(3 / fan_in)`
-where `fan_in` is the number of input units in the weight tensor.
+它从 [-limit，limit] 中的均匀分布中抽取样本，
+其中 `limit` 是 `sqrt(3 / fan_in)`，
+`fan_in` 是权值张量中的输入单位的数量。
 
 __Arguments__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
 __Returns__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 LeCun 98, Efficient Backprop,
 - __http__://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf
@@ -224,22 +220,21 @@ glorot_normal(seed=None)
 ```
 
 
-Glorot normal initializer, also called Xavier normal initializer.
+Glorot 正态分布初始化器，也称为 Xavier 正态分布初始化器。
 
-It draws samples from a truncated normal distribution centered on 0
-with `stddev = sqrt(2 / (fan_in + fan_out))`
-where `fan_in` is the number of input units in the weight tensor
-and `fan_out` is the number of output units in the weight tensor.
+它从以 0 为中心，标准差为 `stddev = sqrt(2 / (fan_in + fan_out))` 的截断正态分布中抽取样本，
+其中 `fan_in` 是权值张量中的输入单位的数量，
+`fan_out` 是权值张量中的输出单位的数量。
 
 __Arguments__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
 __Returns__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 Glorot & Bengio, AISTATS 2010
 - __http__://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
@@ -254,22 +249,22 @@ glorot_uniform(seed=None)
 ```
 
 
-Glorot uniform initializer, also called Xavier uniform initializer.
+Glorot 均匀分布初始化器，也称为 Xavier 均匀分布初始化器。
 
-It draws samples from a uniform distribution within [-limit, limit]
-where `limit` is `sqrt(6 / (fan_in + fan_out))`
-where `fan_in` is the number of input units in the weight tensor
-and `fan_out` is the number of output units in the weight tensor.
+它从 [-limit，limit] 中的均匀分布中抽取样本，
+其中 `limit` 是 `sqrt(6 / (fan_in + fan_out))`，
+`fan_in` 是权值张量中的输入单位的数量，
+`fan_out` 是权值张量中的输出单位的数量。
 
-__Arguments__
+__参数__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 Glorot & Bengio, AISTATS 2010
 - __http__://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
@@ -284,21 +279,20 @@ he_normal(seed=None)
 ```
 
 
-He normal initializer.
+He 正态分布初始化器。
 
-It draws samples from a truncated normal distribution centered on 0
-with `stddev = sqrt(2 / fan_in)`
-where `fan_in` is the number of input units in the weight tensor.
+它从以 0 为中心，标准差为 `stddev = sqrt(2 / fan_in)` 的截断正态分布中抽取样本，
+其中 `fan_in` 是权值张量中的输入单位的数量，
 
-__Arguments__
+__参数__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 He et al., http://arxiv.org/abs/1502.01852
 
@@ -312,21 +306,20 @@ lecun_normal(seed=None)
 ```
 
 
-LeCun normal initializer.
+LeCun 正态分布初始化器。
 
-It draws samples from a truncated normal distribution centered on 0
-with `stddev = sqrt(1 / fan_in)`
-where `fan_in` is the number of input units in the weight tensor.
+它从以 0 为中心，标准差为 `stddev = sqrt(1 / fan_in)` 的截断正态分布中抽取样本，
+其中 `fan_in` 是权值张量中的输入单位的数量。
 
-__Arguments__
+__参数__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 - [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
 - [Efficient Backprop](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
@@ -341,41 +334,42 @@ he_uniform(seed=None)
 ```
 
 
-He uniform variance scaling initializer.
+He 均匀方差缩放初始化器。
 
-It draws samples from a uniform distribution within [-limit, limit]
-where `limit` is `sqrt(6 / fan_in)`
-where `fan_in` is the number of input units in the weight tensor.
+它从 [-limit，limit] 中的均匀分布中抽取样本，
+其中 `limit` 是 `sqrt(6 / fan_in)`，
+其中 `fan_in` 是权值张量中的输入单位的数量。
 
-__Arguments__
+__参数__
 
-- __seed__: A Python integer. Used to seed the random generator.
+- __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
-An initializer.
+一个初始化器。
 
-__References__
+__参考文献__
 
 He et al., http://arxiv.org/abs/1502.01852
 
 
 
-An initializer may be passed as a string (must match one of the available initializers above), or as a callable:
+一个初始化器可以作为一个字符串传递（必须匹配上面的一个可用的初始化器），或者作为一个可调用函数传递：
 
 ```python
 from keras import initializers
 
 model.add(Dense(64, kernel_initializer=initializers.random_normal(stddev=0.01)))
 
-# also works; will use the default parameters.
+# 同样有效;将使用默认参数。
 model.add(Dense(64, kernel_initializer='random_normal'))
 ```
 
 
-## Using custom initializers
+## 使用自定义初始化器
 
-If passing a custom callable, then it must take the argument `shape` (shape of the variable to initialize) and `dtype` (dtype of generated values):
+如果传递一个自定义的可调用函数，那么它必须使用参数 `shape`（需要初始化的变量的尺寸）和 `dtype`（数据类型）：
+
 
 ```python
 from keras import backend as K
