@@ -9,14 +9,14 @@ keras.layers.Dense(units, activation=None, use_bias=True, kernel_initializer='gl
 
 `Dense` 实现以下操作：
 `output = activation(dot(input, kernel) + bias)`
-其中 `activation` 是按逐个元素计算的激活函数，`kernel`
+其中 `activation` 是按逐个元素计算的激活函数，`kernel` 
 是由网络层创建的权值矩阵，以及 `bias` 是其创建的偏置向量
 (只在 `use_bias` 为 `True` 时才有用)。
 
 - __注意__: 如果该层的输入的秩大于2，那么它首先被展平然后
 再计算与 `kernel` 的点乘。
 
-__例__
+__例子__
 
 
 ```python
@@ -87,7 +87,7 @@ __输入尺寸__
 
 任意尺寸。
 当使用此层作为模型中的第一层时，
-使用参数 `input_shape`
+使用参数 `input_shape` 
 （整数元组，不包括样本数的轴）。
 
 
@@ -116,7 +116,7 @@ __参数__
 - __noise_shape__: 1D 整数张量，
 表示将与输入相乘的二进制 dropout 掩层的形状。
 例如，如果你的输入尺寸为
-`(batch_size, timesteps, features)`，然后
+`(batch_size, timesteps, features)`，然后 
 你希望 dropout 掩层在所有时间步都是一样的，
 你可以使用 `noise_shape=(batch_size, 1, features)`。
 - __seed__: 一个作为随机种子的 Python 整数。
@@ -191,7 +191,7 @@ __参数__
 - __tensor__: 可选的可封装到 `Input` 层的现有张量。
 如果设定了，那么这个层将不会创建占位符张量。
 
-__返回__
+__Returns__
 
 一个张量。
 
@@ -225,7 +225,7 @@ __输入尺寸__
 
 任意，尽管输入尺寸中的所有维度必须是固定的。
 当使用此层作为模型中的第一层时，
-使用参数 `input_shape`
+使用参数 `input_shape` 
 （整数元组，不包括样本数的轴）。
 
 __输出尺寸__
@@ -283,7 +283,7 @@ __参数__
 __输入尺寸__
 
 任意。当使用此层作为模型中的第一层时，
-使用参数 `input_shape`
+使用参数 `input_shape` 
 （整数元组，不包括样本数的轴）。
 
 __输出尺寸__
@@ -384,10 +384,10 @@ __参数__
 __输入尺寸__
 
 任意。当使用此层作为模型中的第一层时，
-使用参数 `input_shape`
+使用参数 `input_shape` 
 （整数元组，不包括样本数的轴）。
 
-__输出尺寸__
+__Output shape__
 
 由 `output_shape` 参数指定
 (或者在使用 TensorFlow 时，自动推理得到)。
@@ -411,7 +411,7 @@ __参数__
 __输入尺寸__
 
 任意。当使用此层作为模型中的第一层时，
-使用参数 `input_shape`
+使用参数 `input_shape` 
 （整数元组，不包括样本数的轴）。
 
 __输出尺寸__
