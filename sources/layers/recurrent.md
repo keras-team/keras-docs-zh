@@ -7,7 +7,7 @@ keras.layers.RNN(cell, return_sequences=False, return_state=False, go_backwards=
 
 Base class for recurrent layers.
 
-__Arguments__
+__参数__
 
 - __cell__: A RNN cell instance. A RNN cell is a class that has:
 - a `call(input_at_t, states_at_t)` method, returning
@@ -55,11 +55,11 @@ in your model, you would need to specify the input length
 at the level of the first layer
 (e.g. via the `input_shape` argument)
 
-__Input shape__
+__输入格式__
 
 3D tensor with shape `(batch_size, timesteps, input_dim)`.
 
-__Output shape__
+__输出格式__
 
 - if `return_state`: a list of tensors. The first tensor is
 the output. The remaining tensors are the last states,
@@ -118,7 +118,7 @@ requires that the `cell.call` method accepts the same keyword argument
 transformation on additional static inputs (not changing over time),
 a.k.a. an attention mechanism.
 
-__Examples__
+__例子__
 
 
 ```python
@@ -173,7 +173,7 @@ keras.layers.SimpleRNN(units, activation='tanh', use_bias=True, kernel_initializ
 
 Fully-connected RNN where the output is to be fed back to input.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -243,7 +243,7 @@ keras.layers.GRU(units, activation='tanh', recurrent_activation='hard_sigmoid', 
 
 Gated Recurrent Unit - Cho et al. 2014.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -311,7 +311,7 @@ Unrolling can speed-up a RNN,
 although it tends to be more memory-intensive.
 Unrolling is only suitable for short sequences.
 
-__References__
+__参考文献__
 
 - [On the Properties of Neural Machine Translation: Encoder-Decoder Approaches](https://arxiv.org/abs/1409.1259)
 - [Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling](http://arxiv.org/abs/1412.3555v1)
@@ -328,7 +328,7 @@ keras.layers.LSTM(units, activation='tanh', recurrent_activation='hard_sigmoid',
 
 Long-Short Term Memory layer - Hochreiter 1997.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -400,7 +400,7 @@ Unrolling can speed-up a RNN,
 although it tends to be more memory-intensive.
 Unrolling is only suitable for short sequences.
 
-__References__
+__参考文献__
 
 - [Long short-term memory](http://www.bioinf.jku.at/publications/older/2604.pdf) (original 1997 paper)
 - [Learning to forget: Continual prediction with LSTM](http://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015)
@@ -421,7 +421,7 @@ Convolutional LSTM.
 It is similar to an LSTM layer, but the input transformations
 and recurrent transformations are both convolutional.
 
-__Arguments__
+__参数__
 
 - __filters__: Integer, the dimensionality of the output space
 (i.e. the number output of filters in the convolution).
@@ -500,7 +500,7 @@ the linear transformation of the inputs.
 Fraction of the units to drop for
 the linear transformation of the recurrent state.
 
-__Input shape__
+__输入格式__
 
 - if data_format='channels_first'
 5D tensor with shape:
@@ -509,7 +509,7 @@ __Input shape__
 5D tensor with shape:
 `(samples,time, rows, cols, channels)`
 
-__Output shape__
+__输出格式__
 
 - if `return_sequences`
 - if data_format='channels_first'
@@ -528,11 +528,11 @@ __Output shape__
 where o_row and o_col depend on the shape of the filter and
 the padding
 
-__Raises__
+__异常__
 
 - __ValueError__: in case of invalid constructor arguments.
 
-__References__
+__参考文献__
 
 - [Convolutional LSTM Network: A Machine Learning Approach for
 Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)
@@ -550,7 +550,7 @@ keras.layers.SimpleRNNCell(units, activation='tanh', use_bias=True, kernel_initi
 
 Cell class for SimpleRNN.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -601,7 +601,7 @@ keras.layers.GRUCell(units, activation='tanh', recurrent_activation='hard_sigmoi
 
 Cell class for the GRU layer.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -661,7 +661,7 @@ keras.layers.LSTMCell(units, activation='tanh', recurrent_activation='hard_sigmo
 
 Cell class for the LSTM layer.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __activation__: Activation function to use
@@ -727,11 +727,11 @@ Wrapper allowing a stack of RNN cells to behave as a single cell.
 
 Used to implement efficient stacked RNNs.
 
-__Arguments__
+__参数__
 
 - __cells__: List of RNN cell instances.
 
-__Examples__
+__例子__
 
 
 ```python
@@ -758,7 +758,7 @@ Fast GRU implementation backed by [CuDNN](https://developer.nvidia.com/cudnn).
 
 Can only be run on GPU, with the TensorFlow backend.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __kernel_initializer__: Initializer for the `kernel` weights matrix,
@@ -810,7 +810,7 @@ Fast LSTM implementation backed by [CuDNN](https://developer.nvidia.com/cudnn).
 
 Can only be run on GPU, with the TensorFlow backend.
 
-__Arguments__
+__参数__
 
 - __units__: Positive integer, dimensionality of the output space.
 - __kernel_initializer__: Initializer for the `kernel` weights matrix,
