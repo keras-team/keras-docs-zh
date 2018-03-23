@@ -46,7 +46,7 @@ __输出尺寸__
 - 如果 `return_state` 为 True，则返回张量列表。
 第一个张量为输出。剩余的张量为最后的状态，
 每个张量的尺寸为 `(batch_size, units)`。
-- 否则，返回尺寸为 `(batch_size, units)` 的2D 张量。
+- 否则，返回尺寸为 `(batch_size, units)` 的 2D 张量。
 
 __屏蔽覆盖__
 
