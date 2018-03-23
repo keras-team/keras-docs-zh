@@ -56,6 +56,5 @@
 ## 剩余翻译页面
 
 1. [Keras Convolutional Layers](https://github.com/keras-team/keras-docs-zh/blob/master/sources/layers/convolutional.md)
-2. [Keras Recurrent Layers](https://github.com/keras-team/keras-docs-zh/blob/master/sources/layers/recurrent.md)
 
 Welcome to contribute!!!
