@@ -5,124 +5,93 @@
 keras.layers.RNN(cell, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-Base class for recurrent layers.
+循环神经网络层基类。
 
 __参数__
 
-- __cell__: A RNN cell instance. A RNN cell is a class that has:
-- a `call(input_at_t, states_at_t)` method, returning
-`(output_at_t, states_at_t_plus_1)`. The call method of the
-cell can also take the optional argument `constants`, see
-section "Note on passing external constants" below.
-- a `state_size` attribute. This can be a single integer
-(single state) in which case it is
-the size of the recurrent state
-(which should be the same as the size of the cell output).
-This can also be a list/tuple of integers
-(one size per state). In this case, the first entry
-(`state_size[0]`) should be the same as
-the size of the cell output.
-It is also possible for `cell` to be a list of RNN cell instances,
-in which cases the cells get stacked on after the other in the RNN,
-implementing an efficient stacked RNN.
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __go_backwards__: Boolean (default False).
-If True, process the input sequence backwards and return the
-reversed sequence.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
-- __unroll__: Boolean (default False).
-If True, the network will be unrolled,
-else a symbolic loop will be used.
-Unrolling can speed-up a RNN,
-although it tends to be more memory-intensive.
-Unrolling is only suitable for short sequences.
-- __input_dim__: dimensionality of the input (integer).
-This argument (or alternatively,
-the keyword argument `input_shape`)
-is required when using this layer as the first layer in a model.
-- __input_length__: Length of input sequences, to be specified
-when it is constant.
-This argument is required if you are going to connect
-`Flatten` then `Dense` layers upstream
-(without it, the shape of the dense outputs cannot be computed).
-Note that if the recurrent layer is not the first layer
-in your model, you would need to specify the input length
-at the level of the first layer
-(e.g. via the `input_shape` argument)
+- __cell__: 一个 RNN 单元实例。RNN 单元是一个具有以下项目的类：
+- 一个 `call(input_at_t, states_at_t)` 方法，
+它返回 `(output_at_t, states_at_t_plus_1)`。
+单元的调用方法也可以采用可选参数 `constants`，
+详见下面的小节 "关于传递外部常量的注意事项"。
+- 一个 `state_size` 属性。这可以是单个整数（单个状态），
+在这种情况下，它是循环层状态的大小（应该与单元输出的大小相同）。
+这也可以是整数的列表/元组（每个状态一个大小）。
+在这种情况下，第一项（`state_size [0]`）应该与单元输出的大小相同。
+`cell` 也可能是 RNN 单元实例的列表，在这种情况下，RNN 的单元将堆叠在另一个单元上，实现高效的堆叠 RNN。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __go_backwards__: 布尔值 (默认 False)。
+如果为 True，则向后处理输入序列并返回相反的序列。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态将用作下一批次中索引 i 样品的初始状态。
+- __unroll__: 布尔值 (默认 False)。
+如果为 True，则网络将展开，否则将使用符号循环。
+展开可以加速 RNN，但它往往会占用更多的内存。
+展开只适用于短序列。
+- __input_dim__: 输入的维度（整数）。
+将此层用作模型中的第一层时，此参数（或者，关键字参数 `input_shape`）是必需的。
+- __input_length__: 输入序列的长度，在恒定时指定。
+如果你要在上游连接 `Flatten` 和 `Dense` 层，
+则需要此参数（如果没有它，无法计算全连接输出的尺寸）。
+请注意，如果循环神经网络层不是模型中的第一层，
+则需要在第一层的层级指定输入长度（例如，通过 `input_shape` 参数）。
 
-__输入格式__
+__输入尺寸__
 
-3D tensor with shape `(batch_size, timesteps, input_dim)`.
+3D 张量，尺寸为 `(batch_size, timesteps, input_dim)`。
 
-__输出格式__
+__输出尺寸__
 
-- if `return_state`: a list of tensors. The first tensor is
-the output. The remaining tensors are the last states,
-each with shape `(batch_size, units)`.
-- if `return_sequences`: 3D tensor with shape
-`(batch_size, timesteps, units)`.
-- else, 2D tensor with shape `(batch_size, units)`.
+- 如果 `return_state` 为 True，则返回张量列表。
+第一个张量为输出。剩余的张量为最后的状态，
+每个张量的尺寸为 `(batch_size, units)`。
+- 否则，返回尺寸为 `(batch_size, units)` 的2D 张量。
 
-__Masking__
+__屏蔽覆盖__
 
-This layer supports masking for input data with a variable number
-of timesteps. To introduce masks to your data,
-use an [Embedding](embeddings.md) layer with the `mask_zero` parameter
-set to `True`.
+该层支持以可变数量的时间步长对输入数据进行屏蔽覆盖。
+要将屏蔽引入数据，请使用 [Embedding](embeddings.md) 层，
+并将`mask_zero` 参数设置为 `True`。
 
-__Note on using statefulness in RNNs__
+__关于在 RNN 中使用状态的注意事项__
 
-You can set RNN layers to be 'stateful', which means that the states
-computed for the samples in one batch will be reused as initial states
-for the samples in the next batch. This assumes a one-to-one mapping
-between samples in different successive batches.
+你可以将 RNN 层设置为 `stateful`（有状态的），
+这意味着针对一批中的样本计算的状态将被重新用作下一批样品的初始状态。
+这假定在不同连续批次的样品之间有一对一的映射。
 
-To enable statefulness:
-- specify `stateful=True` in the layer constructor.
-- specify a fixed batch size for your model, by passing
-if sequential model:
-`batch_input_shape=(...)` to the first layer in your model.
-else for functional model with 1 or more Input layers:
-`batch_shape=(...)` to all the first layers in your model.
-This is the expected shape of your inputs
-*including the batch size*.
-It should be a tuple of integers, e.g. `(32, 10, 100)`.
-- specify `shuffle=False` when calling fit().
+为了使状态有效：
+- 在层构造器中指定 `stateful=True`。
+- 为你的模型指定一个固定的批次大小，
+如果是顺序模型，为你的模型的第一层传递一个 `batch_input_shape=(...)` 参数。
+- 为你的模型指定一个固定的批次大小，
+如果是顺序模型，为你的模型的第一层传递一个 `batch_input_shape=(...)`。
+如果是带有 1 个或多个 Input 层的函数式模型，为你的模型的所有第一层传递一个 `batch_shape=(...)`。
+这是你的输入的预期尺寸，*包括批量维度*。
+它应该是整数的元组，例如 `(32, 10, 100)`。
+- 在调用 `fit()` 是指定 `shuffle=False`。
 
-To reset the states of your model, call `.reset_states()` on either
-a specific layer, or on your entire model.
+要重置模型的状态，请在特定图层或整个模型上调用 `.reset_states()`。
 
-__Note on specifying the initial state of RNNs__
+__关于指定 RNN 初始状态的注意事项__
 
-You can specify the initial state of RNN layers symbolically by
-calling them with the keyword argument `initial_state`. The value of
-`initial_state` should be a tensor or list of tensors representing
-the initial state of the RNN layer.
+您可以通过使用关键字参数 `initial_state` 调用它们来符号化地指定 RNN 层的初始状态。
+`initial_state` 的值应该是表示 RNN 层初始状态的张量或张量列表。
 
-You can specify the initial state of RNN layers numerically by
-calling `reset_states` with the keyword argument `states`. The value of
-`states` should be a numpy array or list of numpy arrays representing
-the initial state of the RNN layer.
+您可以通过调用带有关键字参数 `states` 的 `reset_states` 方法来数字化地指定 RNN 层的初始状态。
+`states` 的值应该是一个代表 RNN 层初始状态的 Numpy 数组或者 Numpy 数组列表。
 
-__Note on passing external constants to RNNs__
+__关于给 RNN 传递外部常量的注意事项__
 
-You can pass "external" constants to the cell using the `constants`
-keyword argument of `RNN.__call__` (as well as `RNN.call`) method. This
-requires that the `cell.call` method accepts the same keyword argument
-`constants`. Such constants can be used to condition the cell
-transformation on additional static inputs (not changing over time),
-a.k.a. an attention mechanism.
+你可以使用 `RNN.__call__`（以及 `RNN.call`）的 `constants` 关键字参数将「外部」常量传递给单元。
+这要求 `cell.call` 方法接受相同的关键字参数 `constants`。
+这些常数可用于调节附加静态输入（不随时间变化）上的单元转换，也可用于注意力机制。
 
 __例子__
 
 
 ```python
-# First, let's define a RNN Cell, as a layer subclass.
+# 首先，让我们定义一个 RNN 单元，作为网络层子类。
 
 class MinimalRNNCell(keras.layers.Layer):
 
@@ -147,14 +116,14 @@ class MinimalRNNCell(keras.layers.Layer):
         output = h + K.dot(prev_output, self.recurrent_kernel)
         return output, [output]
 
-# Let's use this cell in a RNN layer:
+# 让我们在 RNN 层使用这个单元：
 
 cell = MinimalRNNCell(32)
 x = keras.Input((None, 5))
 layer = RNN(cell)
 y = layer(x)
 
-# Here's how to use the cell to build a stacked RNN:
+# 以下是如何使用单元格构建堆叠的 RNN的方法：
 
 cells = [MinimalRNNCell(32), MinimalRNNCell(64)]
 x = keras.Input((None, 5))
@@ -171,66 +140,53 @@ y = layer(x)
 keras.layers.SimpleRNN(units, activation='tanh', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-Fully-connected RNN where the output is to be fed back to input.
+完全连接的 RNN，其输出将被反馈到输入。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __go_backwards__: Boolean (default False).
-If True, process the input sequence backwards and return the
-reversed sequence.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
-- __unroll__: Boolean (default False).
-If True, the network will be unrolled,
-else a symbolic loop will be used.
-Unrolling can speed-up a RNN,
-although it tends to be more memory-intensive.
-Unrolling is only suitable for short sequences.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __go_backwards__: 布尔值 (默认 False)。
+如果为 True，则向后处理输入序列并返回相反的序列。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品
+的最后状态将用作下一批次中索引 i 样品的初始状态。
+- __unroll__: 布尔值 (默认 False)。
+如果为 True，则网络将展开，否则将使用符号循环。
+展开可以加速 RNN，但它往往会占用更多的内存。
+展开只适用于短序列。
 
 ----
 
@@ -241,75 +197,59 @@ Unrolling is only suitable for short sequences.
 keras.layers.GRU(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-Gated Recurrent Unit - Cho et al. 2014.
+门限循环单元网络 - Cho et al. 2014.
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __recurrent_activation__: Activation function to use
-for the recurrent step
-(see [activations](../activations.md)).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
-- __implementation__: Implementation mode, either 1 or 2.
-Mode 1 will structure its operations as a larger number of
-smaller dot products and additions, whereas mode 2 will
-batch them into fewer, larger operations. These modes will
-have different performance profiles on different hardware and
-for different applications.
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __go_backwards__: Boolean (default False).
-If True, process the input sequence backwards and return the
-reversed sequence.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
-- __unroll__: Boolean (default False).
-If True, the network will be unrolled,
-else a symbolic loop will be used.
-Unrolling can speed-up a RNN,
-although it tends to be more memory-intensive.
-Unrolling is only suitable for short sequences.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __recurrent_activation__: 用于循环时间步的激活函数
+(详见 [activations](../activations.md))。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
+- __implementation__: 实现模式，1 或 2。
+模式 1 将把它的操作结构化为更多的小的点积和加法操作，
+而模式 2 将把它们分批到更少，更大的操作中。
+这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __go_backwards__: 布尔值 (默认 False)。
+如果为 True，则向后处理输入序列并返回相反的序列。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态
+将用作下一批次中索引 i 样品的初始状态。
+- __unroll__: 布尔值 (默认 False)。
+如果为 True，则网络将展开，否则将使用符号循环。
+展开可以加速 RNN，但它往往会占用更多的内存。
+展开只适用于短序列。
 
 __参考文献__
 
@@ -326,79 +266,63 @@ __参考文献__
 keras.layers.LSTM(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-Long-Short Term Memory layer - Hochreiter 1997.
+长短期记忆网络层 - Hochreiter 1997.
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __recurrent_activation__: Activation function to use
-for the recurrent step
-(see [activations](../activations.md)).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs.
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state.
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __unit_forget_bias__: Boolean.
-If True, add 1 to the bias of the forget gate at initialization.
-Setting it to true will also force `bias_initializer="zeros"`.
-This is recommended in [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
-- __implementation__: Implementation mode, either 1 or 2.
-Mode 1 will structure its operations as a larger number of
-smaller dot products and additions, whereas mode 2 will
-batch them into fewer, larger operations. These modes will
-have different performance profiles on different hardware and
-for different applications.
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __go_backwards__: Boolean (default False).
-If True, process the input sequence backwards and return the
-reversed sequence.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
-- __unroll__: Boolean (default False).
-If True, the network will be unrolled,
-else a symbolic loop will be used.
-Unrolling can speed-up a RNN,
-although it tends to be more memory-intensive.
-Unrolling is only suitable for short sequences.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __recurrent_activation__: 用于循环时间步的激活函数
+(详见 [activations](../activations.md))。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __unit_forget_bias__: 布尔值。
+如果为 True，初始化时，将忘记门的偏置加 1。
+将其设置为 True 同时还会强制 `bias_initializer="zeros"`。
+这个建议来自 [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)。
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
+- __implementation__: 实现模式，1 或 2。
+模式 1 将把它的操作结构化为更多的小的点积和加法操作，
+而模式 2 将把它们分批到更少，更大的操作中。
+这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __go_backwards__: 布尔值 (默认 False)。
+如果为 True，则向后处理输入序列并返回相反的序列。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态
+将用作下一批次中索引 i 样品的初始状态。
+- __unroll__: 布尔值 (默认 False)。
+如果为 True，则网络将展开，否则将使用符号循环。
+展开可以加速 RNN，但它往往会占用更多的内存。
+展开只适用于短序列。
 
 __参考文献__
 
@@ -416,128 +340,111 @@ __参考文献__
 keras.layers.ConvLSTM2D(filters, kernel_size, strides=(1, 1), padding='valid', data_format=None, dilation_rate=(1, 1), activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, return_sequences=False, go_backwards=False, stateful=False, dropout=0.0, recurrent_dropout=0.0)
 ```
 
-Convolutional LSTM.
+卷积 LSTM.
 
-It is similar to an LSTM layer, but the input transformations
-and recurrent transformations are both convolutional.
+它类似于 LSTM 层，但输入变换和循环变换都是卷积的。
 
 __参数__
 
-- __filters__: Integer, the dimensionality of the output space
-(i.e. the number output of filters in the convolution).
-- __kernel_size__: An integer or tuple/list of n integers, specifying the
-dimensions of the convolution window.
-- __strides__: An integer or tuple/list of n integers,
-specifying the strides of the convolution.
-Specifying any stride value != 1 is incompatible with specifying
-any `dilation_rate` value != 1.
-- __padding__: One of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, time, ..., channels)`
-while `channels_first` corresponds to
-inputs with shape `(batch, time, channels, ...)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
-- __dilation_rate__: An integer or tuple/list of n integers, specifying
-the dilation rate to use for dilated convolution.
-Currently, specifying any `dilation_rate` value != 1 is
-incompatible with specifying any `strides` value != 1.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you don't specify anything, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __recurrent_activation__: Activation function to use
-for the recurrent step
-(see [activations](../activations.md)).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs.
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state.
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __unit_forget_bias__: Boolean.
-If True, add 1 to the bias of the forget gate at initialization.
-Use in combination with `bias_initializer="zeros"`.
-This is recommended in [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __return_sequences__: Boolean. Whether to return the last output
-in the output sequence, or the full sequence.
-- __go_backwards__: Boolean (default False).
-If True, rocess the input sequence backwards.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
+- __filters__: 整数，输出空间的维度
+（即卷积中滤波器的输出数量）。
+- __kernel_size__: 一个整数，或者单个整数表示的元组或列表，
+指明 1D 卷积窗口的长度。
+- __strides__: 一个整数，或者单个整数表示的元组或列表，
+指明卷积的步长。
+指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
+- __padding__: `"valid"` 或 `"same"` 之一 (大小写敏感)。
+- __data_format__: 字符串，
+`channels_last` (默认) 或 `channels_first` 之一。
+输入中维度的顺序。
+`channels_last` 对应输入尺寸为 `(batch, height, width, channels)`，
+`channels_first` 对应输入尺寸为 `(batch, channels, height, width)`。
+它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
+找到的 `image_data_format` 值。
+如果你从未设置它，将使用 "channels_last"。
+- __dilation_rate__: 一个整数，或 n 个整数的元组/列表，指定用于膨胀卷积的膨胀率。
+目前，指定任何 `dilation_rate` 值 != 1 与指定 stride 值 != 1 两者不兼容。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __recurrent_activation__: 用于循环时间步的激活函数
+(详见 [activations](../activations.md))。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __unit_forget_bias__: 布尔值。
+如果为 True，初始化时，将忘记门的偏置加 1。
+将其设置为 True 同时还会强制 `bias_initializer="zeros"`。
+这个建议来自 [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)。
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __go_backwards__: 布尔值 (默认 False)。
+如果为 True，则向后处理输入序列并返回相反的序列。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态
+将用作下一批次中索引 i 样品的初始状态。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
 
-__输入格式__
+__输入尺寸__
 
-- if data_format='channels_first'
-5D tensor with shape:
-`(samples,time, channels, rows, cols)`
-- if data_format='channels_last'
-5D tensor with shape:
-`(samples,time, rows, cols, channels)`
+- 如果 data_format='channels_first'，
+返回 5D 张量，尺寸为：
+`(samples,time, channels, rows, cols)`。
+- 如果 data_format='channels_last'，
+返回 5D 张量，尺寸为：
+`(samples,time, rows, cols, channels)`。
 
-__输出格式__
+__输出尺寸__
 
-- if `return_sequences`
-- if data_format='channels_first'
-5D tensor with shape:
-`(samples, time, filters, output_row, output_col)`
-- if data_format='channels_last'
-5D tensor with shape:
-`(samples, time, output_row, output_col, filters)`
-- else
-- if data_format ='channels_first'
-4D tensor with shape:
-`(samples, filters, output_row, output_col)`
-- if data_format='channels_last'
-4D tensor with shape:
-`(samples, output_row, output_col, filters)`
-where o_row and o_col depend on the shape of the filter and
-the padding
+- 如果 `return_sequences`，
+- 如果 data_format='channels_first'，
+返回 5D 张量，尺寸为：
+`(samples, time, filters, output_row, output_col)`。
+- 如果 data_format='channels_last'，
+返回 5D 张量，尺寸为：
+`(samples, time, output_row, output_col, filters)`。
+- 否则，
+- 如果 data_format ='channels_first'，
+返回 4D 张量，尺寸为：
+`(samples, filters, output_row, output_col)`。
+- 如果 data_format='channels_last'，
+返回 4D 张量，尺寸为：
+`(samples, output_row, output_col, filters)`。
+o_row 和 o_col 依赖于过滤器的尺寸和填充。
 
 __异常__
 
-- __ValueError__: in case of invalid constructor arguments.
+- __ValueError__: 无效的构造参数。
 
 __参考文献__
 
 - [Convolutional LSTM Network: A Machine Learning Approach for
 Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)
-The current implementation does not include the feedback loop on the
-cells output
+
+当前的实现不包括单元输出的反馈回路。
 
 ----
 
@@ -548,47 +455,40 @@ cells output
 keras.layers.SimpleRNNCell(units, activation='tanh', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0)
 ```
 
-Cell class for SimpleRNN.
+SimpleRNN 的单元类。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
 
 ----
 
@@ -599,56 +499,46 @@ the linear transformation of the recurrent state.
 keras.layers.GRUCell(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1)
 ```
 
-Cell class for the GRU layer.
+GRU 层的单元类。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __recurrent_activation__: Activation function to use
-for the recurrent step
-(see [activations](../activations.md)).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
-- __implementation__: Implementation mode, either 1 or 2.
-Mode 1 will structure its operations as a larger number of
-smaller dot products and additions, whereas mode 2 will
-batch them into fewer, larger operations. These modes will
-have different performance profiles on different hardware and
-for different applications.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __recurrent_activation__: 用于循环时间步的激活函数
+(详见 [activations](../activations.md))。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
+- __implementation__: 实现模式，1 或 2。
+模式 1 将把它的操作结构化为更多的小的点积和加法操作，
+而模式 2 将把它们分批到更少，更大的操作中。
+这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
 
 ----
 
@@ -659,60 +549,50 @@ for different applications.
 keras.layers.LSTMCell(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1)
 ```
 
-Cell class for the LSTM layer.
+LSTM 层的单元类。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you pass None, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __recurrent_activation__: Activation function to use
-for the recurrent step
-(see [activations](../activations.md)).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __unit_forget_bias__: Boolean.
-If True, add 1 to the bias of the forget gate at initialization.
-Setting it to true will also force `bias_initializer="zeros"`.
-This is recommended in [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the inputs.
-- __recurrent_dropout__: Float between 0 and 1.
-Fraction of the units to drop for
-the linear transformation of the recurrent state.
-- __implementation__: Implementation mode, either 1 or 2.
-Mode 1 will structure its operations as a larger number of
-smaller dot products and additions, whereas mode 2 will
-batch them into fewer, larger operations. These modes will
-have different performance profiles on different hardware and
-for different applications.
+- __units__: 正整数，输出空间的维度。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
+- __recurrent_activation__: 用于循环时间步的激活函数
+(详见 [activations](../activations.md))。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __unit_forget_bias__: 布尔值。
+如果为 True，初始化时，将忘记门的偏置加 1。
+将其设置为 True 同时还会强制 `bias_initializer="zeros"`。
+这个建议来自 [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)。
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于输入的线性转换。
+- __recurrent_dropout__: 在 0 和 1 之间的浮点数。
+单元的丢弃比例，用于循环层状态的线性转换。
+- __implementation__: 实现模式，1 或 2。
+模式 1 将把它的操作结构化为更多的小的点积和加法操作，
+而模式 2 将把它们分批到更少，更大的操作中。
+这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
 
 ----
 
@@ -723,13 +603,13 @@ for different applications.
 keras.layers.StackedRNNCells(cells)
 ```
 
-Wrapper allowing a stack of RNN cells to behave as a single cell.
+允许将一堆 RNN 单元表现为一个单元的封装器。
 
-Used to implement efficient stacked RNNs.
+用于实现高效堆叠的 RNN。
 
 __参数__
 
-- __cells__: List of RNN cell instances.
+- __cells__: RNN 单元实例的列表。
 
 __例子__
 
@@ -754,48 +634,41 @@ x = keras.layers.RNN(cells)(inputs)
 keras.layers.CuDNNGRU(units, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, return_sequences=False, return_state=False, stateful=False)
 ```
 
-Fast GRU implementation backed by [CuDNN](https://developer.nvidia.com/cudnn).
+由 [CuDNN](https://developer.nvidia.com/cudnn) 支持的快速 GRU 实现。
 
-Can only be run on GPU, with the TensorFlow backend.
+只能以 TensorFlow 后端运行在 GPU 上。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs.
-(see [initializers](../initializers.md)).
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state.
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
+- __units__: 正整数，输出空间的维度。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
 - __activity_regularizer__: Regularizer function applied to
 the output of the layer (its "activation").
 (see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态
+将用作下一批次中索引 i 样品的初始状态。
 
 ----
 
@@ -806,49 +679,41 @@ state for the sample of index i in the following batch.
 keras.layers.CuDNNLSTM(units, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, return_sequences=False, return_state=False, stateful=False)
 ```
 
-Fast LSTM implementation backed by [CuDNN](https://developer.nvidia.com/cudnn).
+由 [CuDNN](https://developer.nvidia.com/cudnn) 支持的快速 LSTM 实现。
 
-Can only be run on GPU, with the TensorFlow backend.
+只能以 TensorFlow 后端运行在 GPU 上。
 
 __参数__
 
-- __units__: Positive integer, dimensionality of the output space.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix,
-used for the linear transformation of the inputs.
-(see [initializers](../initializers.md)).
-- __unit_forget_bias__: Boolean.
-If True, add 1 to the bias of the forget gate at initialization.
-Setting it to true will also force `bias_initializer="zeros"`.
-This is recommended in [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)
-- __recurrent_initializer__: Initializer for the `recurrent_kernel`
-weights matrix,
-used for the linear transformation of the recurrent state.
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __recurrent_regularizer__: Regularizer function applied to
-the `recurrent_kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to
-the `kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __recurrent_constraint__: Constraint function applied to
-the `recurrent_kernel` weights matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
-- __return_sequences__: Boolean. Whether to return the last output.
-in the output sequence, or the full sequence.
-- __return_state__: Boolean. Whether to return the last state
-in addition to the output.
-- __stateful__: Boolean (default False). If True, the last state
-for each sample at index i in a batch will be used as initial
-state for the sample of index i in the following batch.
+- __units__: 正整数，输出空间的维度。
+- __kernel_initializer__: kernel 权值矩阵的初始化器，
+用于输入的线性转换
+(详见 [initializers](../initializers.md))。
+- __unit_forget_bias__: 布尔值。
+如果为 True，初始化时，将忘记门的偏置加 1。
+将其设置为 True 同时还会强制 `bias_initializer="zeros"`。
+这个建议来自 [Jozefowicz et al.](http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf)。
+- __recurrent_initializer__: `recurrent_kernel` 权值矩阵
+的初始化器，用于循环层状态的线性转换
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__:偏置向量的初始化器
+(详见[initializers](../initializers.md)).
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __recurrent_regularizer__: 运用到 `recurrent_kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __recurrent_constraint__: 运用到 `recurrent_kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+- __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
+- __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
+- __stateful__: 布尔值 (默认 False)。
+如果为 True，则批次中索引 i 处的每个样品的最后状态
+将用作下一批次中索引 i 样品的初始状态。
