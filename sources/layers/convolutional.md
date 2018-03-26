@@ -5,73 +5,67 @@
 keras.layers.Conv1D(filters, kernel_size, strides=1, padding='valid', dilation_rate=1, activation=None, use_bias=True, kernel_initializer='glorot_uniform', bias_initializer='zeros', kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, bias_constraint=None)
 ```
 
-1D convolution layer (e.g. temporal convolution).
+1D 卷积层 (例如时序卷积)。
 
-This layer creates a convolution kernel that is convolved
-with the layer input over a single spatial (or temporal) dimension
-to produce a tensor of outputs.
-If `use_bias` is True, a bias vector is created and added to the outputs.
-Finally, if `activation` is not `None`,
-it is applied to the outputs as well.
+该层创建了一个卷积核，该卷积核以
+单个空间（或时间）维上的层输入进行卷积，
+以生成输出张量。
+如果 `use_bias` 为 True，
+则会创建一个偏向量并将其添加到输出中。
+最后，如果 `activation` 
+不是 `None`，它也会应用于输出。
 
-When using this layer as the first layer in a model,
-provide an `input_shape` argument
-(tuple of integers or `None`, e.g.
-`(10, 128)` for sequences of 10 vectors of 128-dimensional vectors,
-or `(None, 128)` for variable-length sequences of 128-dimensional vectors.
+当使用该层作为模型第一层时，需要提供 `input_shape` 参数（整数元组或 `None`），例如，
+`(10, 128)` 表示 10 个 128 维的向量组成的向量序列，
+`(None, 128)` 表示 128 维的向量组成的变长序列。
 
-__Arguments__
+__参数__
 
-- __filters__: Integer, the dimensionality of the output space
-(i.e. the number output of filters in the convolution).
-- __kernel_size__: An integer or tuple/list of a single integer,
-specifying the length of the 1D convolution window.
-- __strides__: An integer or tuple/list of a single integer,
-specifying the stride length of the convolution.
-Specifying any stride value != 1 is incompatible with specifying
-any `dilation_rate` value != 1.
-- __padding__: One of `"valid"`, `"causal"` or `"same"` (case-insensitive).
-`"valid"` means "no padding".
-`"same"` results in padding the input such that
-the output has the same length as the original input.
-`"causal"` results in causal (dilated) convolutions, e.g. output[t]
-does not depend on input[t+1:]. Useful when modeling temporal data
-where the model should not violate the temporal order.
-See [WaveNet: A Generative Model for Raw Audio, section 2.1](https://arxiv.org/abs/1609.03499).
-- __dilation_rate__: an integer or tuple/list of a single integer, specifying
-the dilation rate to use for dilated convolution.
-Currently, specifying any `dilation_rate` value != 1 is
-incompatible with specifying any `strides` value != 1.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you don't specify anything, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to the kernel matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
+- __filters__: 整数，输出空间的维度
+（即卷积中滤波器的输出数量）。
+- __kernel_size__: 一个整数，或者单个整数表示的元组或列表，
+指明 1D 卷积窗口的长度。
+- __strides__: 一个整数，或者单个整数表示的元组或列表，
+指明卷积的步长。
+指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
+- __padding__: `"valid"`, `"causal"` 或 `"same"` 之一 (大小写敏感)
+`"valid"` 表示「不填充」。
+`"same"` 表示填充输入以使输出具有与原始输入相同的长度。
+`"causal"` 表示因果（膨胀）卷积，
+例如，output[t] 不依赖于 input[t+1:]，
+在模型不应违反时间顺序的时间数据建模时非常有用。
+在模型不应违反时间顺序的时间数据建模时非常有用。
+详见 [WaveNet: A Generative Model for Raw Audio, section 2.1](https://arxiv.org/abs/1609.03499)。
+- __dilation_rate__: 一个整数，或者单个整数表示的元组或列表，指定用于膨胀卷积的膨胀率。
+当前，指定任何 `dilation_rate` 值 != 1 与指定 stride 值 != 1 两者不兼容。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果你不指定，则不使用激活函数
+(即线性激活： `a(x) = x`)。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__: 偏置向量的初始化器
+(详见 [initializers](../initializers.md))。
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
 
-__Input shape__
+__输入尺寸__
 
-3D tensor with shape: `(batch_size, steps, input_dim)`
+3D 张量 ，尺寸为 `(batch_size, steps, input_dim)`。
 
-__Output shape__
+__输出尺寸__
 
-3D tensor with shape: `(batch_size, new_steps, filters)`
-`steps` value might have changed due to padding or strides.
+3D 张量，尺寸为 `(batch_size, new_steps, filters)`。
+由于填充或窗口按步长滑动，`steps` 值可能已更改。
 
 ----
 
@@ -82,87 +76,80 @@ __Output shape__
 keras.layers.Conv2D(filters, kernel_size, strides=(1, 1), padding='valid', data_format=None, dilation_rate=(1, 1), activation=None, use_bias=True, kernel_initializer='glorot_uniform', bias_initializer='zeros', kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, bias_constraint=None)
 ```
 
-2D convolution layer (e.g. spatial convolution over images).
+2D 卷积层 (例如对图像的空间卷积)。
 
-This layer creates a convolution kernel that is convolved
-with the layer input to produce a tensor of
-outputs. If `use_bias` is True,
-a bias vector is created and added to the outputs. Finally, if
-`activation` is not `None`, it is applied to the outputs as well.
+该层创建了一个卷积核，
+该卷积核对层输入进行卷积，
+以生成输出张量。
+如果 `use_bias` 为 True，
+则会创建一个偏向量并将其添加到输出中。
+最后，如果 `activation` 
+不是 `None`，它也会应用于输出。
 
-When using this layer as the first layer in a model,
-provide the keyword argument `input_shape`
-(tuple of integers, does not include the sample axis),
-e.g. `input_shape=(128, 128, 3)` for 128x128 RGB pictures
-in `data_format="channels_last"`.
+当使用该层作为模型第一层时，需要提供 `input_shape` 参数
+（整数元组，不包含样本表示的轴），例如，
+`input_shape=(128, 128, 3)` 表示 128x128 RGB 图像，
+在 `data_format="channels_last"` 时。
 
-__Arguments__
+__参数__
 
-- __filters__: Integer, the dimensionality of the output space
-(i.e. the number output of filters in the convolution).
-- __kernel_size__: An integer or tuple/list of 2 integers, specifying the
-width and height of the 2D convolution window.
-Can be a single integer to specify the same value for
-all spatial dimensions.
-- __strides__: An integer or tuple/list of 2 integers,
-specifying the strides of the convolution along the width and height.
-Can be a single integer to specify the same value for
-all spatial dimensions.
-Specifying any stride value != 1 is incompatible with specifying
-any `dilation_rate` value != 1.
-- __padding__: one of `"valid"` or `"same"` (case-insensitive).
-- __data_format__: A string,
-one of `channels_last` (default) or `channels_first`.
-The ordering of the dimensions in the inputs.
-`channels_last` corresponds to inputs with shape
-`(batch, height, width, channels)` while `channels_first`
-corresponds to inputs with shape
-`(batch, channels, height, width)`.
-It defaults to the `image_data_format` value found in your
-Keras config file at `~/.keras/keras.json`.
-If you never set it, then it will be "channels_last".
-- __dilation_rate__: an integer or tuple/list of 2 integers, specifying
-the dilation rate to use for dilated convolution.
-Can be a single integer to specify the same value for
-all spatial dimensions.
-Currently, specifying any `dilation_rate` value != 1 is
-incompatible with specifying any stride value != 1.
-- __activation__: Activation function to use
-(see [activations](../activations.md)).
-If you don't specify anything, no activation is applied
-(ie. "linear" activation: `a(x) = x`).
-- __use_bias__: Boolean, whether the layer uses a bias vector.
-- __kernel_initializer__: Initializer for the `kernel` weights matrix
-(see [initializers](../initializers.md)).
-- __bias_initializer__: Initializer for the bias vector
-(see [initializers](../initializers.md)).
-- __kernel_regularizer__: Regularizer function applied to
-the `kernel` weights matrix
-(see [regularizer](../regularizers.md)).
-- __bias_regularizer__: Regularizer function applied to the bias vector
-(see [regularizer](../regularizers.md)).
-- __activity_regularizer__: Regularizer function applied to
-the output of the layer (its "activation").
-(see [regularizer](../regularizers.md)).
-- __kernel_constraint__: Constraint function applied to the kernel matrix
-(see [constraints](../constraints.md)).
-- __bias_constraint__: Constraint function applied to the bias vector
-(see [constraints](../constraints.md)).
+- __filters__: 整数，输出空间的维度
+（即卷积中滤波器的输出数量）。
+- __kernel_size__: 一个整数，或者 2 个整数表示的元组或列表，
+指明 2D 卷积窗口的宽度和高度。
+可以是一个整数，为所有空间维度指定相同的值。
+- __strides__: 一个整数，或者 2 个整数表示的元组或列表，
+指明卷积沿宽度和高度方向的步长。
+可以是一个整数，为所有空间维度指定相同的值。
+指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
+- __padding__: `"valid"` 或 `"same"` (大小写敏感)。
+- __data_format__: 字符串，
+`channels_last` (默认) 或 `channels_first` 之一，表示输入中维度的顺序。
+`channels_last` 对应输入尺寸为 `(batch, height, width, channels)`，
+`channels_first` 对应输入尺寸为 `(batch, channels, height, width)`。
+它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
+找到的 `image_data_format` 值。
+如果你从未设置它，将使用 "channels_last"。
+- __dilation_rate__: 一个整数或 2 个整数的元组或列表，
+指定膨胀卷积的膨胀率。
+可以是一个整数，为所有空间维度指定相同的值。
+当前，指定任何 `dilation_rate` 值 != 1 与
+指定 stride 值 != 1 两者不兼容。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果你不指定，则不使用激活函数
+(即线性激活： `a(x) = x`)。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__: 偏置向量的初始化器
+(详见 [initializers](../initializers.md))。
+- __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __kernel_constraint__: 运用到 `kernel` 权值矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
 
-__Input shape__
+__输入尺寸__
 
-4D tensor with shape:
-`(samples, channels, rows, cols)` if data_format='channels_first'
-or 4D tensor with shape:
-`(samples, rows, cols, channels)` if data_format='channels_last'.
+- 如果 data_format='channels_first'，
+输入 4D 张量，尺寸为 `(samples, channels, rows, cols)`。
+- 如果 data_format='channels_last'，
+输入 4D 张量，尺寸为 `(samples, rows, cols, channels)`。
 
-__Output shape__
+__输出尺寸__
 
-4D tensor with shape:
-`(samples, filters, new_rows, new_cols)` if data_format='channels_first'
-or 4D tensor with shape:
-`(samples, new_rows, new_cols, filters)` if data_format='channels_last'.
-`rows` and `cols` values might have changed due to padding.
+- 如果 data_format='channels_first'，
+输出 4D 张量，尺寸为 `(samples, filters, new_rows, new_cols)`。
+- 如果 data_format='channels_last'，
+输出 4D 张量，尺寸为 `(samples, new_rows, new_cols, filters)`。
+
+由于填充的原因， `rows` 和 `cols` 值可能已更改。
 
 ----
 
