@@ -6,13 +6,13 @@
 
 ## 你恰好发现了 Keras。
 
-Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow),  [CNTK](https://github.com/Microsoft/cntk), 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
+Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow), [CNTK](https://github.com/Microsoft/cntk), 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
 
 如果你有如下需求，请选择 Keras：
 
 - 允许简单而快速的原型设计（用户友好，高度模块化，可扩展性）。
 - 同时支持卷积神经网络和循环神经网络，以及两者的组合。
-- 在CPU和GPU上无缝运行与切换。
+- 在 CPU 和 GPU 上无缝运行与切换。
 
 查看文档，请访问 [Keras.io](https://keras.io/zh/)。
 
@@ -24,9 +24,9 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 ## 指导原则
 
-- __User friendliness.__ Keras 是为人类设计的 API，而不是机器。它把用户体验放在首要和中心位置。Keras 遵循减少认知困难的最佳实践： 它提供一致和简单的 API，它将常见用例所需的用户操作数量降至最低，并且在用户错误时提供清晰和可操作的反馈。
+- __User friendliness.__ Keras 是为人类而不是为机器设计的 API。它把用户体验放在首要和中心位置。Keras 遵循减少认知困难的最佳实践：它提供一致和简单的 API，将常见用例所需的用户操作数量降至最低，并且在用户错误时提供清晰和可操作的反馈。
 
-- __Modularity.__ 模型被理解为由独立的，完全可配置的模块构成的序列或图表。这些模块可以在尽可能少的限制下组装在一起。特别是神经网络层、损失函数、优化器、初始化方法、激活函数、正则化方法，它们都是可以结合起来构建新模型的模块。
+- __Modularity.__ 模型被理解为由独立的、完全可配置的模块构成的序列或图表。这些模块可以在尽可能少的限制下组装在一起。特别是神经网络层、损失函数、优化器、初始化方法、激活函数、正则化方法，它们都是可以结合起来构建新模型的模块。
 
 - __Easy extensibility.__ 新的模块是很容易添加的（作为新的类和函数），现有的模块已经提供了充足的例子。为能够轻松地创建可以提高表现力的新模块，使 Keras 更加适合高级研究。
 
@@ -36,11 +36,11 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 ------------------
 
 
-## 快速开始：30秒上手 Keras
+## 快速开始：30 秒上手 Keras
 
-Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 模型，它是由多网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
+Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 顺序模型，它是由多个网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
 
-`Sequential` 模型如下所示：
+`Sequential` 顺序模型如下所示：
 
 ```python
 from keras.models import Sequential
@@ -75,7 +75,7 @@ model.compile(loss=keras.losses.categorical_crossentropy,
 现在，你可以批量地在训练数据上进行迭代了：
 
 ```python
-# x_train and y_train are Numpy arrays --just like in the Scikit-Learn API.
+# x_train 和 y_train 是 Numpy 数组 -- 就像在 Scikit-Learn API 中一样。
 model.fit(x_train, y_train, epochs=5, batch_size=32)
 ```
 
@@ -101,18 +101,18 @@ classes = model.predict(x_test, batch_size=128)
 
 有关 Keras 更深入的教程，请查看：
 
-- [Sequential 模型入门](https://keras.io/zh/getting-started/sequential-model-guide)
-- [函数式 API 入门](https://keras.io/zh/getting-started/functional-api-guide)
+- [开始使用 Sequential 顺序模型](https://keras.io/zh/getting-started/sequential-model-guide)
+- [开始使用函数式 API](https://keras.io/zh/getting-started/functional-api-guide)
 
-在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统，基于栈式 LSTM 的文本生成等等。
+在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统、基于栈式 LSTM 的文本生成等等。
 
 
 ------------------
 
 
-## 安装
+## 安装指引
 
-在安装 Keras 之前，请安装以下后端引擎之一：TensorFlow， Theano，或者 CNTK。我们推荐 TensorFlow 后端。
+在安装 Keras 之前，请安装以下后端引擎之一：TensorFlow，Theano，或者 CNTK。我们推荐 TensorFlow 后端。
 
 - [TensorFlow 安装指引](https://www.tensorflow.org/install/)。
 - [Theano 安装指引](http://deeplearning.net/software/theano/install.html#install)。
@@ -156,14 +156,14 @@ sudo python setup.py install
 ------------------
 
 
-## 从 TensorFlow 切换到 CNTK 或 Theano
+## 使用 TensorFlow 以外的后端
 
 默认情况下，Keras 将使用 TensorFlow 作为张量操作库。请[跟随这些指引](https://keras.io/zh/backend/)来配置其他 Keras 后端。
 
 ------------------
 
 
-## 支持
+## 技术支持
 
 你可以提出问题并参与开发讨论：
 
@@ -178,10 +178,10 @@ sudo python setup.py install
 
 ## 为什么取名为 Keras?
 
-Keras (κέρας) 在希腊语中意为 *号角* 。它来自古希腊和拉丁文学中的一个文学形象，首先发现于 *《奥德赛》* 中， 梦神 (_Oneiroi_, singular _Oneiros_) 从这两类人中分离出来：那些用虚幻的景象欺骗人类，通过象牙之门抵达地球之人，以及那些宣告未来即将到来，通过号角之门抵达之之人。 它类似于文字寓意，κέρας (号角) / κραίνω (履行)，以及 ἐλέφας (象牙) / ἐλεφαίρομαι (欺骗)。
+Keras (κέρας) 在希腊语中意为 *号角* 。它来自古希腊和拉丁文学中的一个文学形象，首先出现于 *《奥德赛》* 中， 梦神 (_Oneiroi_, singular _Oneiros_) 从这两类人中分离出来：那些用虚幻的景象欺骗人类，通过象牙之门抵达地球之人，以及那些宣告未来即将到来，通过号角之门抵达之人。 它类似于文字寓意，κέρας (号角) / κραίνω (履行)，以及 ἐλέφας (象牙) / ἐλεφαίρομαι (欺骗)。
 
 Keras 最初是作为 ONEIROS 项目（开放式神经电子智能机器人操作系统）研究工作的一部分而开发的。
 
->_"Oneiroi 超出了我们的理解 - 谁能确定他们讲述了什么故事？并不是所有人都能找到。那里有两扇门，就是通往短暂的 Oneiroi 的通道；一个是用号角制造的，一个是用象牙制造的。穿过尖锐的象牙的 Oneiroi 是诡计多端的，他们带有一些不会实现的信息； 那些穿过抛光的喇叭出来的人背后具有真理，对于看到他们的人来说是完成的。"_ Homer, Odyssey 19. 562 ff (Shewring translation).
+>_"Oneiroi 超出了我们的理解 - 谁能确定它们讲述了什么故事？并不是所有人都能找到。那里有两扇门，就是通往短暂的 Oneiroi 的通道；一个是用号角制造的，一个是用象牙制造的。穿过尖锐的象牙的 Oneiroi 是诡计多端的，他们带有一些不会实现的信息； 那些穿过抛光的喇叭出来的人背后具有真理，对于看到他们的人来说是完成的。"_ Homer, Odyssey 19. 562 ff (Shewring translation).
 
 ------------------
