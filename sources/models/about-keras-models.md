@@ -1,6 +1,6 @@
 # 关于Keras模型
 
-在 Keras 中有两类模型：[Suquential 顺序模型](/models/sequential) 和 [使用函数式 API 的 Model 类模型](/models/model)。
+在 Keras 中有两类模型：[Sequential 顺序模型](/models/sequential) 和 [使用函数式 API 的 Model 类模型](/models/model)。
 
 这些模型有许多共同的方法：
 
