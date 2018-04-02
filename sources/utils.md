@@ -336,4 +336,4 @@ model.save('my_model.h5')
 
 __关于模型保存__
 
-要保存多 GPU 模型，请使用 `.save(fname)` 或 `.save_weights(fname)` 作为模板模型（传递给 `multi_gpu_model` 的参数），而不是`multi_gpu_model` 返回的模型。
+要保存多 GPU 模型，用模板模型调用 `.save(fname)` 或 `.save_weights(fname)` ，所谓的模板模型是指传递给 `multi_gpu_model` 的参数，而不是函数 `multi_gpu_model` 返回的模型。
