@@ -8,11 +8,11 @@
 
 Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow), [CNTK](https://github.com/Microsoft/cntk), 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
 
-如果你有如下需求，请选择 Keras：
+如果你在以下情况下需要深度学习库，请使用 Keras：
 
-- 允许简单而快速的原型设计（用户友好，高度模块化，可扩展性）。
+- 允许简单而快速的原型设计（由于用户友好，高度模块化，可扩展性）。
 - 同时支持卷积神经网络和循环神经网络，以及两者的组合。
-- 在 CPU 和 GPU 上无缝运行与切换。
+- 在 CPU 和 GPU 上无缝运行。
 
 查看文档，请访问 [Keras.io](https://keras.io/zh/)。
 
@@ -24,13 +24,13 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 ## 指导原则
 
-- __User friendliness.__ Keras 是为人类而不是为机器设计的 API。它把用户体验放在首要和中心位置。Keras 遵循减少认知困难的最佳实践：它提供一致和简单的 API，将常见用例所需的用户操作数量降至最低，并且在用户错误时提供清晰和可操作的反馈。
+- __用户友好。__ Keras 是为人类而不是为机器设计的 API。它把用户体验放在首要和中心位置。Keras 遵循减少认知困难的最佳实践：它提供一致且简单的 API，将常见用例所需的用户操作数量降至最低，并且在用户错误时提供清晰和可操作的反馈。
 
-- __Modularity.__ 模型被理解为由独立的、完全可配置的模块构成的序列或图表。这些模块可以在尽可能少的限制下组装在一起。特别是神经网络层、损失函数、优化器、初始化方法、激活函数、正则化方法，它们都是可以结合起来构建新模型的模块。
+- __模块化。__ 模型被理解为由独立的、完全可配置的模块构成的序列或图。这些模块可以以尽可能少的限制组装在一起。特别是神经网络层、损失函数、优化器、初始化方法、激活函数、正则化方法，它们都是可以结合起来构建新模型的模块。
 
-- __Easy extensibility.__ 新的模块是很容易添加的（作为新的类和函数），现有的模块已经提供了充足的例子。为能够轻松地创建可以提高表现力的新模块，使 Keras 更加适合高级研究。
+- __易扩展性。__ 新的模块是很容易添加的（作为新的类和函数），现有的模块已经提供了充足的示例。由于能够轻松地创建可以提高表现力的新模块，Keras 更加适合高级研究。
 
-- __Work with Python__. Keras 没有特定格式的单独配置文件。模型定义在 Python 代码中，这些代码紧凑，易于调试，并且易于扩展。
+- __基于 Python 实现。__ Keras 没有特定格式的单独配置文件。模型定义在 Python 代码中，这些代码紧凑，易于调试，并且易于扩展。
 
 
 ------------------
@@ -65,7 +65,7 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 ```
 
-如果需要，你还可以进一步地配置优化器。Keras 的一个核心原则是使事情变得相当简单，同时又允许用户在需要的时候能够进行完全的控制（终极的控制是源代码的易扩展性）。
+如果需要，你还可以进一步地配置你的优化器。Keras 的核心原则是使事情变得相当简单，同时又允许用户在需要的时候能够进行完全的控制（终极的控制是源代码的易扩展性）。
 
 ```python
 model.compile(loss=keras.losses.categorical_crossentropy,
@@ -122,7 +122,7 @@ classes = model.predict(x_test, batch_size=128)
 
 - cuDNN (如果你计划在 GPU 上运行 Keras，建议安装)。
 - HDF5 和 h5py (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
-- graphviz 和 pydot (被[可视化工具](https://keras.io/zh/visualization/)用来绘制模型图)。
+- graphviz 和 pydot (用于[可视化工具](https://keras.io/zh/visualization/)绘制模型图)。
 
 然后你就可以安装 Keras 本身了。有两种方法安装 Keras：
 
@@ -158,7 +158,7 @@ sudo python setup.py install
 
 ## 使用 TensorFlow 以外的后端
 
-默认情况下，Keras 将使用 TensorFlow 作为张量操作库。请[跟随这些指引](https://keras.io/zh/backend/)来配置其他 Keras 后端。
+默认情况下，Keras 将使用 TensorFlow 作为其张量操作库。请[跟随这些指引](https://keras.io/zh/backend/)来配置其他 Keras 后端。
 
 ------------------
 
@@ -170,7 +170,7 @@ sudo python setup.py install
 - [Keras Google group](https://groups.google.com/forum/#!forum/keras-users)。
 - [Keras Slack channel](https://kerasteam.slack.com)。 使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
 
-你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中张贴 **漏洞报告和新功能请求**。注意请先阅读 [规范文档 ](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
+你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中张贴**漏洞报告和新功能请求**（仅限于此）。注意请先阅读 [规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
 
 
 ------------------
