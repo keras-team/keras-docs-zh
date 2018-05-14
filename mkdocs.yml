@@ -45,7 +45,7 @@ pages:
 - 激活函数 Activations: activations.md
 - 回调函数 Callbacks: callbacks.md
 - 常用数据集 Datasets: datasets.md
-- 预训练模型 Applications: applications.md
+- 应用 Applications: applications.md
 - 后端 Backend: backend.md
 - 初始化 Initializers: initializers.md
 - 正则化 Regularizers: regularizers.md
