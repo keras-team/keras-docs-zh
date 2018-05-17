@@ -328,7 +328,7 @@ __参数__
 - __workers__: 整数。使用的最大进程数量，如果使用基于进程的多线程。
 如未指定，`workers` 将默认为 1。如果为 0，将在主线程上执行生成器。
 - __use_multiprocessing__: 布尔值。如果 True，则使用基于进程的多线程。
-如未指定， `workers` 将默认为 False。
+如未指定， `use_multiprocessing` 将默认为 False。
 请注意，由于此实现依赖于多进程，所以不应将不可传递的参数传递给生成器，因为它们不能被轻易地传递给子进程。
 - __shuffle__: 是否在每轮迭代之前打乱 batch 的顺序。
 只能与 `Sequence` (keras.utils.Sequence) 实例同用。
