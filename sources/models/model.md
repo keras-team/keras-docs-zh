@@ -302,7 +302,7 @@ __参数__
 以在使用多进程时避免数据的重复。
 生成器的输出应该为以下之一：
   - 一个 (inputs, targets) 元组
-  - 一个 (inputs, targets, sample_weights) 元组。
+  - 一个 (inputs, targets, sample_weights) 元组。
 这个元组（生成器的单个输出）组成了单个的 batch。
 因此，这个元组中的所有数组长度必须相同（与这一个 batch 的大小相等）。
 不同的 batch 可能大小不同。
@@ -316,9 +316,9 @@ __参数__
 - __verbose__: 日志显示模式。0，1 或 2。
 - __callbacks__: 在训练时调用的一系列回调函数。
 - __validation_data__: 它可以是以下之一：
- - 验证数据的生成器
- - 一个 (inputs, targets) 元组
- - 一个 (inputs, targets, sample_weights) 元组。
+  - 验证数据的生成器
+  - 一个 (inputs, targets) 元组
+  - 一个 (inputs, targets, sample_weights) 元组。
 - __validation_steps__: 仅当 `validation_data` 是一个生成器时才可用。
 在停止前 `generator` 生成的总步数（样本批数）。
 对于 `Sequence`，它是可选的：如果未指定，将使用 `len(generator)` 作为步数。
