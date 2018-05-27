@@ -533,7 +533,7 @@ NASNetLarge 默认的输入尺寸是 331x331，NASNetMobile 默认的输入尺�
 
 ### 参数
 
-- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然对于 NASNetMobile 模型来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）。输入尺寸必须是三个数字，且宽高必须不小于 32，比如 (200, 200, 3) 是一个合法的输入尺寸。
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然对于 NASNetMobile 模型来说，输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）或 `(3, 331, 331)` （`channels_first` 格式）。输入尺寸必须是三个数字，且宽高必须不小于 32，比如 (200, 200, 3) 是一个合法的输入尺寸。
 - include_top: 是否包括顶层的全连接层。
 - weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
