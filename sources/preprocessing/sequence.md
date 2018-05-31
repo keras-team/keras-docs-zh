@@ -7,7 +7,7 @@ keras.preprocessing.sequence.pad_sequences(sequences, maxlen=None, dtype='int32'
 
 将一个 `num_samples` 的序列（标量的列表）转化为一个二维 Numpy 矩阵，其尺寸为 `(num_samples, num_timesteps)` 。 `num_timesteps` 为 `maxlen`参数，当未提供该参数时，则取最长的序列的长度。比 `num_timesteps`短的序列会被在一端用 `value` 补齐。比 `num_timesteps` 长的序列会被截断使其符合所需要的长度。发生「补齐」和「截断」的位置分别由 `padding` 和 `truncating` 决定。  
 
-- __返回__: 二维 Numpy 矩阵，尺寸为 `(num_samples, num_timesteps)`。
+- __返回__: 二维 Numpy 矩阵，尺寸为 `(num_samples, num_timesteps)` 。
 
 - __参数__:
     - __sequences__: 一个或多个整数或浮点数列表。
@@ -36,8 +36,8 @@ keras.preprocessing.sequence.skipgrams(sequence, vocabulary_size,
 Vector Space](http://arxiv.org/pdf/1301.3781v3.pdf)
 
 - __返回__: 元组 `(couples, labels)`.
-    - `couples` 是一个元素为两个整型数对的列表：  `[word_index, other_word_index]` 。
-    - `labels` 是一个由 0 和 1 组成的列表，1 表示 `other_word_index` 与`word_index` 在同一个窗口中，0 表示 `other_word_index` 是从词汇表中随机选取的。
+    - `couples` 是一个元素为两个整型数对的列表： `[word_index, other_word_index]` 。
+    - `labels` 是一个由 0 和 1 组成的列表，1 表示 `other_word_index` 与 `word_index` 在同一个窗口中，0 表示 `other_word_index` 是从词汇表中随机选取的。
     - 如果 `categorical` 被设为 `True`，标签为分类标签，即 1 变为 [0, 1] 而 0 变为 [1, 0] 。
 
 - __参数__:
@@ -47,7 +47,7 @@ Vector Space](http://arxiv.org/pdf/1301.3781v3.pdf)
     - __negative_samples__: 大于等于 0 的浮点数，表示负样本（即随机样本）相对于正样本的比例。例如，1 表示生成与正样本一样多的负样本。
     - __shuffle__: 布尔值。表示是否混洗数据。
     - __categorical__: 布尔值。表示是否要将返回的标签设为「分类标签」。 
-    - __sampling_table__: 样本表，Numpy 矩阵，尺寸为 `(vocabulary_size,)` ，这里 `sampling_table[i]` 是 索引为 i 的词的出现概率（ i 应该是数据集中所出现频率第 i 高的词）。
+    - __sampling_table__: 样本表，Numpy 矩阵，尺寸为 `(vocabulary_size,)` ，这里 `sampling_table[i]` 是索引为 i 的词的出现概率（i 应该是数据集中所出现频率第 i 高的词）。
 
 ---
 
@@ -59,7 +59,7 @@ keras.preprocessing.sequence.make_sampling_table(size, sampling_factor=1e-5)
 
 用来生成 `skipgrams` 的 `sampling_table` 参数。 `sampling_table[i]` 是数据集中出现第 i 多的词的出现概率（出于平衡考虑，出现更频繁的词应该被更少地采样）。
 
-- __返回__: Numpy 矩阵，尺寸为 `(size,)`。
+- __返回__: Numpy 矩阵，尺寸为 `(size,)` 。
 
 - __参数__:
     - __size__: 词汇表的大小。
