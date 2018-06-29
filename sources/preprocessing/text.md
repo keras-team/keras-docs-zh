@@ -1,128 +1,103 @@
+## 文本预处理
 
-## text_to_word_sequence
+### Tokenizer
 
 ```python
-keras.preprocessing.text.text_to_word_sequence(text,
-                                               filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
-                                               lower=True,
-                                               split=" ")
+keras.preprocessing.text.Tokenizer(num_words=None, 
+                                   filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', 
+                                   lower=True, split=' ', 
+                                   char_level=False, 
+                                   oov_token=None)
 ```
 
-将一个句子划分为词的列表。
+文本标记实用类。
 
-- __返回__: 词的列表（字符串）。
+该类允许使用两种方法向量化一个文本语料库：
+将每个文本转化为一个整数序列（每个整数都是词典中标记的索引）；
+或者将其转化为一个向量，其中每个标记的系数可以是二进制值、词频、TF-IDF权重等。
 
-- __参数__：
-  - __text__: 字符串。
-  - __filters__: 需要过滤掉的字符列表（或连接）。
-  默认：<code>!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n</code>，
-  包含基本标点符号、制表符、换行符。
-  - __lower__: 布尔值。是否将文本转换为小写。
-  - __split__: 字符串。词的分隔符。
+__参数__
 
-## one_hot
+- num_words: 需要保留的最大词数，基于词频。只有最常出现的 `num_words` 词会被保留。
+- filters: 一个字符串，其中每个元素是一个将从文本中过滤掉的字符。默认值是所有标点符号，加上制表符和换行符，减去 `'` 字符。
+- lower: 布尔值。是否将文本转换为小写。
+- split: 字符串。按该字符串切割文本。
+- char_level: 如果为 True，则每个字符都将被视为标记。
+- oov_token: 如果给出，它将被添加到 word_index 中，并用于在 `text_to_sequence` 调用期间替换词汇表外的单词。
 
-```python
-keras.preprocessing.text.one_hot(text,
-                                 n,
-                                 filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
-                                 lower=True,
-                                 split=" ")
-```
+默认情况下，删除所有标点符号，将文本转换为空格分隔的单词序列（单词可能包含 `'` 字符）。
+这些序列然后被分割成标记列表。然后它们将被索引或向量化。
 
-One-hot 将文本编码为大小为 n 的词汇表中的词索引列表。
+`0` 是不会被分配给任何单词的保留索引。
 
-这是使用 `hash` 作为散列函数的 `hashing_trick` 函数的封装器。
-
-- __返回__: 整数列表 [1, n]。每个整数编码一个词（唯一性无法保证）。
-
-- __参数__:
-  - __text__: 字符串。
-  - __n__: 整数。词汇表大小。
-  - __filters__: 需要过滤掉的字符列表（或连接）。
-  默认：<code>!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n</code>，
-  包含基本标点符号、制表符、换行符。
-  - __lower__: 布尔值。是否将文本转换为小写。
-  - __split__: 字符串。词的分隔符。
-    
-## hashing_trick
+### hashing_trick
 
 ```python
-keras.preprocessing.text.hashing_trick(text, 
-                                       n,
-                                       hash_function=None,
-                                       filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
-                                       lower=True,
-                                       split=' ')
+keras.preprocessing.text.hashing_trick(text, n, 
+                                       hash_function=None, 
+                                       filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', 
+                                       lower=True, split=' ')
 ```
 
 将文本转换为固定大小散列空间中的索引序列。
 
-- __返回__: 词索引的列表（唯一性无法保证）。
-        
-- __参数__:
-  - __text__: 字符串。
-  - __n__: 散列空间的维度。
-  - __hash_function__:默认为 Python `hash` 函数，
-  可以是 'md5' 或任何接受输入字符串并返回 int 的函数。
-  注意 `hash` 是一个不稳定的散列函数，
-  因而它在不同的运行环境下是不一致的，
-  而 `md5` 是一个稳定的散列函数。
-  - __filters__: 需要过滤掉的字符列表（或连接）。
-  默认：<code>!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n</code>，
-  包含基本标点符号、制表符、换行符。
-  - __lower__: 布尔值。是否将文本转换为小写。
-  - __split__: 字符串。词的分隔符。
+__参数__
 
-## Tokenizer
+- text: 输入文本（字符串）。
+- n: 散列空间维度。
+- hash_function: 默认为 python 散列函数，可以是 'md5' 或任意接受输入字符串并返回整数的函数。注意 'hash' 不是稳定的散列函数，所以它在不同的运行中不一致，而 'md5' 是一个稳定的散列函数。
+- filters: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- lower: 布尔值。是否将文本转换为小写。
+- split: 字符串。按该字符串切割文本。
+
+__返回__
+
+整数词索引列表（唯一性无法保证）。
+
+`0` 是不会被分配给任何单词的保留索引。
+
+由于哈希函数可能发生冲突，可能会将两个或更多字分配给同一索引。
+碰撞的概率与散列空间的维度和不同对象的数量有关。
+
+### one_hot
 
 ```python
-keras.preprocessing.text.Tokenizer(num_words=None,
-                                   filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
-                                   lower=True,
-                                   split=" ",
-                                   char_level=False)
+keras.preprocessing.text.one_hot(text, n, 
+                                 filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', 
+                                 lower=True, split=' ')
 ```
 
-将文本向量化的类，或/且 将文本转化为序列（词索引的列表，其中在数据集中的第 i 个首次出现的单词索引为 i，从 1 开始）。
+One-hot 将文本编码为大小为 n 的单词索引列表。
 
-- __参数__: 与上面的 `text_to_word_sequence` 相同。
-  - __num_words__: None 或 整型。 要使用的最大词数 （如果设置，标记化过程将会局限在数据集中最常出现的词中）。
-  - __char_level__: 如果 True，每一个字符都被作为一个标记。
+__参数__
 
-- __方法__:
-  - __fit_on_texts(texts)__: 
-    - __参数__:
-      - __texts__: 需要训练的文本列表。
+- text: 输入文本（字符串）。
+- n: 整数。词汇表尺寸。
+- filters: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- lower: 布尔值。是否将文本转换为小写。
+- split: 字符串。按该字符串切割文本。
 
-  - __texts_to_sequences(texts)__
-     - __参数__: 
-       - __texts__: 需要转换为序列的文本列表。
-     - __返回__: 序列的列表（每个文本输入一个序列）。
+__返回__
 
-  - __texts_to_sequences_generator(texts)__: 以上方法的生成器版本。
-    - __返回__: 每一次文本输入返回一个序列。
+[1, n] 之间的整数列表。每个整数编码一个词（唯一性无法保证）。
 
-  - __texts_to_matrix(texts)__:
-    - __返回__: numpy array of shape `(len(texts), num_words)`.
-    - __参数__:
-      - __texts__: 需要向量化的文本列表。
-      - __mode__: "binary", "count", "tfidf", "freq" 之一 (默认: "binary")。
+### text_to_word_sequence
 
-  - __fit_on_sequences(sequences)__: 
-    - __参数__:
-      - __sequences__: 需要训练的文本列表。
+```python
+keras.preprocessing.text.text_to_word_sequence(text, 
+                                               filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', 
+                                               lower=True, split=' ')
+```
 
-  - __sequences_to_matrix(sequences)__:
-    - __返回__: 尺寸为 `(len(sequences), num_words)` 的 numpy 数组。
-    - __参数__:
-      - __sequences__: 需要向量化的序列列表。
-      - __mode__: "binary", "count", "tfidf", "freq" 之一 (默认: "binary")。
+将文本转换为单词（或标记）的序列。
 
-- __属性__:
-  - __word_counts__: 在训练时将词（字符串）映射到其出现次数的字典。只在调用 `fit_on_text` 后才被设置。
-  - __word_docs__: 在训练时将词（字符串）映射到其出现的文档/文本数的字典。只在调用 `fit_on_text` 后才被设置。
-  - __word_index__: 将词（字符串）映射到索引（整型）的字典。只在调用 `fit_on_text` 后才被设置。
-  - __document_count__: 整型。标志器训练的文档（文本/序列）数量。只在调用 `fit_on_text` 或 `fit_on_sequences` 后才被设置。
+__参数__
 
+- text: 输入文本（字符串）。
+- filters: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- lower: 布尔值。是否将文本转换为小写。
+- split: 字符串。按该字符串切割文本。
 
+__返回__
+
+词或标记的列表。
