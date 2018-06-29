@@ -63,7 +63,7 @@ __参数__
 - __data_format__: 图像数据格式，{"channels_first", "channels_last"} 之一。"channels_last" 模式表示图像输入尺寸应该为 `(samples, height, width, channels)`，"channels_first" 模式表示输入尺寸应该为 `(samples, channels, height, width)`。默认为 在 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值。如果你从未设置它，那它就是 "channels_last"。
 - __validation_split__: 浮点数。Float. 保留用于验证的图像的比例（严格在0和1之间）。
 
-- __例子__:
+__例子__
 
 使用 `.flow(x, y)` 的例子：
 
