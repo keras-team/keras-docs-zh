@@ -1,11 +1,6 @@
-# Sequential 顺序模型 API
+# Sequential 模型 API
 
 在阅读这片文档前，请先阅读 [Keras Sequential 模型指引](/getting-started/sequential-model-guide)。
-
-## 常用 Sequential 属性
-
-- `model.layers` 是添加到模型的层的列表。
-
 
 ----
 
@@ -15,7 +10,7 @@
 
 
 ```python
-compile(self, optimizer, loss, metrics=None, sample_weight_mode=None, weighted_metrics=None, target_tensors=None)
+compile(self, optimizer, loss=None, metrics=None, loss_weights=None, sample_weight_mode=None, weighted_metrics=None, target_tensors=None)
 ```
 
 用于配置训练模型。
@@ -27,7 +22,7 @@ __参数__
 如果模型具有多个输出，则可以通过传递损失函数的字典或列表，在每个输出上使用不同的损失。模型将最小化的损失值将是所有单个损失的总和。
 - __metrics__: 在训练和测试期间的模型评估标准。通常你会使用 `metrics = ['accuracy']`。
 要为多输出模型的不同输出指定不同的评估标准，还可以传递一个字典，如 `metrics = {'output_a'：'accuracy'}`。
-- __sample_weight_mode__: 如果你需要执行按时间步采样权重（2D权重），请将其设置为 `temporal`。
+- __sample_weight_mode__: 如果你需要执行按时间步采样权重（2D 权重），请将其设置为 `temporal`。
 默认为 `None`，为采样权重（1D）。如果模型有多个输出，则可以通过传递 mode 的字典或列表，以在每个输出上使用不同的 `sample_weight_mode`。
 - __weighted_metrics__: 在训练和测试期间，由 sample_weight 或 class_weight 评估和加权的度量标准列表。
 - __target_tensors__: 默认情况下，Keras 将为模型的目标创建一个占位符，在训练过程中将使用目标数据。相反，如果你想使用自己的目标张量（反过来说，Keras 在训练期间不会载入这些目标张量的外部 Numpy 数据），您可以通过 `target_tensors` 参数指定它们。它应该是单个张量（对于单输出 Sequential 模型）。
@@ -36,17 +31,6 @@ __参数__
 __异常__
 
 - __ValueError__:  如果 `optimizer`, `loss`, `metrics` 或 `sample_weight_mode` 这些参数不合法。
-
-__例__
-
-```python
-model = Sequential()
-model.add(Dense(32, input_shape=(500,)))
-model.add(Dense(10, activation='softmax'))
-model.compile(optimizer='rmsprop',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-```
 
 ----
 
@@ -83,7 +67,7 @@ __参数__
 
 __返回__
 
-一个 `History` 对象。其 `History.history` 属性是连续 epoch 训练损失和评估值，以及验证集损失和评估值的记录（如果适用）​​。 
+一个 `History` 对象。其 `History.history` 属性是连续 epoch 训练损失和评估值，以及验证集损失和评估值的记录（如果适用）。 
 
 __异常__
 
@@ -98,9 +82,9 @@ __异常__
 ```python
 evaluate(self, x=None, y=None, batch_size=None, verbose=1, sample_weight=None, steps=None)
 ```
+在测试模式，返回误差值和评估标准值。
 
-
-计算一些输入数据的误差，逐批次。
+计算逐批次进行。
 
 __参数__
 
@@ -119,10 +103,6 @@ __返回__
 标量测试误差（如果模型没有评估指标）或标量列表（如果模型计算其他指标）。
 属性 `model.metrics_names` 将提供标量输出的显示标签。
 
-__异常__
-
-- __RuntimeError__: 如果模型从未编译。
-
 ----
 
 ### predict
@@ -135,7 +115,7 @@ predict(self, x, batch_size=None, verbose=0, steps=None)
 
 为输入样本生成输出预测。
 
-输入样本逐批处理。
+计算逐批次进行。
 
 __参数__
 
@@ -147,6 +127,10 @@ __参数__
 __返回__
 
 预测的 Numpy 数组。
+
+__异常__
+
+- __ValueError__: 如果提供的输入数据与模型的期望数据不匹配，或者有状态模型收到的数量不是批量大小的倍数。
 
 ----
 
@@ -172,10 +156,6 @@ __返回__
 标量训练误差（如果模型没有评估指标）或标量列表（如果模型计算其他指标）。
 属性 `model.metrics_names` 将提供标量输出的显示标签。
 
-__异常__
-
-- __RuntimeError__: 如果模型从未编译。
-
 ----
 
 ### test_on_batch
@@ -198,10 +178,6 @@ __返回__
 
 标量测试误差（如果模型没有评估指标）或标量列表（如果模型计算其他指标）。
 属性 `model.metrics_names` 将提供标量输出的显示标签。
-
-__异常__
-
-- __RuntimeError__: 如果模型从未编译。
 
 ----
 
@@ -231,26 +207,28 @@ __返回__
 fit_generator(self, generator, steps_per_epoch=None, epochs=1, verbose=1, callbacks=None, validation_data=None, validation_steps=None, class_weight=None, max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 ```
 
-使用 Python 生成器逐批生成的数据，按批次训练模型。
+使用 Python 生成器或 `Sequence` 实例逐批生成的数据，按批次训练模型。
 
 生成器与模型并行运行，以提高效率。
 例如，这可以让你在 CPU 上对图像进行实时数据增强，以在 GPU 上训练模型。
 
+`keras.utils.Sequence` 的使用可以保证数据的顺序， 以及当 `use_multiprocessing=True` 时 ，保证每个输入在每个 epoch 只使用一次。
+
 __参数__
 
-- __generator__: 一个生成器。
+- __generator__: 一个生成器或 `Sequence` (`keras.utils.Sequence`)。
 生成器的输出应该为以下之一：
-  - 一个 (inputs, targets) 元组
-  - 一个 (inputs, targets, sample_weights) 元组。
+  - 一个 `(inputs, targets)` 元组
+  - 一个 `(inputs, targets, sample_weights)` 元组。
   所有的数组都必须包含同样数量的样本。生成器将无限地在数据集上循环。当运行到第 `steps_per_epoch` 时，记一个 epoch 结束。
 - __steps_per_epoch__: 在声明一个 epoch 完成并开始下一个 epoch 之前从 `generator` 产生的总步数（批次样本）。它通常应该等于你的数据集的样本数量除以批量大小。可选参数 `Sequence`：如果未指定，将使用`len(generator)` 作为步数。
 - __epochs__: 整数，数据的迭代总轮数。请注意，与 initial_epoch 一起，参数 `epochs` 应被理解为 「最终轮数」。模型并不是训练了 `epochs` 轮，而是到第 `epochs` 轮停止训练。
 - __verbose__: 日志显示模式。0，1 或 2。
 - __callbacks__: 在训练时调用的一系列回调函数。
 - __validation_data__: 它可以是以下之一：
- - 验证数据的生成器
- - 一个 (inputs, targets) 元组
- - 一个 (inputs, targets, sample_weights) 元组。
+ - 验证数据的生成器或 `Sequence` 实例
+ - 一个 `(inputs, targets)` 元组
+ - 一个 `(inputs, targets, sample_weights)` 元组。
 - __validation_steps__: 仅当 `validation_data` 是一个生成器时才可用。
 每个 epoch 结束时验证集生成器产生的步数。它通常应该等于你的数据集的样本数量除以批量大小。可选参数 `Sequence`：如果未指定，将使用`len(generator)` 作为步数。
 - __class_weight__: 将类别映射为权重的字典。
@@ -267,7 +245,7 @@ __返回__
 
 __异常__
 
-- __RuntimeError__: 如果模型从未编译。
+- __ValueError__: 如果生成器生成的数据格式不正确。
 
 __例__
 
@@ -277,8 +255,7 @@ def generate_arrays_from_file(path):
     while 1:
         f = open(path)
         for line in f:
-            # create Numpy arrays of input data
-            # and labels, from each line in the file
+            # 从文件中的每一行生成输入数据和标签的 numpy 数组
             x, y = process_line(line)
             yield (x, y)
         f.close()
@@ -319,7 +296,7 @@ __返回__
 
 __异常__
 
-- __RuntimeError__: 如果模型从未编译。
+- __ValueError__: 如果生成器生成的数据格式不正确。
 
 ----
 
@@ -350,6 +327,10 @@ __返回__
 
 预测值的 Numpy 数组。
 
+__异常__
+
+- __ValueError__: 如果生成器生成的数据格式不正确。
+
 ----
 
 ### get_layer
@@ -359,7 +340,9 @@ __返回__
 get_layer(self, name=None, index=None)
 ```
 
-提取模型的某一层。
+根据名称（唯一）或索引值查找网络层。
+
+如果同时提供了 `name` 和 `index`，则 `index` 将优先。
 
 根据网络层的名称（唯一）或其索引返回该层。索引是基于水平图遍历的顺序（自下而上）。
 
@@ -371,3 +354,7 @@ __参数__
 __返回__
 
 一个层实例。
+
+__异常__
+
+- __ValueError__: 如果层的名称或索引不正确。
