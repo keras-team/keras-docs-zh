@@ -153,11 +153,95 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1384)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1386)</span>
+### SeparableConv1D
+
+```python
+keras.layers.SeparableConv1D(filters, kernel_size, strides=1, padding='valid', data_format=None, dilation_rate=1, depth_multiplier=1, activation=None, use_bias=True, depthwise_initializer='glorot_uniform', pointwise_initializer='glorot_uniform', bias_initializer='zeros', depthwise_regularizer=None, pointwise_regularizer=None, bias_regularizer=None, activity_regularizer=None, depthwise_constraint=None, pointwise_constraint=None, bias_constraint=None)
+```
+
+深度方向的可分离 1D 卷积。
+
+可分离的卷积的操作包括，首先执行深度方向的空间卷积
+（分别作用于每个输入通道），紧接一个将所得输出通道
+混合在一起的逐点卷积。`depth_multiplier` 参数控
+制深度步骤中每个输入通道生成多少个输出通道。
+
+直观地说，可分离的卷积可以理解为一种将卷积核分解成
+两个较小的卷积核的方法，或者作为 Inception 块的
+一个极端版本。
+
+__参数__
+
+- __filters__: 整数，输出空间的维度
+（即卷积中滤波器的输出数量）。
+- __kernel_size__: 一个整数，或者单个整数表示的元组或列表，
+指明 1D 卷积窗口的长度。
+- __strides__: 一个整数，或者单个整数表示的元组或列表，
+指明卷积的步长。
+指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
+- __padding__: `"valid"` 或 `"same"` (大小写敏感)。
+- __data_format__: 字符串，
+`channels_last` (默认) 或 `channels_first` 之一，表示输入中维度的顺序。
+`channels_last` 对应输入尺寸为 `(batch, height, width, channels)`，
+`channels_first` 对应输入尺寸为 `(batch, channels, height, width)`。
+它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
+找到的 `image_data_format` 值。
+如果你从未设置它，将使用 "channels_last"。
+- __dilation_rate__: 一个整数，或者单个整数表示的元组或列表，
+为使用扩张（空洞）卷积指明扩张率。
+目前，指定任何 `dilation_rate` 值 != 1 与指定任何 `stride` 值 != 1 两者不兼容。
+- __depth_multiplier__: 每个输入通道的深度方向卷积输出通道的数量。
+深度方向卷积输出通道的总数将等于 `filterss_in * depth_multiplier`。
+- __activation__: 要使用的激活函数
+(详见 [activations](../activations.md))。
+如果你不指定，则不使用激活函数
+(即线性激活： `a(x) = x`)。
+- __use_bias__: 布尔值，该层是否使用偏置向量。
+- __depthwise_initializer__: 运用到深度方向的核矩阵的初始化器
+(详见 [initializers](../initializers.md))。
+- __pointwise_initializer__: 运用到逐点核矩阵的初始化器
+(详见 [initializers](../initializers.md))。
+- __bias_initializer__: 偏置向量的初始化器
+(详见 [initializers](../initializers.md))。
+- __depthwise_regularizer__: 运用到深度方向的核矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __pointwise_regularizer__: 运用到逐点核矩阵的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __bias_regularizer__: 运用到偏置向量的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 运用到层输出（它的激活值）的正则化函数
+(详见 [regularizer](../regularizers.md))。
+- __depthwise_constraint__: 运用到深度方向的核矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __pointwise_constraint__: 运用到逐点核矩阵的约束函数
+(详见 [constraints](../constraints.md))。
+- __bias_constraint__: 运用到偏置向量的约束函数
+(详见 [constraints](../constraints.md))。
+
+__输入尺寸__
+
+- 如果 data_format='channels_first'，
+输入 3D 张量，尺寸为 `(batch, channels, steps)`。
+- 如果 data_format='channels_last'，
+输入 3D 张量，尺寸为 `(batch, steps, channels)`。
+
+__输出尺寸__
+
+- 如果 data_format='channels_first'，
+输出 3D 张量，尺寸为 `(batch, filters, new_steps)`。
+- 如果 data_format='channels_last'，
+输出 3D 张量，尺寸为 `(batch, new_steps, filters)`。
+
+由于填充的原因， `new_steps` 值可能已更改。
+
+----
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1521)</span>
 ### SeparableConv2D
 
 ```python
-keras.layers.SeparableConv2D(filters, kernel_size, strides=(1, 1), padding='valid', data_format=None, depth_multiplier=1, activation=None, use_bias=True, depthwise_initializer='glorot_uniform', pointwise_initializer='glorot_uniform', bias_initializer='zeros', depthwise_regularizer=None, pointwise_regularizer=None, bias_regularizer=None, activity_regularizer=None, depthwise_constraint=None, pointwise_constraint=None, bias_constraint=None)
+keras.layers.SeparableConv2D(filters, kernel_size, strides=(1, 1), padding='valid', data_format=None, dilation_rate=(1, 1), depth_multiplier=1, activation=None, use_bias=True, depthwise_initializer='glorot_uniform', pointwise_initializer='glorot_uniform', bias_initializer='zeros', depthwise_regularizer=None, pointwise_regularizer=None, bias_regularizer=None, activity_regularizer=None, depthwise_constraint=None, pointwise_constraint=None, bias_constraint=None)
 ```
 
 深度方向的可分离 2D 卷积。
@@ -190,6 +274,9 @@ __参数__
 它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
 找到的 `image_data_format` 值。
 如果你从未设置它，将使用 "channels_last"。
+- __dilation_rate__: 一个整数，或者 2 个整数表示的元组或列表，
+为使用扩张（空洞）卷积指明扩张率。
+目前，指定任何 `dilation_rate` 值 != 1 与指定任何 `stride` 值 != 1 两者不兼容。
 - __depth_multiplier__: 每个输入通道的深度方向卷积输出通道的数量。
 深度方向卷积输出通道的总数将等于 `filterss_in * depth_multiplier`。
 - __activation__: 要使用的激活函数
