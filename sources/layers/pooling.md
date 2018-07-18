@@ -302,3 +302,63 @@ __输入尺寸__
 __输出尺寸__
 
 尺寸是 `(batch_size, channels)` 的 2D 张量
+
+----
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/pooling.py#L639)</span>
+### GlobalMaxPooling3D
+
+```python
+keras.layers.GlobalMaxPooling3D(data_format=None)
+```
+
+对于 3D 数据的全局最大池化。
+
+__参数__
+
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
+
+__输入尺寸__
+
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的 5D 张量
+
+__输出尺寸__
+
+尺寸是 `(batch_size, channels)` 的 2D 张量
+
+----
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/pooling.py#L604)</span>
+### GlobalAveragePooling3D
+
+```python
+keras.layers.GlobalAveragePooling3D(data_format=None)
+```
+
+对于 3D 数据的全局平均池化。
+
+__参数__
+
+- __data_format__: 一个字符串，`channels_last` （默认值）或者 `channels_first`。
+输入张量中的维度顺序。
+`channels_last` 代表尺寸是 `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的输入张量，而 `channels_first` 代表尺寸是 `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的输入张量。
+默认值根据 Keras 配置文件 `~/.keras/keras.json` 中的 `image_data_format` 值来设置。
+如果还没有设置过，那么默认值就是 "channels_last"。
+
+__输入尺寸__
+
+- 如果 `data_format='channels_last'`:
+尺寸是 `(batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)` 的 5D 张量
+- 如果 `data_format='channels_first'`:
+尺寸是 `(batch_size, channels, spatial_dim1, spatial_dim2, spatial_dim3)` 的 5D 张量
+
+__输出尺寸__
+
+尺寸是 `(batch_size, channels)` 的 2D 张量
