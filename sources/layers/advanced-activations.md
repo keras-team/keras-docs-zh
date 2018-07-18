@@ -159,6 +159,9 @@ __参数__
 
 - __axis__: 整数，应用 softmax 标准化的轴。
 
+----
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L262)</span>
 ### ReLU
 
 ```python
