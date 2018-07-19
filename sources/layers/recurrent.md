@@ -150,7 +150,7 @@ __参数__
 如果传入 None，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -190,26 +190,37 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1378)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1426)</span>
 ### GRU
 
 ```python
-keras.layers.GRU(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
+keras.layers.GRU(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False, reset_after=False)
 ```
 
 门限循环单元网络 - Cho et al. 2014.
+
+有两种变体。默认的基于 1406.1078v3 并且在矩阵乘法之前将复位门应用于隐藏状态。
+另一种则是基于 1406.1078v1 并且顺序倒置。
+
+第二种变体与 CuDNNGRU(GPU-only) 兼容并且允许在 CPU 上进行推理。
+因此它对于 `kernel` 和 `recurrent_kernel` 有可分离偏置。
+使用 `'reset_after'=True` 和 `recurrent_activation='sigmoid'` 。
 
 __参数__
 
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
+默认：双曲正切 (`tanh`)。
 如果传入 None，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
+默认：分段线性近似 sigmoid (`hard_sigmoid`)。
+如果传入 None，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -250,9 +261,12 @@ __参数__
 如果为 True，则网络将展开，否则将使用符号循环。
 展开可以加速 RNN，但它往往会占用更多的内存。
 展开只适用于短序列。
+- __reset_after__: GRU 公约 (是否在矩阵乘法之前或者之后使用重置门)。
+False = "之前" (默认)，Ture = "之后" ( CuDNN 兼容)。
 
 __参考文献__
 
+- [Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation](https://arxiv.org/abs/1406.1078)
 - [On the Properties of Neural Machine Translation: Encoder-Decoder Approaches](https://arxiv.org/abs/1409.1259)
 - [Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling](http://arxiv.org/abs/1412.3555v1)
 - [A Theoretically Grounded Application of Dropout in Recurrent Neural Networks](http://arxiv.org/abs/1512.05287)
@@ -278,7 +292,7 @@ __参数__
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -371,7 +385,7 @@ __参数__
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -465,7 +479,7 @@ __参数__
 如果传入 None，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -511,7 +525,7 @@ __参数__
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -561,7 +575,7 @@ __参数__
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -641,7 +655,7 @@ keras.layers.CuDNNGRU(units, kernel_initializer='glorot_uniform', recurrent_init
 __参数__
 
 - __units__: 正整数，输出空间的维度。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __recurrent_initializer__: `recurrent_kernel` 权值矩阵
@@ -686,7 +700,7 @@ keras.layers.CuDNNLSTM(units, kernel_initializer='glorot_uniform', recurrent_ini
 __参数__
 
 - __units__: 正整数，输出空间的维度。
-- __kernel_initializer__: kernel 权值矩阵的初始化器，
+- __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
 (详见 [initializers](../initializers.md))。
 - __unit_forget_bias__: 布尔值。
