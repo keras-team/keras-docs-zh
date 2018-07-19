@@ -19,10 +19,12 @@
 - [如何在 Keras 中使用 HDF5 输入？](#how-can-i-use-hdf5-inputs-with-keras)
 - [Keras 配置文件保存在哪里？](#where-is-the-keras-configuration-file-stored)
 - [如何在 Keras 开发过程中获取可复现的结果？](#how-can-i-obtain-reproducible-results-using-keras-during-development)
+- [如何在 Keras 中安装 HDF5 或 h5py 来保存我的模型？](#how-can-i-obtain-reproducible-results-using-keras-during-development)
 
 ---
 
-### 如何引用 Keras?
+<span id="how-should-i-cite-keras"></span>
+### 如何引用 Keras? 
 
 如果 Keras 有助于您的研究，请在你的出版物中引用它。以下是 BibTeX 条目引用的示例：
 
@@ -38,6 +40,7 @@
 
 ---
 
+<span id="how-can-i-run-keras-on-gpu"></span>
 ### 如何在 GPU 上运行 Keras?
 
 如果你以 TensorFlow 或 CNTK 后端运行，只要检测到任何可用的GPU，那么代码将自动在GPU上运行。
@@ -61,7 +64,7 @@ theano.config.floatX = 'float32'
 ```
 
 ---
-
+<span id="how-can-i-run-a-keras-model-on-multiple-gpus"></span>
 ### 如何在多 GPU 上运行 Keras 模型?
 
 我们建议使用 TensorFlow 后端。有两种方法可在多个 GPU 上运行单个模型：数据并行和设备并行。
@@ -115,7 +118,7 @@ with tf.device_scope('/cpu:0'):
 ```
 
 ---
-
+<span id="what-does-sample-batch-epoch-mean"></span>
 ### "sample", "batch", "epoch" 分别是什么？
 
 为了正确地使用 Keras，以下是必须了解和理解的一些常见定义：
@@ -128,9 +131,9 @@ with tf.device_scope('/cpu:0'):
 - **Epoch**: 轮次，通常被定义为 「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
   - 当在 Keras 模型的 `fit` 方法中使用 `evaluation_data` 或 `evaluation_split` 时，评估将在每个 **epoch** 结束时运行。
   - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](https://keras.io/zh/callbacks/)。例如学习率变化和模型检查点（保存）。
- 
----
 
+---
+<span id="how-can-i-save-a-keras-model"></span>
 ### 如何保存 Keras 模型？
 
 #### 保存/加载整个模型（结构 + 权重 + 优化器状态）
@@ -256,7 +259,7 @@ model = model_from_json(json_string, custom_objects={'AttentionLayer': Attention
 ```
 
 ---
-
+<span id="why-is-the-training-loss-much-higher-than-the-testing-loss"></span>
 ### 为什么训练误差比测试误差高很多？
 
 Keras 模型有两种模式：训练和测试。正则化机制，如 Dropout 和 L1/L2 权重正则化，在测试时是关闭的。
@@ -264,7 +267,7 @@ Keras 模型有两种模式：训练和测试。正则化机制，如 Dropout �
 此外，训练误差是每批训练数据的平均误差。由于你的模型是随着时间而变化的，一个 epoch 中的第一批数据的误差通常比最后一批的要高。另一方面，测试误差是模型在一个 epoch 训练完后计算的，因而误差较小。
 
 ---
-
+<span id="how-can-i-obtain-the-output-of-an-intermediate-layer"></span>
 ### 如何获取中间层的输出？
 
 一个简单的方法是创建一个新的模型来输出你所感兴趣的层：
@@ -307,7 +310,7 @@ layer_output = get_3rd_layer_output([x, 1])[0]
 ```
 
 ---
-
+<span id="how-can-i-use-keras-with-datasets-that-dont-fit-in-memory"></span>
 ### 如何用 Keras 处理超过内存的数据集？
 
 你可以使用 `model.train_on_batch(x，y)` 和 `model.test_on_batch(x，y)` 进行批量训练与测试。请参阅 [模型文档](/models/sequential)。
@@ -317,7 +320,7 @@ layer_output = get_3rd_layer_output([x, 1])[0]
 你可以在 [CIFAR10 example](https://github.com/keras-team/keras/blob/master/examples/cifar10_cnn.py) 中找到实践代码。
 
 ---
-
+<span id="how-can-i-interrupt-training-when-the-validation-loss-isnt-decreasing-anymore"></span>
 ### 在验证集的误差不再下降时，如何中断训练？
 
 你可以使用 `EarlyStopping` 回调函数：
@@ -331,7 +334,7 @@ model.fit(x, y, validation_split=0.2, callbacks=[early_stopping])
 更多信息请查看 [callbacks 文档](/callbacks)。
 
 ---
-
+<span id="how-is-the-validation-split-computed"></span>
 ### 验证集划分是如何计算的？
 
 如果您将 `model.fit` 中的 `validation_split` 参数设置为 0.1，那么使用的验证数据将是最后 10％ 的数据。如果设置为 0.25，就是最后 25% 的数据。注意，在提取分割验证集之前，数据不会被混洗，因此验证集仅仅是传递的输入中最后一个 x％ 的样本。 
@@ -339,7 +342,7 @@ model.fit(x, y, validation_split=0.2, callbacks=[early_stopping])
 所有 epoch 都使用相同的验证集（在同一个 `fit` 中调用）。
 
 ---
-
+<span id="is-the-data-shuffled-during-training"></span>
 ### 在训练过程中数据是否会混洗？
 
 是的，如果 `model.fit`中的 `shuffle`参数设置为 True（默认值），则训练数据将在每个 epoch 混洗。
@@ -348,7 +351,7 @@ model.fit(x, y, validation_split=0.2, callbacks=[early_stopping])
 
 ---
 
-
+<span id="how-can-i-record-the-training-validation-loss-accuracy-at-each-epoch"></span>
 ### 如何在每个 epoch 后记录训练集和验证集的误差和准确率？
 
 `model.fit` 方法返回一个 `History` 回调，它具有包含连续误差的列表和其他度量的 `history` 属性。
@@ -359,7 +362,7 @@ print(hist.history)
 ```
 
 ---
-
+<span id="how-can-i-freeze-keras-layers"></span>
 ### 如何「冻结」网络层？
 
 「冻结」一个层意味着将其排除在训练之外，即其权重将永远不会更新。这在微调模型或使用固定的词向量进行文本输入中很有用。
@@ -393,7 +396,7 @@ trainable_model.fit(data, labels)  # 这会更新 `layer` 的权重
 ```
 
 ---
-
+<span id="how-can-i-use-stateful-rnns"></span>
 ### 如何使用有状态 RNN (stateful RNNs)?
 
 使 RNN 具有状态意味着每批样品的状态将被重新用作下一批样品的初始状态。
@@ -443,7 +446,7 @@ model.layers[0].reset_states()
 请注意，`predict`, `fit`, `train_on_batch`, `predict_classes` 等方法 *全部* 都会更新模型中有状态层的状态。这使你不仅可以进行有状态的训练，还可以进行有状态的预测。
 
 ---
-
+<span id="how-can-i-remove-a-layer-from-a-sequential-model"></span>
 ### 如何从 Sequential 模型中移除一个层？
 
 你可以通过调用 `.pop()` 来删除 `Sequential` 模型中最后添加的层：
@@ -460,7 +463,7 @@ print(len(model.layers))  # "1"
 ```
 
 ---
-
+<span id="how-can-i-use-pre-trained-models-in-keras"></span>
 ### 如何在 Keras 中使用预训练的模型？
 
 我们提供了以下图像分类模型的代码和预训练的权重：
@@ -498,7 +501,7 @@ VGG16 模型也是以下几个 Keras 示例脚本的基础：
 - [Deep dream](https://github.com/keras-team/keras/blob/master/examples/deep_dream.py)
 
 ---
-
+<span id="how-can-i-use-hdf5-inputs-with-keras"></span>
 ### 如何在 Keras 中使用 HDF5 输入？
 
 你可以使用 `keras.utils.io_utils` 中的 `HDF5Matrix` 类。有关详细信息，请参阅 [HDF5Matrix文档](/utils/#hdf5matrix)。
@@ -513,7 +516,7 @@ with h5py.File('input/file.hdf5', 'r') as f:
 ```
 
 ---
-
+<span id="where-is-the-keras-configuration-file-stored"></span>
 ### Keras 配置文件保存在哪里？
 
 所有 Keras 数据存储的默认目录是：
@@ -545,7 +548,7 @@ Keras配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默
 同样，缓存的数据集文件（如使用 `get_file()` 下载的文件）默认存储在 `$HOME/.keras/datasets/` 中。
 
 ---
-
+<span id="how-can-i-obtain-reproducible-results-using-keras-during-development"></span>
 ### 如何在 Keras 开发过程中获取可复现的结果？
 
 在模型的开发过程中，能够在一次次的运行中获得可复现的结果，以确定性能的变化是来自模型还是数据集的变化，或者仅仅是一些新的随机样本点带来的结果，有时候是很有用处的。下面的代码片段提供了一个如何获得可复现结果的例子 - 针对 Python 3 环境的 TensorFlow 后端。
@@ -590,3 +593,21 @@ K.set_session(sess)
 
 # 剩余代码 ...
 ```
+---
+
+<span id="how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras"></span>
+### 如何在 Keras 中安装 HDF5 或 h5py 来保存我的模型？
+
+为了将你的 Keras 模型保存为 HDF5 文件，例如通过 `keras.callbacks.ModelCheckpoint`，Keras 使用了 h5py Python 包。h5py 是 Keras 的依赖项，应默认被安装。在基于 Debian 的发行版本上，你需要再额外安装 `libhdf5`：
+
+```
+sudo apt-get install libhdf5-serial-dev
+```
+
+如果你不确定是否安装了 h5py，则可以打开 Python shell 并通过下面的命令加载模块
+
+```
+import h5py
+```
+
+如果模块导入没有错误，那么模块已经安装成功，否则你可以在 http://docs.h5py.org/en/latest/build.html 中找到详细的安装说明。
