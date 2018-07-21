@@ -131,10 +131,14 @@ __参考文献__
 ### Flatten
 
 ```python
-keras.layers.Flatten()
+keras.layers.Flatten(data_format=None)
 ```
 
 将输入展平。不影响批量大小。
+
+__参数__
+
+- __data_format__：一个字符串，其值为 `channels_last`（默认值）或者 `channels_first`。它表明输入的维度的顺序。此参数的目的是当模型从一种数据格式切换到另一种数据格式时保留权重顺序。`channels_last` 对应着尺寸为 `(batch, ..., channels)` 的输入，而 `channels_first` 对应着尺寸为 `(batch, channels, ...)` 的输入。默认为 `image_data_format` 的值，你可以在 Keras 的配置文件 `~/.keras/keras.json` 中找到它。如果你从未设置过它，那么它将是 `channels_last`
 
 __例__
 
@@ -156,7 +160,7 @@ model.add(Flatten())
 ### Input
 
 ```python
-keras.engine.topology.Input()
+keras.engine.input_layer.Input()
 ```
 
 `Input()` 用于实例化 Keras 张量。
@@ -452,3 +456,91 @@ model = Sequential()
 model.add(Masking(mask_value=0., input_shape=(timesteps, features)))
 model.add(LSTM(32))
 ```
+---
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L139)</span>
+### SpatialDropout1D
+
+```python
+keras.layers.SpatialDropout1D(rate)
+```
+
+Dropout 的 Spatial 1D 版本
+
+此版本的功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。如果特征图中相邻的帧是强相关的（通常是靠前的卷积层中的情况），那么常规的 dropout 将无法使激活正则化，且导致有效的学习速率降低。在这种情况下，SpatialDropout1D 将有助于提高特征图之间的独立性，应该使用它来代替 Dropout。
+
+__参数__
+
+- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+
+__输入尺寸__
+
+2D 张量，尺寸为：`(samples, timesteps, channels)`
+
+__输出尺寸__
+
+与输入相同。
+
+__参考文献__
+
+- [Efficient Object Localization Using Convolutional Networks](https://arxiv.org/abs/1411.4280)
+
+---
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L175)</span>
+### SpatialDropout2D
+
+```python
+keras.layers.SpatialDropout2D(rate, data_format=None)
+```
+
+Dropout 的 Spatial 2D 版本
+
+此版本的功能与 Dropout 相同，但它会丢弃整个 2D 的特征图而不是丢弃单个元素。如果特征图中相邻的像素是强相关的（通常是靠前的卷积层中的情况），那么常规的 dropout 将无法使激活正则化，且导致有效的学习速率降低。在这种情况下，SpatialDropout2D 将有助于提高特征图之间的独立性，应该使用它来代替 dropout。
+
+__参数__
+
+- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+- __data_format__：`channels_first` 或者 `channels_last`。在 `channels_first`  模式中，通道维度（即深度）位于索引 1，在 `channels_last` 模式中，通道维度位于索引 3。默认为 `image_data_format` 的值，你可以在 Keras 的配置文件 `~/.keras/keras.json` 中找到它。如果你从未设置过它，那么它将是 `channels_last`
+
+__输入尺寸__
+
+4D 张量，如果 data_format＝`channels_first`，尺寸为 `(samples, channels, rows, cols)`，如果 data_format＝`channels_last`，尺寸为 `(samples, rows, cols, channels)`
+
+__输出尺寸__
+
+与输入相同。
+
+__参考文献__
+
+- [Efficient Object Localization Using Convolutional Networks](https://arxiv.org/abs/1411.4280)
+
+---
+
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L229)</span>
+### SpatialDropout3D
+
+```python
+keras.layers.SpatialDropout3D(rate, data_format=None)
+```
+
+Dropout 的 Spatial 3D 版本
+
+此版本的功能与 Dropout 相同，但它会丢弃整个 3D 的特征图而不是丢弃单个元素。如果特征图中相邻的体素是强相关的（通常是靠前的卷积层中的情况），那么常规的 dropout 将无法使激活正则化，且导致有效的学习速率降低。在这种情况下，SpatialDropout3D 将有助于提高特征图之间的独立性，应该使用它来代替 dropout。
+
+__参数__
+
+- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+- __data_format__：`channels_first` 或者 `channels_last`。在 `channels_first`  模式中，通道维度（即深度）位于索引 1，在 `channels_last` 模式中，通道维度位于索引 4。默认为 `image_data_format` 的值，你可以在 Keras 的配置文件 `~/.keras/keras.json` 中找到它。如果你从未设置过它，那么它将是 `channels_last`
+
+__输入尺寸__
+
+5D 张量，如果 data_format＝`channels_first`，尺寸为 `(samples, channels, dim1, dim2, dim3)`，如果 data_format＝`channels_last`，尺寸为 `(samples, dim1, dim2, dim3, channels)`
+
+__输出尺寸__
+
+与输入相同。
+
+__参考文献__
+
+- [Efficient Object Localization Using Convolutional Networks](https://arxiv.org/abs/1411.4280)
