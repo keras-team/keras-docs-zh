@@ -48,7 +48,7 @@ sgd = optimizers.SGD(lr=0.01, clipvalue=0.5)
 
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L135)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L157)</span>
 ### SGD
 
 ```python
@@ -71,7 +71,7 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L198)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L220)</span>
 ### RMSprop
 
 ```python
@@ -99,7 +99,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L265)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L287)</span>
 ### Adagrad
 
 ```python
@@ -124,7 +124,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L324)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L351)</span>
 ### Adadelta
 
 ```python
@@ -152,7 +152,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L397)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L433)</span>
 ### Adam
 
 ```python
@@ -181,7 +181,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L486)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L522)</span>
 ### Adamax
 
 ```python
@@ -206,7 +206,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L563)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L599)</span>
 ### Nadam
 
 ```python
@@ -235,7 +235,7 @@ __引用__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L649)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L687)</span>
 ### TFOptimizer
 
 ```python
