@@ -108,6 +108,8 @@ keras.optimizers.Adagrad(lr=0.01, epsilon=None, decay=0.0)
 
 Adagrad优化器.
 
+Adagrad是一种具有特定参数学习率的优化器，它根据参数在训练期间的更新频率进行自适应调整。 参数接收的更新越多，更新越小。
+
 建议使用优化器的默认参数。
 
 __参数__
@@ -129,7 +131,11 @@ __引用__
 keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=None, decay=0.0)
 ```
 
-Adagrad优化器.
+Adadelta优化器.
+
+Adadelta是Adagrad的一个具有更强鲁棒性的的扩展版本，它不是累积所有过去的梯度，而是根据渐变更新的移动窗口调整学习速率。 
+这样，即使进行了许多更新，Adadelta仍在继续学习。 与Adagrad相比，在Adadelta的原始版本中，您无需设置初始学习率。 
+在此版本中，与大多数其他Keras优化器一样，可以设置初始学习速率和衰减因子。
 
 建议使用优化器的默认参数。
 
