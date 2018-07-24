@@ -259,7 +259,7 @@ __参数__
 
 
 ```python
-keras.utils.multi_gpu_model(model, gpus)
+keras.utils.multi_gpu_model(model, gpus=None, cpu_merge=True, cpu_relocation=False)
 ```
 
 
@@ -287,52 +287,12 @@ __参数__
 详见下面的使用样例。
 - __gpus__: 整数 >= 2 或整数列表，创建模型副本的 GPU 数量，
 或 GPU ID 的列表。
+- __cpu_merge__: 一个布尔值，用于标识是否强制合并 CPU 范围内的模型权重。
+- __cpu_relocation__: 一个布尔值，用来确定是否在 CPU 的范围内创建模型的权重。如果模型没有在任何一个设备范围内定义，您仍然可以通过激活这个选项来拯救它。
 
 __返回__
 
 一个 Keras `Model` 实例，它可以像初始 `model` 参数一样使用，但它将工作负载分布在多个 GPU 上。
-
-__例子__
-
-
-```python
-import tensorflow as tf
-from keras.applications import Xception
-from keras.utils import multi_gpu_model
-import numpy as np
-
-num_samples = 1000
-height = 224
-width = 224
-num_classes = 1000
-
-# 实例化基础模型（或「模板」模型）。
-# 我们建议在 CPU 设备范围内执行此操作，
-# 以便让模型的权值托管在 CPU 内存上。
-# 否则，他们可能会最终托管在 GPU 上，
-# 这会使权值共享变得复杂。
-with tf.device('/cpu:0'):
-    model = Xception(weights=None,
-                     input_shape=(height, width, 3),
-                     classes=num_classes)
-
-# 将模型复制到 8 个 GPU 上。
-# 这假定你的机器有 8 个可用的 GPU。
-parallel_model = multi_gpu_model(model, gpus=8)
-parallel_model.compile(loss='categorical_crossentropy',
-                       optimizer='rmsprop')
-
-# 生成虚拟数据。
-x = np.random.random((num_samples, height, width, 3))
-y = np.random.random((num_samples, num_classes))
-
-# 这个 `fit` 调用将分布在 8 个 GPU 上。
-# 由于 批大小为 256，每个 GPU 将处理 32 个样本。
-parallel_model.fit(x, y, epochs=20, batch_size=256)
-
-# 通过模板模型（共享相同的权值）保存模型：
-model.save('my_model.h5')
-```
 
 __关于模型保存__
 
