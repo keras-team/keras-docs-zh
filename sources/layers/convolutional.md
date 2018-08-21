@@ -34,7 +34,6 @@ __参数__
 `"causal"` 表示因果（膨胀）卷积，
 例如，output[t] 不依赖于 input[t+1:]，
 在模型不应违反时间顺序的时间数据建模时非常有用。
-在模型不应违反时间顺序的时间数据建模时非常有用。
 详见 [WaveNet: A Generative Model for Raw Audio, section 2.1](https://arxiv.org/abs/1609.03499)。
 - __dilation_rate__: 一个整数，或者单个整数表示的元组或列表，指定用于膨胀卷积的膨胀率。
 当前，指定任何 `dilation_rate` 值 != 1 与指定 stride 值 != 1 两者不兼容。
