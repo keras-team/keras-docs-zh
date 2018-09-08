@@ -18,7 +18,7 @@ model = Sequential.from_config(config)
 ```
 
 - `model.get_weights()` 返回模型中所有权重张量的列表，类型为 Numpy 数组。
-- `model.set_weights(weights)` 从 Nympy 数组中为模型设置权重。列表中的数组必须与 `get_weights()` 返回的权重具有相同的尺寸。
+- `model.set_weights(weights)` 从 Numpy 数组中为模型设置权重。列表中的数组必须与 `get_weights()` 返回的权重具有相同的尺寸。
 - `model.to_json()` 以 JSON 字符串的形式返回模型的表示。请注意，该表示不包括权重，仅包含结构。你可以通过以下方式从 JSON 字符串重新实例化同一模型（使用重新初始化的权重）：
 
 ```python
