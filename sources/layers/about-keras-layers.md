@@ -2,8 +2,8 @@
 
 所有Keras层都有很多共同的函数：
 
-- `layer.get_weights()`: 以Numpy矩阵的形式返回层的权重。
-- `layer.set_weights(weights)`: 从Numpy矩阵中设置层的权重（与`get_weights`的输出形状相同）。
+- `layer.get_weights()`: 以含有Numpy矩阵的列表形式返回层的权重。
+- `layer.set_weights(weights)`: 从含有Numpy矩阵的列表中设置层的权重（与`get_weights`的输出形状相同）。
 - `layer.get_config()`: 返回包含层配置的字典。此图层可以通过以下方式重置：
 
 ```python
