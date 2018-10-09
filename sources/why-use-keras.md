@@ -37,7 +37,7 @@ Keras 还被大型科研机构的研究者所采用，特别是 CERN 和 NASA。
 - 在安卓 上，通过 TensorFlow Android runtime，例如：[Not Hotdog app](https://medium.com/@timanglade/how-hbos-silicon-valley-built-not-hotdog-with-mobile-tensorflow-keras-react-native-ef03260747f3)。
 - 在浏览器上，通过 GPU 加速的 JavaScript 运行时，例如：[Keras.js](https://transcranial.github.io/keras-js/#/) 和 [WebDNN](https://mil-tokyo.github.io/webdnn/)。
 - 在 Google Cloud 上，通过 [TensorFlow-Serving](https://www.tensorflow.org/serving/)。
-- [在 Python 网页应用后端（比如 Flask app）中]（https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html)。
+- [在 Python 网页应用后端（比如 Flask app）中](https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html)。
 - 在 JVM，通过 [SkyMind 提供的 DL4J 模型导入](https://deeplearning4j.org/model-import-keras)。
 - 在 Raspberry Pi 树莓派上。
 
