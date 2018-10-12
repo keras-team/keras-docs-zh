@@ -1,0 +1,21 @@
+Keras 配置文件保存在哪里？
+所有 Keras 数据存储的默认目录是：
+
+$HOME/.keras/
+注意，Windows 用户应该将 $HOME 替换为 ％USERPROFILE％。如果 Keras 无法创建上述目录（例如，由于权限问题），则使用 /tmp/.keras/ 作为备份。
+
+Keras配置文件是存储在 $HOME/.keras/keras.json 中的 JSON 文件。默认的配置文件如下所示：
+
+{
+    "image_data_format": "channels_last",
+    "epsilon": 1e-07,
+    "floatx": "float32",
+    "backend": "tensorflow"
+}
+它包含以下字段：
+
+图像处理层和实用程序所使用的默认值图像数据格式（channels_last 或 channels_first）。
+用于防止在某些操作中被零除的 epsilon 模糊因子。
+默认浮点数据类型。
+默认后端。详见 backend 文档。
+同样，缓存的数据集文件（如使用 get_file() 下载的文件）默认存储在  $HOME/.keras/datasets/ 中。
