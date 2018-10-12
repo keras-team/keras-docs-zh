@@ -540,7 +540,7 @@ Keras配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默
 
 它包含以下字段：
 
-- 图像处理层和实用程序所使用的默认值图像数据格式（`channel_last` 或 `channels_first`）。
+- 图像处理层和实用程序所使用的默认值图像数据格式（`channels_last` 或 `channels_first`）。
 - 用于防止在某些操作中被零除的 `epsilon` 模糊因子。
 - 默认浮点数据类型。
 - 默认后端。详见 [backend 文档](/backend)。
