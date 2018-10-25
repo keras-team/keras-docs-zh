@@ -38,7 +38,7 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 ## 快速开始：30 秒上手 Keras
 
-Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 顺序模型，它是由多个网络层线性堆叠的栈。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
+Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
 
 `Sequential` 顺序模型如下所示：
 
