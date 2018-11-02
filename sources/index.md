@@ -120,9 +120,9 @@ classes = model.predict(x_test, batch_size=128)
 
 你也可以考虑安装以下**可选依赖**：
 
-- cuDNN (如果你计划在 GPU 上运行 Keras，建议安装)。
-- HDF5 和 h5py (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
-- graphviz 和 pydot (用于[可视化工具](https://keras.io/zh/visualization/)绘制模型图)。
+- [cuDNN](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/) (如果你计划在 GPU 上运行 Keras，建议安装)。
+- HDF5 和 [h5py](http://docs.h5py.org/en/latest/build.html) (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
+- [graphviz](https://graphviz.gitlab.io/download/) 和 [pydot](https://github.com/erocarrera/pydot) (用于[可视化工具](https://keras.io/zh/visualization/)绘制模型图)。
 
 然后你就可以安装 Keras 本身了。有两种方法安装 Keras：
 
