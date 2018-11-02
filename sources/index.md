@@ -170,7 +170,7 @@ sudo python setup.py install
 - [Keras Google group](https://groups.google.com/forum/#!forum/keras-users)。
 - [Keras Slack channel](https://kerasteam.slack.com)。 使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
 
-你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中张贴**漏洞报告和新功能请求**（仅限于此）。注意请先阅读 [规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
+你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中发布**漏洞报告和新功能请求**（仅限于此）。注意请先阅读[规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
 
 
 ------------------
