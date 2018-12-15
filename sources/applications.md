@@ -533,11 +533,10 @@ NASNetLarge 默认的输入尺寸是 331x331，NASNetMobile 默认的输入尺�
 
 ### 参数
 
-- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然对于 NASNetMobile 模型来说，输入形状必须是 `(224, 224, 3)` （`channels_last` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）。输入尺寸必须是三个数字。
+- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然对于 NASNetMobile 模型来说，输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）或 `(3, 331, 331)` （`channels_first` 格式）。输入尺寸必须是三个数字，且宽高必须不小于 32，比如 (200, 200, 3) 是一个合法的输入尺寸。
 - include_top: 是否包括顶层的全连接层。
 - weights: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - input_tensor: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）
-- input_shape: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（不然输入形状必须是 `(224, 224, 3)` （`channels_last` 格式）或 `(3, 224, 224)` （`channels_first` 格式），因为预训练模型是以这个大小训练的）。输入尺寸必须是三个数字。
 - pooling: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
     - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
     - `'avg'` 代表全局平均池化（GLobalAveragePool2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
