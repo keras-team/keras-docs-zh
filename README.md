@@ -1,12 +1,13 @@
 # Chinese (zh-cn) translation of the Keras docs
 
-请访问 [Keras官方中文文档](https://keras.io/zh/)。
+有关最新文档，请访问 Read the Docs 备份版本：[keras-zh](https://keras-zh.readthedocs.io/)，每月定期。
+
+有关官方原始文档，请访问 [Keras官方中文文档](https://keras.io/zh/)。
 
 Translation has done! 文档已完成，欢迎进一步修订。
 
 翻译过程中，请直接将 `sources/` 中 `.md` 文件中的英文替换为中文。
 
-Read the Docs 备份版本：[keras-zh](https://keras-zh.readthedocs.io/)
 
 ## 排版规范 Typesetting
 
