@@ -1,6 +1,6 @@
 # Chinese (zh-cn) translation of the Keras docs
 
-有关最新文档，请访问 Read the Docs 备份版本：[keras-zh](https://keras-zh.readthedocs.io/)，每月定期。
+有关最新文档，请访问 Read the Docs 备份版本：[keras-zh](https://keras-zh.readthedocs.io/)，每月更新。
 
 有关官方原始文档，请访问 [Keras官方中文文档](https://keras.io/zh/)。
 
