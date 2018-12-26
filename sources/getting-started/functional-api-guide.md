@@ -2,7 +2,7 @@
 
 Keras 函数式 API 是定义复杂模型（如多输出模型、有向无环图，或具有共享层的模型）的方法。
 
-这部分文档假设你已经对 Sequential 顺序模型比较熟悉。
+这部分文档假设你已经对 `Sequential` 顺序模型比较熟悉。
 
 让我们先从一些简单的例子开始。
 
@@ -53,7 +53,8 @@ y = model(x)
 ```python
 from keras.layers import TimeDistributed
 
-# 输入张量是 20 个时间步的序列，每一个时间为一个 784 维的向量
+# 输入张量是 20 个时间步的序列，
+# 每一个时间为一个 784 维的向量
 input_sequences = Input(shape=(20, 784))
 
 # 这部分将我们之前定义的模型应用于输入序列中的每个时间步。
@@ -73,7 +74,7 @@ processed_sequences = TimeDistributed(model)(input_sequences)
 
 模型结构如下图所示：
 
-<img src="https://s3.amazonaws.com/keras.io/img/multi-input-multi-output-graph.png" alt="multi-input-multi-output-graph" style="width: 400px;"/>
+<img src="/img/multi-input-multi-output-graph.png" alt="multi-input-multi-output-graph" style="width: 400px;"/>
 
 让我们用函数式 API 来实现它。
 
@@ -85,13 +86,15 @@ from keras.layers import Input, Embedding, LSTM, Dense
 from keras.models import Model
 
 # 标题输入：接收一个含有 100 个整数的序列，每个整数在 1 到 10000 之间。
-# 注意我们可以通过传递一个 `name` 参数来命名任何层。
+# 注意我们可以通过传递一个 "name" 参数来命名任何层。
 main_input = Input(shape=(100,), dtype='int32', name='main_input')
 
-# Embedding 层将输入序列编码为一个稠密向量的序列，每个向量维度为 512。
+# Embedding 层将输入序列编码为一个稠密向量的序列，
+# 每个向量维度为 512。
 x = Embedding(output_dim=512, input_dim=10000, input_length=100)(main_input)
 
-# LSTM 层把向量序列转换成单个向量，它包含整个序列的上下文信息
+# LSTM 层把向量序列转换成单个向量，
+# 它包含整个序列的上下文信息
 lstm_out = LSTM(32)(x)
 ```
 
@@ -160,17 +163,17 @@ model.fit({'main_input': headline_data, 'aux_input': additional_data},
 
 实现这个目标的一种方法是建立一个模型，将两条推文编码成两个向量，连接向量，然后添加逻辑回归层；这将输出两条推文来自同一作者的概率。模型将接收一对对正负表示的推特数据。
 
-由于这个问题是对称的，编码第一条推文的机制应该被完全重用来编码第二条推文。这里我们使用一个共享的 LSTM 层来编码推文。
+由于这个问题是对称的，编码第一条推文的机制应该被完全重用来编码第二条推文（权重及其他全部）。这里我们使用一个共享的 LSTM 层来编码推文。
 
-让我们使用函数式 API 来构建它。首先我们将一条推特转换为一个尺寸为 `(140, 256)` 的矩阵，即每条推特 140 字符，每个字符为 256 维的 one-hot 编码 （取 256 个常用字符）。
+让我们使用函数式 API 来构建它。首先我们将一条推特转换为一个尺寸为 `(280, 256)` 的矩阵，即每条推特 280 字符，每个字符为 256 维的 one-hot 编码向量 （取 256 个常用字符）。
 
 ```python
 import keras
 from keras.layers import Input, LSTM, Dense
 from keras.models import Model
 
-tweet_a = Input(shape=(140, 256))
-tweet_b = Input(shape=(140, 256))
+tweet_a = Input(shape=(280, 256))
+tweet_b = Input(shape=(280, 256))
 ```
 
 要在不同的输入上共享同一个层，只需实例化该层一次，然后根据需要传入你想要的输入即可：
@@ -208,10 +211,10 @@ model.fit([data_a, data_b], labels, epochs=10)
 
 在之前版本的 Keras 中，可以通过 `layer.get_output()` 来获得层实例的输出张量，或者通过 `layer.output_shape` 来获取其输出形状。现在你依然可以这么做（除了 `get_output()` 已经被 `output` 属性替代）。但是如果一个层与多个输入连接呢？
 
-只要一个层只连接到一个输入，就不会有困惑，`.output` 会返回层的唯一输出：
+只要一个层仅仅连接到一个输入，就不会有困惑，`.output` 会返回层的唯一输出：
 
 ```python
-a = Input(shape=(140, 256))
+a = Input(shape=(280, 256))
 
 lstm = LSTM(32)
 encoded_a = lstm(a)
@@ -222,8 +225,8 @@ assert lstm.output == encoded_a
 但是如果该层有多个输入，那就会出现问题：
 
 ```python
-a = Input(shape=(140, 256))
-b = Input(shape=(140, 256))
+a = Input(shape=(280, 256))
+b = Input(shape=(280, 256))
 
 lstm = LSTM(32)
 encoded_a = lstm(a)
@@ -231,6 +234,7 @@ encoded_b = lstm(b)
 
 lstm.output
 ```
+
 ```
 >> AttributeError: Layer lstm_1 has multiple inbound nodes,
 hence the notion of "layer output" is ill-defined.

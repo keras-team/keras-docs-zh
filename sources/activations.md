@@ -1,8 +1,7 @@
 
 ## 激活函数的用法
 
-激活函数可以通过设置单独的激活层实现，也可以在构造层对象时通过传递`activation`参数实现
-
+激活函数可以通过设置单独的激活层实现，也可以在构造层对象时通过传递 `activation` 参数实现：
 
 ```python
 from keras.layers import Activation, Dense
@@ -11,13 +10,13 @@ model.add(Dense(64))
 model.add(Activation('tanh'))
 ```
 
-等价于
+等价于：
 
 ```python
 model.add(Dense(64, activation='tanh'))
 ```
 
-你也可以通过传递一个逐元素运算的Theano/TensorFlow/CNTK函数来作为激活函数：
+你也可以通过传递一个逐元素运算的 Theano/TensorFlow/CNTK 函数来作为激活函数：
 
 
 ```python
@@ -33,7 +32,7 @@ model.add(Activation(K.tanh))
 
 
 ```python
-softmax(x, axis=-1)
+keras.activations.softmax(x, axis=-1)
 ```
 
 
@@ -46,18 +45,18 @@ __参数__
 
 __返回__
 
-softmax变换后的张量。
+softmax 变换后的张量。
 
 __异常__
 
-- __ValueError__： In case `dim(x) == 1`。
+- __ValueError__：如果 `dim(x) == 1`。
 
 ----
 
 ### elu
 
 ```python
-elu(x, alpha=1.0)
+keras.activations.elu(x, alpha=1.0)
 ```
 
 指数线性单元。
@@ -81,7 +80,7 @@ __参考文献__
 
 
 ```python
-selu(x)
+keras.activations.selu(x)
 ```
 
 可伸缩的指数线性单元（SELU）。
@@ -111,7 +110,7 @@ __参考文献__
 
 
 ```python
-softplus(x)
+keras.activations.softplus(x)
 ```
 
 Softplus 激活函数。
@@ -130,7 +129,7 @@ Softplus 激活：`log(exp(x) + 1)`。
 
 
 ```python
-softsign(x)
+keras.activations.softsign(x)
 ```
 
 Softsign 激活函数。
@@ -149,27 +148,36 @@ Softsign 激活：`x / (abs(x) + 1)`。
 
 
 ```python
-relu(x, alpha=0.0, max_value=None)
+keras.activations.relu(x, alpha=0.0, max_value=None, threshold=0.0)
 ```
 
-线性修正单元。
+整流线性单元。
+
+使用默认值时，它返回逐元素的 `max(x, 0)`。
+
+否则，它遵循：
+
+- 如果 `x >= max_value`：`f(x) = max_value`，
+- 如果 `threshold <= x < max_value`：`f(x) = x`，
+- 否则：`f(x) = alpha * (x - threshold)`。
 
 __参数__
 
 - __x__: 张量。
 - __alpha__：负数部分的斜率。默认为 0。
-- __max_value__：输出的最大值
+- __max_value__：输出的最大值。
+- __threshold__: 浮点数。Thresholded activation 的阈值值。
 
 __返回__
 
-线性修正单元激活：如果 `x > 0`，返回值为 `x`；如果 `x < 0`，返回值为 `alpha * x`。如果定义了 max_value，则结果将截断为此值。
+一个张量。
 
 ----
 
 ### tanh
 
 ```python
-tanh(x)
+keras.activations.tanh(x)
 ```
 
 双曲正切激活函数。
@@ -212,11 +220,22 @@ Hard sigmoid 激活：
 
 ----
 
+### exponential
+
+
+```python
+keras.activations.exponential(x)
+```
+
+自然数指数激活函数。
+
+----
+
 ### linear
 
 
 ```python
-linear(x)
+keras.activations.linear(x)
 ```
 
 线性激活函数（即不做任何改变）
@@ -224,4 +243,4 @@ linear(x)
 
 ## 高级激活函数
 
-对于Theano/TensorFlow/CNTK不能表达的复杂激活函数，如含有可学习参数的激活函数，可通过[高级激活函数](layers/advanced-activations.md)实现，可以在 `keras.layers.advanced_activations` 模块中找到。 这些高级激活函数包括 `PReLU` 和 `LeakyReLU`
+对于 Theano/TensorFlow/CNTK 不能表达的复杂激活函数，如含有可学习参数的激活函数，可通过[高级激活函数](layers/advanced-activations.md)实现，可以在 `keras.layers.advanced_activations` 模块中找到。 这些高级激活函数包括 `PReLU` 和 `LeakyReLU`。

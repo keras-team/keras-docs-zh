@@ -1,3 +1,4 @@
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/preprocessing/sequence.py#L16)</span>
 ### TimeseriesGenerator
 
 ```python
@@ -10,16 +11,16 @@ keras.preprocessing.sequence.TimeseriesGenerator(data, targets, length, sampling
 
 __参数__
 
-- data: 可索引的生成器（例如列表或 Numpy 数组），包含连续数据点（时间步）。数据应该是 2D 的，且第 0 个轴为时间维度。
-- targets: 对应于 `data` 的时间步的目标值。它应该与 `data` 的长度相同。
-- length: 输出序列的长度（以时间步数表示）。
-- sampling_rate: 序列内连续各个时间步之间的周期。对于周期 `r`, 时间步 `data[i]`, `data[i-r]`, ... `data[i - length]` 被用于生成样本序列。
-- stride: 连续输出序列之间的周期. 对于周期 `s`, 连续输出样本将为 `data[i]`, `data[i+s]`, `data[i+2*s]` 等。
-- start_index: 在 `start_index` 之前的数据点在输出序列中将不被使用。这对保留部分数据以进行测试或验证很有用。
-- end_index: 在 `end_index` 之后的数据点在输出序列中将不被使用。这对保留部分数据以进行测试或验证很有用。
-- shuffle: 是否打乱输出样本，还是按照时间顺序绘制它们。
-- reverse: 布尔值: 如果 `true`, 每个输出样本中的时间步将按照时间倒序排列。
-- batch_size: 每个批次中的时间序列样本数（可能除最后一个外）。
+- __data__: 可索引的生成器（例如列表或 Numpy 数组），包含连续数据点（时间步）。数据应该是 2D 的，且第 0 个轴为时间维度。
+- __targets__: 对应于 `data` 的时间步的目标值。它应该与 `data` 的长度相同。
+- __length__: 输出序列的长度（以时间步数表示）。
+- __sampling_rate__: 序列内连续各个时间步之间的周期。对于周期 `r`, 时间步 `data[i]`, `data[i-r]`, ... `data[i - length]` 被用于生成样本序列。
+- __stride__: 连续输出序列之间的周期. 对于周期 `s`, 连续输出样本将为 `data[i]`, `data[i+s]`, `data[i+2*s]` 等。
+- __start_index__: 在 `start_index` 之前的数据点在输出序列中将不被使用。这对保留部分数据以进行测试或验证很有用。
+- __end_index__: 在 `end_index` 之后的数据点在输出序列中将不被使用。这对保留部分数据以进行测试或验证很有用。
+- __shuffle__: 是否打乱输出样本，还是按照时间顺序绘制它们。
+- __reverse__: 布尔值: 如果 `true`, 每个输出样本中的时间步将按照时间倒序排列。
+- __batch_size__: 每个批次中的时间序列样本数（可能除最后一个外）。
 
 __返回__
 
@@ -52,6 +53,7 @@ assert np.array_equal(y,
 
 ### pad_sequences
 
+
 ```python
 keras.preprocessing.sequence.pad_sequences(sequences, maxlen=None, dtype='int32', padding='pre', truncating='pre', value=0.0)
 ```
@@ -71,14 +73,15 @@ __参数__
 - __sequences__: 列表的列表，每一个元素是一个序列。
 - __maxlen__: 整数，所有序列的最大长度。
 - __dtype__: 输出序列的类型。
-- __padding__: 字符串，'pre' 或 'post' ，表示长度不足时是在序列的前端补齐还是在后端补齐。
+要使用可变长度字符串填充序列，可以使用 `object`。
+- __padding__: 字符串，'pre' 或 'post' ，在序列的前端补齐还是在后端补齐。
 - __truncating__: 字符串，'pre' 或 'post' ，移除长度大于 `maxlen` 的序列的值，要么在序列前端截断，要么在后端。
 - __value__: 浮点数，表示用来补齐的值。
 
 
 __返回__
 
-- x: Numpy 矩阵，尺寸为 `(len(sequences), maxlen)`。
+- __x__: Numpy 矩阵，尺寸为 `(len(sequences), maxlen)`。
 
 __异常__
 
@@ -87,6 +90,7 @@ __异常__
 ---
 
 ### skipgrams
+
 
 ```python
 keras.preprocessing.sequence.skipgrams(sequence, vocabulary_size, window_size=4, negative_samples=1.0, shuffle=True, categorical=False, sampling_table=None, seed=None)
@@ -99,19 +103,18 @@ keras.preprocessing.sequence.skipgrams(sequence, vocabulary_size, window_size=4,
 - （单词, 同窗口的单词），标签为 1（正样本）。
 - （单词, 来自词汇表的随机单词），标签为 0（负样本）。
 
-若要了解更多和 Skipgram 有关的知识，请参阅这份由 Mikolov 等人发表的经典论文： [Efficient Estimation of Word Representations in
-Vector Space](http://arxiv.org/pdf/1301.3781v3.pdf)
+若要了解更多和 Skipgram 有关的知识，请参阅这份由 Mikolov 等人发表的经典论文： [Efficient Estimation of Word Representations in Vector Space](http://arxiv.org/pdf/1301.3781v3.pdf)
 
 __参数__
 
-- sequence: 一个编码为单词索引（整数）列表的词序列（句子）。如果使用一个 `sampling_table`，词索引应该以一个相关数据集的词的排名匹配（例如，10 将会编码为第 10 个最长出现的词）。注意词汇表中的索引 0 是非单词，将被跳过。
-- vocabulary_size: 整数，最大可能词索引 + 1
-- window_size: 整数，采样窗口大小（技术上是半个窗口）。词 `w_i` 的窗口是 `[i - window_size, i + window_size+1]`。
-- negative_samples: 大于等于 0 的浮点数。0 表示非负（即随机）采样。1 表示与正样本数相同。
-- shuffle: 是否在返回之前将这些词语打乱。
-- categorical: 布尔值。如果 False，标签将为整数（例如 `[0, 1, 1 .. ]`），如果 True，标签将为分类，例如 `[[1,0],[0,1],[0,1] .. ]`。
-- sampling_table: 尺寸为 `vocabulary_size` 的 1D 数组，其中第 i 项编码了排名为 i 的词的采样概率。
-- seed: 随机种子。
+- __sequence__: 一个编码为单词索引（整数）列表的词序列（句子）。如果使用一个 `sampling_table`，词索引应该以一个相关数据集的词的排名匹配（例如，10 将会编码为第 10 个最长出现的词）。注意词汇表中的索引 0 是非单词，将被跳过。
+- __vocabulary_size__: 整数，最大可能词索引 + 1
+- __window_size__: 整数，采样窗口大小（技术上是半个窗口）。词 `w_i` 的窗口是 `[i - window_size, i + window_size+1]`。
+- __negative_samples__: 大于等于 0 的浮点数。0 表示非负（即随机）采样。1 表示与正样本数相同。
+- __shuffle__: 是否在返回之前将这些词语打乱。
+- __categorical__: 布尔值。如果 False，标签将为整数（例如 `[0, 1, 1 .. ]`），如果 True，标签将为分类，例如 `[[1,0],[0,1],[0,1] .. ]`。
+- __sampling_table__: 尺寸为 `vocabulary_size` 的 1D 数组，其中第 i 项编码了排名为 i 的词的采样概率。
+- __seed__: 随机种子。
     
 __返回__
 
@@ -125,9 +128,12 @@ __注意__
 
 ### make_sampling_table
 
+
 ```python
 keras.preprocessing.sequence.make_sampling_table(size, sampling_factor=1e-05)
 ```
+
+
 生成一个基于单词的概率采样表。
 
 用来生成 `skipgrams` 的 `sampling_table` 参数。`sampling_table[i]` 是数据集中第 i 个最常见词的采样概率（出于平衡考虑，出现更频繁的词应该被更少地采样）。
@@ -149,7 +155,5 @@ __参数__
 - __sampling_factor__: word2vec 公式中的采样因子。
 
 __返回__
-
-A 1D Numpy array of length size where the ith entry is the probability that a word of rank i should be sampled.
 
 一个长度为 `size` 大小的 1D Numpy 数组，其中第 i 项是排名为 i 的单词的采样概率。

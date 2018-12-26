@@ -9,7 +9,7 @@
 1. 你的漏洞可能已经被修复了。确保更新到目前的Keras master分支，以及最新的 Theano/TensorFlow/CNTK master 分支。
 轻松更新 Theano 的方法：`pip install git+git://github.com/Theano/Theano.git --upgrade`
 
-2. 搜索相似问题。 确保在搜索已经解决的 Issue 时删除 `is:open` 标签。有可能已经有人遇到了这个漏洞。同时记得检查 Keras [FAQ](http://keras.io/faq/)。仍然有问题？在 Github 上开一个 Issue，让我们知道。
+2. 搜索相似问题。 确保在搜索已经解决的 Issue 时删除 `is:open` 标签。有可能已经有人遇到了这个漏洞。同时记得检查 Keras [FAQ](/faq/)。仍然有问题？在 Github 上开一个 Issue，让我们知道。
 
 3. 确保你向我们提供了有关你的配置的有用信息：什么操作系统？什么 Keras 后端？你是否在 GPU 上运行，Cuda 和 cuDNN 的版本是多少？GPU型号是什么？
 
@@ -54,12 +54,12 @@
 以下是提交你的改进的快速指南：
 
 1. 如果你的 PR 介绍了功能的改变，确保你从撰写设计文档并将其发给 Keras 邮件列表开始，以讨论是否应该修改，以及如何处理。这将拯救你于 PR 关闭。当然，如果你的 PR 只是一个简单的漏洞修复，那就不需要这样做。撰写与提交设计文档的过程如下所示：
-  - 从这个 [Google 文档模版](https://docs.google.com/document/d/1ZXNfce77LDW9tFAj6U5ctaJmI5mT7CQXOFMEAZo-mAA/edit#) 开始，将它复制为一个新的 Google 文档。
-  - 填写内容。注意你需要插入代码样例。要插入代码，请使用 Google 文档插件，例如 [CodePretty]  (https://chrome.google.com/webstore/detail/code-pretty/igjbncgfgnfpbnifnnlcmjfbnidkndnh?hl=en) (有许多可用的插件)。
-  - 将共享设置为 「每个有链接的人都可以发表评论」。
-  - 将文档发给 `keras-users@googlegroups.com`，主题从 `[API DESIGN REVIEW]` (全大写) 开始，这样我们才会注意到它。
-    - 等待评论，回复评论。必要时修改提案。
-    - 该提案最终将被批准或拒绝。一旦获得批准，您可以发出合并请求或要求他人撰写合并请求。
+      - 从这个 [Google 文档模版](https://docs.google.com/document/d/1ZXNfce77LDW9tFAj6U5ctaJmI5mT7CQXOFMEAZo-mAA/edit#) 开始，将它复制为一个新的 Google 文档。
+      - 填写内容。注意你需要插入代码样例。要插入代码，请使用 Google 文档插件，例如 [CodePretty]  (https://chrome.google.com/webstore/detail/code-pretty/igjbncgfgnfpbnifnnlcmjfbnidkndnh?hl=en) (有许多可用的插件)。
+      - 将共享设置为 「每个有链接的人都可以发表评论」。
+      - 将文档发给 `keras-users@googlegroups.com`，主题从 `[API DESIGN REVIEW]` (全大写) 开始，这样我们才会注意到它。
+      - 等待评论，回复评论。必要时修改提案。
+      - 该提案最终将被批准或拒绝。一旦获得批准，您可以发出合并请求或要求他人撰写合并请求。
 
 
 2. 撰写代码（或者让别人写）。这是最难的一部分。
@@ -69,17 +69,17 @@
 4. 撰写测试。你的代码应该有完整的单元测试覆盖。如果你想看到你的 PR 迅速合并，这是至关重要的。 
 
 5. 在本地运行测试套件。这很简单：在 Keras 目录下，直接运行： `py.test tests/`。
-  - 您还需要安装测试包： `pip install -e .[tests]`。
+      - 您还需要安装测试包： `pip install -e .[tests]`。
 
 6. 确保通过所有测试：
-  - 使用 Theano 后端，Python 2.7 和 Python 3.5。确保你有 Theano 的开发版本。
-  - 使用 TensorFlow 后端，Python 2.7 和 Python 3.5。确保你有 TensorFlow 的开发版本。
-  - 使用 CNTK 后端， Python 2.7 和 Python 3.5。确保你有 CNTK 的开发版本。
+      - 使用 Theano 后端，Python 2.7 和 Python 3.5。确保你有 Theano 的开发版本。
+      - 使用 TensorFlow 后端，Python 2.7 和 Python 3.5。确保你有 TensorFlow 的开发版本。
+      - 使用 CNTK 后端， Python 2.7 和 Python 3.5。确保你有 CNTK 的开发版本。
 
 7. 我们使用 PEP8 语法约定，但是当涉及到行长时，我们不是教条式的。尽管如此，确保你的行保持合理的大小。为了让您的生活更轻松，我们推荐使用 PEP8 linter：
-  - 安装 PEP8 包：`pip install pep8 pytest-pep8 autopep8`
-  - 运行独立的 PEP8 检查： `py.test --pep8 -m pep8`
-  - 你可以通过运行这个命令自动修复一些 PEP8 错误： `autopep8 -i --select <errors> <FILENAME>`
+      - 安装 PEP8 包：`pip install pep8 pytest-pep8 autopep8`
+      - 运行独立的 PEP8 检查： `py.test --pep8 -m pep8`
+      - 你可以通过运行这个命令自动修复一些 PEP8 错误： `autopep8 -i --select <errors> <FILENAME>`。
     例如： `autopep8 -i --select E128 tests/keras/backend/test_backends.py`
 
 8. 提交时，请使用适当的描述性提交消息。

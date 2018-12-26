@@ -44,6 +44,22 @@ KERAS_BACKEND=tensorflow python -c "from keras import backend"
 Using TensorFlow backend.
 ```
 
+在 Keras 中，可以加载比 `"tensorflow"`, `"theano"` 和 `"cntk"` 更多的后端。
+Keras 也可以使用外部后端，这可以通过更改 `keras.json` 配置文件和 `"backend"` 设置来执行。 假设您有一个名为 `my_module` 的 Python 模块，您希望将其用作外部后端。`keras.json` 配置文件将更改如下：
+
+```
+{
+    "image_data_format": "channels_last",
+    "epsilon": 1e-07,
+    "floatx": "float32",
+    "backend": "my_package.my_module"
+}
+```
+
+必须验证外部后端才能使用，有效的后端必须具有以下函数：`placeholder`, `variable` and `function`.
+
+如果由于缺少必需的条目而导致外部后端无效，则会记录错误，通知缺少哪些条目。
+
 ----
 
 ## keras.json 详细配置
@@ -62,12 +78,12 @@ The `keras.json` 配置文件包含以下设置：
 
 您可以通过编辑 `$ HOME/.keras/keras.json` 来更改这些设置。
 
-* `image_data_format`: 字符串，`"channels_last"` 或者 `"channels_first"`。它指定了 Keras 将遵循的数据格式约定。(`keras.backend.image_data_format()` 返回它。)
-  - 对于 2D 数据 (例如图像)，`"channels_last"` 假定为 `(rows, cols, channels)`，而 `"channels_first"` 假定为 `(channels, rows, cols)`。
-  - 对于 3D 数据， `"channels_last"` 假定为 `(conv_dim1, conv_dim2, conv_dim3, channels)`，而 `"channels_first"` 假定为 `(channels, conv_dim1, conv_dim2, conv_dim3)`。
-* `epsilon`: 浮点数，用于避免在某些操作中被零除的数字模糊常量。
-* `floatx`: 字符串，`"float16"`, `"float32"`, 或 `"float64"`。默认浮点精度。
-* `backend`: 字符串， `"tensorflow"`, `"theano"`, 或 `"cntk"`。
+- `image_data_format`: 字符串，`"channels_last"` 或者 `"channels_first"`。它指定了 Keras 将遵循的数据格式约定。(`keras.backend.image_data_format()` 返回它。)
+    - 对于 2D 数据 (例如图像)，`"channels_last"` 假定为 `(rows, cols, channels)`，而 `"channels_first"` 假定为 `(channels, rows, cols)`。
+    - 对于 3D 数据， `"channels_last"` 假定为 `(conv_dim1, conv_dim2, conv_dim3, channels)`，而 `"channels_first"` 假定为 `(channels, conv_dim1, conv_dim2, conv_dim3)`。
+- `epsilon`: 浮点数，用于避免在某些操作中被零除的数字模糊常量。
+- `floatx`: 字符串，`"float16"`, `"float32"`, 或 `"float64"`。默认浮点精度。
+- `backend`: 字符串， `"tensorflow"`, `"theano"`, 或 `"cntk"`。
 
 ----
 
@@ -310,6 +326,19 @@ __例子__
 'channels_last'
 ```
 
+
+----
+
+### reset_uids
+
+
+```python
+keras.backend.reset_uids()
+```
+
+重置图的标识符。
+
+
 ----
 
 ### get_uid
@@ -329,17 +358,6 @@ __参数__
 __返回__
 
 图的唯一标识符。
-
-----
-
-### reset_uids
-
-
-```python
-keras.backend.reset_uids()
-```
-
-重置图的标识符。
 
 ----
 
@@ -592,6 +610,14 @@ True
 
 ----
 
+### is_tensor
+
+```python
+keras.backend.is_tensor(x)
+```
+
+----
+
 ### placeholder
 
 
@@ -721,6 +747,13 @@ __例子__
 (2, 2)
 ```
 
+__Numpy 实现__
+
+```python
+def int_shape(x):
+    return x.shape
+```
+
 ----
 
 ### ndim
@@ -739,7 +772,7 @@ __参数__
 
 __返回__
 
-Integer (scalar), number of axes.
+整数 (标量), 轴的数量。
 
 __例子__
 
@@ -752,6 +785,13 @@ __例子__
 3
 >>> K.ndim(kvar)
 2
+```
+
+__Numpy 实现__
+
+```python
+def ndim(x):
+    return x.ndim
 ```
 
 ----
@@ -975,7 +1015,7 @@ keras.backend.ones_like(x, dtype=None, name=None)
 
 __参数__
 
-- __x__: Keras 变量或 Keras 张量。
+- __x__: Keras 变量或张量。
 - __dtype__: 字符串，返回的 Keras 变量的类型。
 如果为 None，则使用 x 的类型。
 - __name__: 字符串，所创建的变量的名称。
@@ -1337,6 +1377,15 @@ __例子__
 `batch_dot(x, y, axes=1) = [[17], [53]]` 是 `x.dot(y.T)` 的主对角线，
 尽管我们不需要计算非对角元素。
 
+伪代码：
+
+```python
+inner_products = []
+for xi, yi in zip(x, y):
+    inner_products.append(xi.dot(yi))
+result = stack(inner_products)
+```
+
 尺寸推断：
 让 `x` 的尺寸为 `(100, 20)`，以及 `y` 的尺寸为 `(100, 30, 20)`。
 如果 `axes` 是 (1, 2)，要找出结果张量的尺寸，
@@ -1423,6 +1472,14 @@ __返回__
 
 与 `reference` 类型相同的张量。
 
+
+__Numpy 实现__
+
+```python
+def gather(reference, indices):
+    return reference[indices]
+```
+
 ----
 
 ### max
@@ -1446,6 +1503,16 @@ __参数__
 __返回__
 
 `x` 中最大值的张量。
+
+
+__Numpy 实现__
+
+```python
+def max(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.max(x, axis=axis, keepdims=keepdims)
+```
 
 ----
 
@@ -1471,6 +1538,15 @@ __返回__
 
 `x` 中最小值的张量。
 
+__Numpy 实现__
+
+```python
+def min(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.min(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### sum
@@ -1494,6 +1570,16 @@ __返回__
 
 `x` 的和的张量。
 
+
+__Numpy 实现__
+
+```python
+def sum(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.sum(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### prod
@@ -1516,6 +1602,16 @@ __参数__
 __返回__
 
 `x` 的元素的乘积的张量。
+
+
+__Numpy 实现__
+
+```python
+def prod(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.prod(x, axis=axis, keepdims=keepdims)
+```
 
 ----
 
@@ -1947,6 +2043,13 @@ __返回__
 
 一个布尔张量。
 
+__Numpy 实现__
+
+```python
+def equal(x, y):
+    return x == y
+```
+
 ----
 
 ### not_equal
@@ -1966,6 +2069,13 @@ __参数__
 __返回__
 
 一个布尔张量。
+
+__Numpy 实现__
+
+```python
+def not_equal(x, y):
+    return x != y
+```
 
 ----
 
@@ -1988,6 +2098,13 @@ __返回__
 
 一个布尔张量。
 
+__Numpy 实现__
+
+```python
+def greater(x, y):
+    return x > y
+```
+
 ----
 
 ### greater_equal
@@ -2008,6 +2125,13 @@ __参数__
 __返回__
 
 一个布尔张量。
+
+__Numpy 实现__
+
+```python
+def greater_equal(x, y):
+    return x >= y
+```
 
 ----
 
@@ -2030,6 +2154,13 @@ __返回__
 
 一个布尔张量。
 
+__Numpy 实现__
+
+```python
+def less(x, y):
+    return x < y
+```
+
 ----
 
 ### less_equal
@@ -2050,6 +2181,13 @@ __参数__
 __返回__
 
 一个布尔张量。
+
+__Numpy 实现__
+
+```python
+def less_equal(x, y):
+    return x <= y
+```
 
 ----
 
@@ -2072,6 +2210,13 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def maximum(x, y):
+    return np.maximum(x, y)
+```
+
 ### minimum
 
 
@@ -2090,6 +2235,13 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+```python
+def minimum(x, y):
+    return np.minimum(x, y)
+```
 
 ----
 
@@ -2624,6 +2776,39 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def reverse(x, axes):
+    if isinstance(axes, list):
+        axes = tuple(axes)
+    return np.flip(x, axes)
+```
+
+----
+
+### slice
+
+```python
+keras.backend.slice(x, start, size)
+```
+
+从张量中提取一个切片。
+
+__参数__
+
+- __x__: 输入张量。
+- __start__: 整数列表/元组，表明每个轴的起始切片索引位置。
+- __size__: 整数列表/元组，表明每个轴上切片多少维度。
+
+__返回__
+
+一个切片张量：
+
+```python
+new_x = x[start[0]: start[0] + size[0], ..., start[-1]: start[-1] + size[-1]]
+```
+
 ----
 
 ### get_value
@@ -2954,6 +3139,18 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def relu(x, alpha=0., max_value=None, threshold=0.):
+    if max_value is None:
+        max_value = np.inf
+    above_threshold = x * (x >= threshold)
+    above_threshold = np.clip(above_threshold, 0.0, max_value)
+    below_threshold = alpha * (x - threshold) * (x < threshold)
+    return below_threshold + above_threshold
+```
+
 ----
 
 ### elu
@@ -2975,6 +3172,13 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def elu(x, alpha=1.):
+    return x * (x > 0) + alpha * (np.exp(x) - 1.) * (x < 0)
+```
+
 ----
 
 ### softmax
@@ -2995,6 +3199,14 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def softmax(x, axis=-1):
+    y = np.exp(x - np.max(x, axis, keepdims=True))
+    return y / np.sum(y, axis, keepdims=True)
+```
+
 ----
 
 ### softplus
@@ -3014,6 +3226,13 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+```python
+def softplus(x):
+    return np.log(1. + np.exp(x))
+```
 
 ----
 
@@ -3128,6 +3347,14 @@ __返回__
 
 一个张量。
 
+
+__Numpy 实现__
+
+```python
+def sigmoid(x):
+    return 1. / (1. + np.exp(-x))
+```
+
 ----
 
 ### hard_sigmoid
@@ -3152,6 +3379,15 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+```python
+def hard_sigmoid(x):
+    y = 0.2 * x + 0.5
+    return np.clip(y, 0, 1)
+```
+
+
 ----
 
 ### tanh
@@ -3171,6 +3407,13 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+```python
+def tanh(x):
+    return np.tanh(x)
+```
 
 ----
 
@@ -3216,6 +3459,16 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+
+```python
+def l2_normalize(x, axis=-1):
+    y = np.max(np.sum(x ** 2, axis, keepdims=True), axis, keepdims=True)
+    return x / np.sqrt(y)
+```
+
 
 ----
 

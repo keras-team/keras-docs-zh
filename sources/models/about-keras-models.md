@@ -42,11 +42,11 @@ model = model_from_yaml(yaml_string)
 
 注意：另请参阅[如何安装 HDF5 或 h5py 以保存 Keras 模型](/getting-started/faq/#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)，在常见问题中了解如何安装 `h5py` 的说明。
 
-## Model 子类
+## Model 类继承
 
-除了这两类模型之外，你还可以通过继承 `Model` 类并在 `call` 方法中实现你自己的前向传播，以创建你自己的完全定制化的模型，（`Model` 子类 API 引入于 Keras 2.2.0）。
+除了这两类模型之外，你还可以通过继承 `Model` 类并在 `call` 方法中实现你自己的前向传播，以创建你自己的完全定制化的模型，（`Model` 类继承 API 引入于 Keras 2.2.0）。
 
-这里是一个用 `Model` 子类写的简单的多层感知器的例子：
+这里是一个用 `Model` 类继承写的简单的多层感知器的例子：
 
 ```python
 import keras
@@ -81,10 +81,10 @@ model.fit(...)
 
 网络层定义在 `__init__(self, ...)` 中，前向传播在 `call(self, inputs)` 中指定。在 `call` 中，你可以指定自定义的损失函数，通过调用 `self.add_loss(loss_tensor)` （就像你在自定义层中一样）。
 
-在子类模型中，模型的拓扑结构是由 Python 代码定义的（而不是网络层的静态图）。这意味着该模型的拓扑结构不能被检查或序列化。因此，以下方法和属性不适用于子类模型：
+在类继承模型中，模型的拓扑结构是由 Python 代码定义的（而不是网络层的静态图）。这意味着该模型的拓扑结构不能被检查或序列化。因此，以下方法和属性**不适用于类继承模型**：
 
 - `model.inputs` 和 `model.outputs`。
 - `model.to_yaml()` 和 `model.to_json()`。
 - `model.get_config()` 和 `model.save()`。
 
-关键点：为每个任务使用正确的 API。`Model` 子类化 API 可以为实现复杂模型提供更大的灵活性，但它需要付出代价（比如缺失的特性）：它更冗长，更复杂，并且有更多的用户错误机会。如果可能的话，尽可能使用函数式 API，这对用户更友好。
+**关键点**：为每个任务使用正确的 API。`Model` 类继承 API 可以为实现复杂模型提供更大的灵活性，但它需要付出代价（比如缺失的特性）：它更冗长，更复杂，并且有更多的用户错误机会。如果可能的话，尽可能使用函数式 API，这对用户更友好。

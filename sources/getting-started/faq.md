@@ -19,7 +19,7 @@
 - [如何在 Keras 中使用 HDF5 输入？](#how-can-i-use-hdf5-inputs-with-keras)
 - [Keras 配置文件保存在哪里？](#where-is-the-keras-configuration-file-stored)
 - [如何在 Keras 开发过程中获取可复现的结果？](#how-can-i-obtain-reproducible-results-using-keras-during-development)
-- [如何在 Keras 中安装 HDF5 或 h5py 来保存我的模型？](#how-can-i-obtain-reproducible-results-using-keras-during-development)
+- [如何在 Keras 中安装 HDF5 或 h5py 来保存我的模型？](#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)
 
 ---
 
@@ -43,7 +43,7 @@
 <span id="how-can-i-run-keras-on-gpu"></span>
 ### 如何在 GPU 上运行 Keras?
 
-如果你以 TensorFlow 或 CNTK 后端运行，只要检测到任何可用的GPU，那么代码将自动在GPU上运行。
+如果你以 TensorFlow 或 CNTK 后端运行，只要检测到任何可用的 GPU，那么代码将自动在 GPU 上运行。
 
 如果你以 Theano 后端运行，则可以使用以下方法之一：
 
@@ -67,7 +67,7 @@ theano.config.floatX = 'float32'
 <span id="how-can-i-run-a-keras-model-on-multiple-gpus"></span>
 ### 如何在多 GPU 上运行 Keras 模型?
 
-我们建议使用 TensorFlow 后端。有两种方法可在多个 GPU 上运行单个模型：数据并行和设备并行。
+我们建议使用 TensorFlow 后端来执行这项任务。有两种方法可在多个 GPU 上运行单个模型：**数据并行**和**设备并行**。
 
 在大多数情况下，你最需要的是数据并行。
 
@@ -75,7 +75,7 @@ theano.config.floatX = 'float32'
 
 数据并行包括在每个设备上复制一次目标模型，并使用每个模型副本处理不同部分的输入数据。Keras 有一个内置的实用函数 `keras.utils.multi_gpu_model`，它可以生成任何模型的数据并行版本，在多达 8 个 GPU 上实现准线性加速。
 
-有关更多信息，请参阅 [multi_gpu_model](/utils/#multi_gpu_model) 的文档。这里是一个简单的例子：
+有关更多信息，请参阅 [multi_gpu_model](/utils/#multi_gpu_model) 的文档。这里是一个快速的例子：
 
 ```python
 from keras.utils import multi_gpu_model
@@ -124,13 +124,13 @@ with tf.device_scope('/cpu:0'):
 为了正确地使用 Keras，以下是必须了解和理解的一些常见定义：
 
 - **Sample**: 样本，数据集中的一个元素，一条数据。
-  - *例1:* 在卷积神经网络中，一张图像是一个样本。
-  - *例2:* 在语音识别模型中，一段音频是一个样本。
+    - *例1:* 在卷积神经网络中，一张图像是一个样本。
+    - *例2:* 在语音识别模型中，一段音频是一个样本。
 - **Batch**: 批，含有 *N* 个样本的集合。每一个 batch 的样本都是独立并行处理的。在训练时，一个 batch 的结果只会用来更新一次模型。
-  - 一个 **batch** 的样本通常比单个输入更接近于总体输入数据的分布，batch 越大就越近似。然而，每个 batch 将花费更长的时间来处理，并且仍然只更新模型一次。在推理（评估/预测）时，建议条件允许的情况下选择一个尽可能大的 batch，（因为较大的 batch 通常评估/预测的速度会更快）。 
+    - 一个 **batch** 的样本通常比单个输入更接近于总体输入数据的分布，batch 越大就越近似。然而，每个 batch 将花费更长的时间来处理，并且仍然只更新模型一次。在推理（评估/预测）时，建议条件允许的情况下选择一个尽可能大的 batch，（因为较大的 batch 通常评估/预测的速度会更快）。 
 - **Epoch**: 轮次，通常被定义为 「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
-  - 当在 Keras 模型的 `fit` 方法中使用 `evaluation_data` 或 `evaluation_split` 时，评估将在每个 **epoch** 结束时运行。
-  - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](https://keras.io/zh/callbacks/)。例如学习率变化和模型检查点（保存）。
+    - 当在 Keras 模型的 `fit` 方法中使用 `validation_data` 或 `validation_split` 时，评估将在每个 **epoch** 结束时运行。
+    - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](/callbacks/)。例如学习率变化和模型检查点（保存）。
 
 ---
 <span id="how-can-i-save-a-keras-model"></span>
@@ -162,9 +162,11 @@ del model  # 删除现有模型
 model = load_model('my_model.h5')
 ```
 
-#### 只保存/加载 模型的结构
+另请参阅[如何安装 HDF5 或 h5py 以在 Keras 中保存我的模型？](#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)，查看有关如何安装 h5py 的说明。
 
-如果您只需要保存模型的结构，而非其权重或训练配置项，则可以执行以下操作：
+#### 只保存/加载模型的结构
+
+如果您只需要保存**模型的结构**，而非其权重或训练配置项，则可以执行以下操作：
 
 ```python
 # 保存为 JSON
@@ -188,7 +190,7 @@ from keras.models import model_from_yaml
 model = model_from_yaml(yaml_string)
 ```
 
-#### 只保存/加载 模型的权重
+#### 只保存/加载模型的权重
 
 如果您只需要 **模型的权重**，可以使用下面的代码以 HDF5 格式进行保存。
 
@@ -211,7 +213,7 @@ model.load_weights('my_model_weights.h5')
 model.load_weights('my_model_weights.h5', by_name=True)
 ```
 
-例如：
+例子：
 
 ```python
 """
@@ -242,7 +244,7 @@ from keras.models import load_model
 model = load_model('my_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
 ```
 
-或者，你可以使用 [自定义对象作用域](https://keras.io/zh/utils/#customobjectscope)：
+或者，你可以使用 [自定义对象作用域](/utils/#customobjectscope)：
 
 ```python
 from keras.utils import CustomObjectScope
@@ -270,7 +272,7 @@ Keras 模型有两种模式：训练和测试。正则化机制，如 Dropout �
 <span id="how-can-i-obtain-the-output-of-an-intermediate-layer"></span>
 ### 如何获取中间层的输出？
 
-一个简单的方法是创建一个新的模型来输出你所感兴趣的层：
+一个简单的方法是创建一个新的 `Model` 来输出你所感兴趣的层：
 
 ```python
 from keras.models import Model
@@ -323,7 +325,7 @@ layer_output = get_3rd_layer_output([x, 1])[0]
 <span id="how-can-i-interrupt-training-when-the-validation-loss-isnt-decreasing-anymore"></span>
 ### 在验证集的误差不再下降时，如何中断训练？
 
-你可以使用 `EarlyStopping` 回调函数：
+你可以使用 `EarlyStopping` 回调：
 
 ```python
 from keras.callbacks import EarlyStopping
@@ -420,7 +422,6 @@ trainable_model.fit(data, labels)  # 这会更新 `layer` 的权重
 例子：
 
 ```python
-
 x  # 输入数据，尺寸为 (32, 21, 16)
 # 将步长为 10 的序列输送到模型中
 
@@ -443,7 +444,7 @@ model.reset_states()
 model.layers[0].reset_states()
 ```
 
-请注意，`predict`, `fit`, `train_on_batch`, `predict_classes` 等方法 *全部* 都会更新模型中有状态层的状态。这使你不仅可以进行有状态的训练，还可以进行有状态的预测。
+请注意，`predict`, `fit`, `train_on_batch`, `predict_classes` 等方法*全部*都会更新模型中有状态层的状态。这使你不仅可以进行有状态的训练，还可以进行有状态的预测。
 
 ---
 <span id="how-can-i-remove-a-layer-from-a-sequential-model"></span>
@@ -475,6 +476,9 @@ print(len(model.layers))  # "1"
 - Inception v3
 - Inception-ResNet v2
 - MobileNet v1
+- DenseNet
+- NASNet
+- MobileNet v2
 
 它们可以使用 `keras.applications` 模块进行导入：
 
@@ -486,11 +490,17 @@ from keras.applications.resnet50 import ResNet50
 from keras.applications.inception_v3 import InceptionV3
 from keras.applications.inception_resnet_v2 import InceptionResNetV2
 from keras.applications.mobilenet import MobileNet
+from keras.applications.densenet import DenseNet121
+from keras.applications.densenet import DenseNet169
+from keras.applications.densenet import DenseNet201
+from keras.applications.nasnet import NASNetLarge
+from keras.applications.nasnet import NASNetMobile
+from keras.applications.mobilenet_v2 import MobileNetV2
 
 model = VGG16(weights='imagenet', include_top=True)
 ```
 
-有关一些简单的用法示例，请参阅 [应用模块的文档](/applications)。
+有关一些简单的用法示例，请参阅 [Applications 模块的文档](/applications)。
 
 有关如何使用此类预训练的模型进行特征提取或微调的详细示例，请参阅 [此博客文章](http://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html)。
 
@@ -551,20 +561,35 @@ Keras配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默
 <span id="how-can-i-obtain-reproducible-results-using-keras-during-development"></span>
 ### 如何在 Keras 开发过程中获取可复现的结果？
 
-在模型的开发过程中，能够在一次次的运行中获得可复现的结果，以确定性能的变化是来自模型还是数据集的变化，或者仅仅是一些新的随机样本点带来的结果，有时候是很有用处的。下面的代码片段提供了一个如何获得可复现结果的例子 - 针对 Python 3 环境的 TensorFlow 后端。
+在模型的开发过程中，能够在一次次的运行中获得可复现的结果，以确定性能的变化是来自模型还是数据集的变化，或者仅仅是一些新的随机样本点带来的结果，有时候是很有用处的。
+
+首先，你需要在程序启动之前将 `PYTHONHASHSEED` 环境变量设置为 0（不在程序本身内）。对于 Python 3.2.3 以上版本，它对于某些基于散列的操作具有可重现的行为是必要的（例如，集合和字典的 item 顺序，请参阅 [Python 文档](https://docs.python.org/3.7/using/cmdline.html#envvar-PYTHONHASHSEED)和 [issue #2280](https://github.com/keras-team/keras/issues/2280#issuecomment-306959926) 获取更多详细信息）。设置环境变量的一种方法是，在这样启动 python 时：
+
+```bash
+$ cat test_hash.py
+print(hash("keras"))
+$ python3 test_hash.py                  # 无法复现的 hash (Python 3.2.3+)
+-8127205062320133199
+$ python3 test_hash.py                  # 无法复现的 hash (Python 3.2.3+)
+3204480642156461591
+$ PYTHONHASHSEED=0 python3 test_hash.py # 可复现的 hash
+4883664951434749476
+$ PYTHONHASHSEED=0 python3 test_hash.py # 可复现的 hash
+4883664951434749476
+```
+
+此外，当使用 TensorFlow 后端并在 GPU 上运行时，某些操作具有非确定性输出，特别是 `tf.reduce_sum()`。这是因为 GPU 并行运行许多操作，因此并不总能保证执行顺序。由于浮点数的精度有限，即使添加几个数字，也可能会产生略有不同的结果，具体取决于添加它们的顺序。你可以尝试避免某些非确定性操作，但有些操作可能是由 TensorFlow 在计算梯度时自动创建的，因此在 CPU 上运行代码要简单得多。为此，你可以将 `CUDA_VISIBLE_DEVICES` 环境变量设置为空字符串，例如：
+
+```bash
+$ CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python your_program.py
+```
+
+下面的代码片段提供了一个如何获得可复现结果的例子 - 针对 Python 3 环境的 TensorFlow 后端。
 
 ```python
 import numpy as np
 import tensorflow as tf
 import random as rn
-
-# 以下是 Python 3.2.3 以上所必需的，
-# 为了使某些基于散列的操作可复现。
-# https://docs.python.org/3.4/using/cmdline.html#envvar-PYTHONHASHSEED
-# https://github.com/keras-team/keras/issues/2280#issuecomment-306959926
-
-import os
-os.environ['PYTHONHASHSEED'] = '0'
 
 # 以下是 Numpy 在一个明确的初始状态生成固定随机数字所必需的。
 
@@ -575,11 +600,12 @@ np.random.seed(42)
 rn.seed(12345)
 
 # 强制 TensorFlow 使用单线程。
-# 多线程是结果不可复现的一个潜在的来源。
-# 更多详情，见: https://stackoverflow.com/questions/42022950/which-seeds-have-to-be-set-where-to-realize-100-reproducibility-of-training-res
+# 多线程是结果不可复现的一个潜在因素。
+# 更多详情，见: https://stackoverflow.com/questions/42022950/
 
-session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
-
+session_conf = tf.ConfigProto(intra_op_parallelism_threads=1,
+                              inter_op_parallelism_threads=1)
+                              
 from keras import backend as K
 
 # `tf.set_random_seed()` 将会以 TensorFlow 为后端，
@@ -610,4 +636,4 @@ sudo apt-get install libhdf5-serial-dev
 import h5py
 ```
 
-如果模块导入没有错误，那么模块已经安装成功，否则你可以在 http://docs.h5py.org/en/latest/build.html 中找到详细的安装说明。
+如果模块导入没有错误，那么说明模块已经安装成功，否则你可以在 [http://docs.h5py.org/en/latest/build.html](http://docs.h5py.org/en/latest/build.html) 中找到详细的安装说明。

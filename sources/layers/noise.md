@@ -61,7 +61,7 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/noise.py#L105)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/noise.py#L106)</span>
 ### AlphaDropout
 
 ```python
@@ -70,9 +70,11 @@ keras.layers.AlphaDropout(rate, noise_shape=None, seed=None)
 
 将 Alpha Dropout 应用到输入。
 
-Alpha Dropout是一种 `Dropout`，它保持输入的平均值和方差与原来的值不变，
-已在 dropout 之后仍然保证数据的自规范性。
-通过随机将激活设置为负饱和值，Alpha Dropout 非常适合按比例缩放的指数线性单元（SELU）。
+Alpha Dropout 是一种 `Dropout`，
+它保持输入的平均值和方差与原来的值不变，
+以确保即使在 dropout 后也能实现自我归一化。
+通过随机将激活设置为负饱和值，
+Alpha Dropout 非常适合按比例缩放的指数线性单元（SELU）。
 
 __参数__
 

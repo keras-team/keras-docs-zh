@@ -13,15 +13,15 @@ from keras import losses
 model.compile(loss=losses.mean_squared_error, optimizer='sgd')
 ```
 
-你可以传递一个现有的损失函数名，或者一个TensorFlow/Theano符号函数。
+你可以传递一个现有的损失函数名，或者一个 TensorFlow/Theano 符号函数。
 该符号函数为每个数据点返回一个标量，有以下两个参数:
 
-- __y_true__: 真实标签. TensorFlow/Theano张量。
-- __y_pred__: 预测值. TensorFlow/Theano张量，其shape与y_true相同。
+- __y_true__: 真实标签。TensorFlow/Theano 张量。
+- __y_pred__: 预测值。TensorFlow/Theano 张量，其 shape 与 y_true 相同。
 
 实际的优化目标是所有数据点的输出数组的平均值。
 
-有关这些函数的几个例子，请查看[losses source](https://github.com/keras-team/keras/blob/master/keras/losses.py)。
+有关这些函数的几个例子，请查看 [losses source](https://github.com/keras-team/keras/blob/master/keras/losses.py)。
 
 ## 可用损失函数
 
@@ -97,14 +97,14 @@ logcosh(y_true, y_pred)
 
 预测误差的双曲余弦的对数。
 
-对于小的`x`，`log(cosh(x))`近似等于`(x ** 2) / 2`。对于大的`x`，近似于`abs(x) - log(2)`。这表示'logcosh'与均方误差大致相同，但是不会受到偶尔疯狂的错误预测的强烈影响。
+对于小的 `x`，`log(cosh(x))` 近似等于 `(x ** 2) / 2`。对于大的 `x`，近似于 `abs(x) - log(2)`。这表示 'logcosh' 与均方误差大致相同，但是不会受到偶尔疯狂的错误预测的强烈影响。
 
-__Arguments__
+__参数__
 
 - __y_true__: 目标真实值的张量。
 - __y_pred__: 目标预测值的张量。
 
-__Returns__
+__返回__
 
 每个样本都有一个标量损失的张量。
 
@@ -165,7 +165,7 @@ cosine_proximity(y_true, y_pred)
 
 ----
 
-**注意**: 当使用`categorical_crossentropy`损失时，你的目标值应该是分类格式 (即，如果你有10个类，每个样本的目标值应该是一个10维的向量，这个向量除了表示类别的那个索引为1，其他均为0)。 为了将 *整数目标值* 转换为 *分类目标值*，你可以使用Keras实用函数`to_categorical`：
+**注意**: 当使用 `categorical_crossentropy` 损失时，你的目标值应该是分类格式 (即，如果你有 10 个类，每个样本的目标值应该是一个 10 维的向量，这个向量除了表示类别的那个索引为 1，其他均为 0)。 为了将 *整数目标值* 转换为 *分类目标值*，你可以使用 Keras 实用函数 `to_categorical`：
 
 ```python
 from keras.utils.np_utils import to_categorical

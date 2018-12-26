@@ -21,11 +21,12 @@ model.compile(loss='mean_squared_error',
 
 我们可以传递已有的评价函数名称，或者传递一个自定义的 Theano/TensorFlow 函数来使用（查阅[自定义评价函数](#custom-metrics)）。
 
-#### 参数
+__参数__
+
   - __y_true__: 真实标签，Theano/Tensorflow 张量。
   - __y_pred__: 预测值。和 y_true 相同尺寸的 Theano/TensorFlow 张量。
 
-#### 返回值
+__返回值__
   
   返回一个表示全部数据点平均值的张量。
 

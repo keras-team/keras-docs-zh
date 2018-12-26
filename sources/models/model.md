@@ -1,4 +1,4 @@
-# Model 类 API
+# Model 类（函数式 API）
 
 在函数式 API 中，给定一些输入张量和输出张量，可以通过以下方式实例化一个 `Model`：
 
@@ -26,14 +26,14 @@ model = Model(inputs=[a1, a2], outputs=[b1, b3, b3])
 ### compile
 
 ```python
-compile(self, optimizer, loss=None, metrics=None, loss_weights=None, sample_weight_mode=None, weighted_metrics=None, target_tensors=None)
+compile(optimizer, loss=None, metrics=None, loss_weights=None, sample_weight_mode=None, weighted_metrics=None, target_tensors=None)
 ```
 
 用于配置训练模型。
 
 __参数__
 
-- __optimizer__: 字符串（优化器名）或者优化器对象。
+- __optimizer__: 字符串（优化器名）或者优化器实例。
 详见 [optimizers](/optimizers)。
 - __loss__: 字符串（目标函数名）或目标函数。
 详见 [losses](/losses)。
@@ -41,9 +41,11 @@ __参数__
 模型将最小化的损失值将是所有单个损失的总和。
 - __metrics__: 在训练和测试期间的模型评估标准。
 通常你会使用 `metrics = ['accuracy']`。
-要为多输出模型的不同输出指定不同的评估标准，还可以传递一个字典，如 `metrics = {'output_a'：'accuracy'}`。
-- __loss_weights__: 可选的指定标量系数（Python 浮点数）的列表或字典，用以衡量损失函数对不同的模型输出的贡献。
-模型将最小化的误差值是由 `loss_weights` 系数加权的 *加权总和* 误差。
+要为多输出模型的不同输出指定不同的评估标准，
+还可以传递一个字典，如 `metrics = {'output_a'：'accuracy'}`。
+- __loss_weights__: 可选的指定标量系数（Python 浮点数）的列表或字典，
+用以衡量损失函数对不同的模型输出的贡献。
+模型将最小化的误差值是由 `loss_weights` 系数加权的*加权总和*误差。
 如果是列表，那么它应该是与模型输出相对应的 1:1 映射。
 如果是张量，那么应该把输出的名称（字符串）映到标量系数。
 - __sample_weight_mode__: 如果你需要执行按时间步采样权重（2D 权重），请将其设置为 `temporal`。
@@ -66,10 +68,10 @@ __异常__
 ### fit
 
 ```python
-fit(self, x=None, y=None, batch_size=None, epochs=1, verbose=1, callbacks=None, validation_split=0.0, validation_data=None, shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
+fit(x=None, y=None, batch_size=None, epochs=1, verbose=1, callbacks=None, validation_split=0.0, validation_data=None, shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None)
 ```
 
-以固定数量的轮次（数据集上的迭代）训练模型。
+以给定数量的轮次（数据集上的迭代）训练模型。
 
 __参数__
 
@@ -88,7 +90,7 @@ __参数__
 0 = 安静模式, 1 = 进度条, 2 = 每轮一行。
 - __callbacks__: 一系列的 `keras.callbacks.Callback` 实例。一系列可以在训练时使用的回调函数。
 详见 [callbacks](/callbacks)。
-- __validation_split__: 在 0 和 1 之间浮动。用作验证集的训练数据的比例。
+- __validation_split__: 0 和 1 之间的浮点数。用作验证集的训练数据的比例。
 模型将分出一部分不会被训练的验证数据，并将在每一轮结束时评估这些验证数据的误差和任何其他模型指标。
 验证数据是混洗之前 `x` 和`y` 数据的最后一部分样本中。
 - __validation_data__: 元组 `(x_val，y_val)` 或元组 `(x_val，y_val，val_sample_weights)`，
@@ -107,7 +109,7 @@ __参数__
 - __steps_per_epoch__: 整数或 `None`。
 在声明一个轮次完成并开始下一个轮次之前的总步数（样品批次）。
 使用 TensorFlow 数据张量等输入张量进行训练时，默认值 `None` 等于数据集中样本的数量除以 batch 的大小，如果无法确定，则为 1。
-- __validation_steps__: 只有在指定了 `steps_per_epoch`时才有用。停止前要验证的总步数（批次样本）。
+- __validation_steps__: 只有在指定了 `steps_per_epoch` 时才有用。停止前要验证的总步数（批次样本）。
 
 __返回__
 
@@ -123,7 +125,7 @@ __异常__
 ### evaluate
 
 ```python
-evaluate(self, x=None, y=None, batch_size=None, verbose=1, sample_weight=None, steps=None)
+evaluate(x=None, y=None, batch_size=None, verbose=1, sample_weight=None, steps=None)
 ```
 
 在测试模式下返回模型的误差值和评估标准值。
@@ -161,7 +163,7 @@ __返回__
 ### predict
 
 ```python
-predict(self, x, batch_size=None, verbose=0, steps=None)
+predict(x, batch_size=None, verbose=0, steps=None)
 ```
 
 为输入样本生成输出预测。
@@ -190,14 +192,14 @@ __异常__
 ### train_on_batch
 
 ```python
-train_on_batch(self, x, y, sample_weight=None, class_weight=None)
+train_on_batch(x, y, sample_weight=None, class_weight=None)
 ```
 
 运行一批样品的单次梯度更新。
 
 __参数_
 
-- __x__: 测试数据的 Numpy 数组（如果模型只有一个输入），
+- __x__: 训练数据的 Numpy 数组（如果模型只有一个输入），
 或者是 Numpy 数组的列表（如果模型有多个输入）。
 如果模型中的输入层被命名，你也可以传递一个字典，将输入层名称映射到 Numpy 数组。
 - __y__: 目标（标签）数据的 Numpy 数组，或 Numpy 数组的列表（如果模型具有多个输出）。
@@ -221,7 +223,7 @@ __返回__
 
 
 ```python
-test_on_batch(self, x, y, sample_weight=None)
+test_on_batch(x, y, sample_weight=None)
 ```
 
 在一批样本上测试模型。
@@ -248,7 +250,7 @@ __返回__
 ### predict_on_batch
 
 ```python
-predict_on_batch(self, x)
+predict_on_batch(x)
 ```
 
 返回一批样本的模型预测值。
@@ -266,7 +268,7 @@ __返回__
 ### fit_generator
 
 ```python
-fit_generator(self, generator, steps_per_epoch=None, epochs=1, verbose=1, callbacks=None, validation_data=None, validation_steps=None, class_weight=None, max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+fit_generator(generator, steps_per_epoch=None, epochs=1, verbose=1, callbacks=None, validation_data=None, validation_steps=None, class_weight=None, max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
 ```
 
 使用 Python 生成器（或 `Sequence` 实例）逐批生成的数据，按批次训练模型。
@@ -280,30 +282,38 @@ fit_generator(self, generator, steps_per_epoch=None, epochs=1, verbose=1, callba
 __参数__
 
 - __generator__: 一个生成器，或者一个 `Sequence` (`keras.utils.Sequence`) 对象的实例，
-以在使用多进程时避免数据的重复。
-生成器的输出应该为以下之一：
-  - 一个 `(inputs, targets)` 元组
-  - 一个 `(inputs, targets, sample_weights)` 元组。
-这个元组（生成器的单个输出）组成了单个的 batch。
-因此，这个元组中的所有数组长度必须相同（与这一个 batch 的大小相等）。
-不同的 batch 可能大小不同。
-例如，一个 epoch 的最后一个 batch 往往比其他 batch 要小，
-如果数据集的尺寸不能被 batch size 整除。
-生成器将无限地在数据集上循环。当运行到第 `steps_per_epoch` 时，记一个 epoch 结束。
+    以在使用多进程时避免数据的重复。
+    生成器的输出应该为以下之一：
+
+    - 一个 `(inputs, targets)` 元组
+    - 一个 `(inputs, targets, sample_weights)` 元组。
+
+    这个元组（生成器的单个输出）组成了单个的 batch。
+    因此，这个元组中的所有数组长度必须相同（与这一个 batch 的大小相等）。
+    不同的 batch 可能大小不同。
+    例如，一个 epoch 的最后一个 batch 往往比其他 batch 要小，
+    如果数据集的尺寸不能被 batch size 整除。
+    生成器将无限地在数据集上循环。当运行到第 `steps_per_epoch` 时，记一个 epoch 结束。
+
 - __steps_per_epoch__: 在声明一个 epoch 完成并开始下一个 epoch 之前从 `generator` 产生的总步数（批次样本）。
 它通常应该等于你的数据集的样本数量除以批量大小。
 对于 `Sequence`，它是可选的：如果未指定，将使用`len(generator)` 作为步数。
-- __epochs__: 整数，数据的迭代总轮数。
-- __verbose__: 日志显示模式。0，1 或 2。
-- __callbacks__: 在训练时调用的一系列回调函数。
+- __epochs__: 整数。训练模型的迭代总轮数。一个 epoch 是对所提供的整个数据的一轮迭代，如 `steps_per_epoch` 所定义。注意，与 `initial_epoch` 一起使用，epoch 应被理解为「最后一轮」。模型没有经历由 `epochs` 给出的多次迭代的训练，而仅仅是直到达到索引 `epoch` 的轮次。
+- __verbose__: 0, 1 或 2。日志显示模式。
+0 = 安静模式, 1 = 进度条, 2 = 每轮一行。
+- __callbacks__: `keras.callbacks.Callback` 实例的列表。在训练时调用的一系列回调函数。
 - __validation_data__: 它可以是以下之一：
-  - 验证数据的生成器或 `Sequence` 实例
-  - 一个 `(inputs, targets)` 元组
-  - 一个 `(inputs, targets, sample_weights)` 元组。
+    - 验证数据的生成器或 `Sequence` 实例
+    - 一个 `(inputs, targets)` 元组
+    - 一个 `(inputs, targets, sample_weights)` 元组。
+  
+    在每个 epoch 结束时评估损失和任何模型指标。该模型不会对此数据进行训练。
+
 - __validation_steps__: 仅当 `validation_data` 是一个生成器时才可用。
 在停止前 `generator` 生成的总步数（样本批数）。
 对于 `Sequence`，它是可选的：如果未指定，将使用 `len(generator)` 作为步数。
-- __class_weight__: 将类别索引映射为权重的字典。
+- __class_weight__: 可选的将类索引（整数）映射到权重（浮点）值的字典，用于加权损失函数（仅在训练期间）。
+这可以用来告诉模型「更多地关注」来自代表性不足的类的样本。
 - __max_queue_size__: 整数。生成器队列的最大尺寸。
 如未指定，`max_queue_size` 将默认为 10。
 - __workers__: 整数。使用的最大进程数量，如果使用基于进程的多线程。
@@ -327,9 +337,9 @@ __例__
 
 ```python
 def generate_arrays_from_file(path):
-    while 1:
-        f = open(path)
-        for line in f:
+    while True:
+        with open(path) as f:
+            for line in f:
             # 从文件中的每一行生成输入数据和标签的 numpy 数组，
             x1, x2, y = process_line(line)
             yield ({'input_1': x1, 'input_2': x2}, {'output': y})
@@ -345,9 +355,8 @@ model.fit_generator(generate_arrays_from_file('/my_file.txt'),
 
 
 ```python
-evaluate_generator(self, generator, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False)
+evaluate_generator(generator, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False, verbose=0)
 ```
-
 
 在数据生成器上评估模型。
 
@@ -355,8 +364,8 @@ evaluate_generator(self, generator, steps=None, max_queue_size=10, workers=1, us
 
 __参数__
 
-- __generator__: 一个生成 (inputs, targets) 或 (inputs, targets, sample_weights) 的生成器，
-或一个 Sequence (keras.utils.Sequence) 对象的实例，以避免在使用多进程时数据的重复。
+- __generator__: 一个生成 `(inputs, targets)` 或 `(inputs, targets, sample_weights)` 的生成器，
+或一个 `Sequence` (`keras.utils.Sequence`) 对象的实例，以避免在使用多进程时数据的重复。
 - __steps__: 在声明一个 epoch 完成并开始下一个 epoch 之前从 `generator` 产生的总步数（批次样本）。
 它通常应该等于你的数据集的样本数量除以批量大小。
 对于 `Sequence`，它是可选的：如果未指定，将使用`len(generator)` 作为步数。
@@ -382,7 +391,7 @@ __异常__
 ### predict_generator
 
 ```python
-predict_generator(self, generator, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False, verbose=0)
+predict_generator(generator, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False, verbose=0)
 ```
 
 为来自数据生成器的输入样本生成预测。
@@ -392,7 +401,7 @@ predict_generator(self, generator, steps=None, max_queue_size=10, workers=1, use
 __参数__
 
 - __generator__: 生成器，返回批量输入样本，
-或一个 Sequence (keras.utils.Sequence) 对象的实例，以避免在使用多进程时数据的重复。
+或一个 `Sequence` (`keras.utils.Sequence`) 对象的实例，以避免在使用多进程时数据的重复。
 - __steps__: 在声明一个 epoch 完成并开始下一个 epoch 之前从 `generator` 产生的总步数（批次样本）。
 它通常应该等于你的数据集的样本数量除以批量大小。
 对于 `Sequence`，它是可选的：如果未指定，将使用`len(generator)` 作为步数。

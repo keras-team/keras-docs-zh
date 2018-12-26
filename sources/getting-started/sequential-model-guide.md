@@ -1,8 +1,8 @@
-# 开始使用 Keras 顺序 (Sequential) 模型
+# 开始使用 Keras Sequential 顺序模型
 
 顺序模型是多个网络层的线性堆叠。
 
-你可以通过将层的列表传递给 `Sequential` 的构造函数，来创建一个 Sequential 模型：
+你可以通过将网络层实例的列表传递给 `Sequential` 的构造器，来创建一个 `Sequential` 模型：
 
 ```python
 from keras.models import Sequential
@@ -16,7 +16,7 @@ model = Sequential([
 ])
 ```
 
-也可以使用 `.add()` 方法将各层添加到模型中：
+也可以简单地使用 `.add()` 方法将各层添加到模型中：
 
 ```python
 model = Sequential()
@@ -28,7 +28,7 @@ model.add(Activation('relu'))
 
 ## 指定输入数据的尺寸
 
-模型需要知道它所期望的输入的尺寸。出于这个原因，顺序模型中的第一层（只有第一层，因为下面的层可以自动地推断尺寸）需要接收关于其输入尺寸的信息。有几种方法来做到这一点：
+模型需要知道它所期望的输入的尺寸。出于这个原因，顺序模型中的第一层（且只有第一层，因为下面的层可以自动地推断尺寸）需要接收关于其输入尺寸的信息。有几种方法来做到这一点：
 
 - 传递一个 `input_shape` 参数给第一层。它是一个表示尺寸的元组 (一个整数或 `None` 的元组，其中 `None` 表示可能为任何正整数)。在 `input_shape` 中不包含数据的 batch 大小。
 - 某些 2D 层，例如 `Dense`，支持通过参数 `input_dim` 指定输入尺寸，某些 3D 时序层支持 `input_dim` 和 `input_length` 参数。
@@ -46,7 +46,7 @@ model.add(Dense(32, input_dim=784))
 
 ----
 
-## 编译
+## 模型编译
 
 在训练模型之前，您需要配置学习过程，这是通过 `compile` 方法完成的。它接收三个参数：
 
@@ -82,12 +82,12 @@ model.compile(optimizer='rmsprop',
 
 ----
 
-## 训练
+## 模型训练
 
 Keras 模型在输入数据和标签的 Numpy 矩阵上进行训练。为了训练一个模型，你通常会使用 `fit` 函数。[文档详见此处](/models/sequential)。
 
 ```python
-# 对于具有2个类的单输入模型（二进制分类）：
+# 对于具有 2 个类的单输入模型（二进制分类）：
 
 model = Sequential()
 model.add(Dense(32, activation='relu', input_dim=100))
@@ -106,7 +106,7 @@ model.fit(data, labels, epochs=10, batch_size=32)
 ```
 
 ```python
-# 对于具有10个类的单输入模型（多分类分类）：
+# 对于具有 10 个类的单输入模型（多分类分类）：
 
 model = Sequential()
 model.add(Dense(32, activation='relu', input_dim=100))
@@ -130,19 +130,19 @@ model.fit(data, one_hot_labels, epochs=10, batch_size=32)
 ----
 
 
-## 例子
+## 样例
 
-这里有几个可以帮助你开始的例子！
+这里有几个可以帮助你起步的例子！
 
 在 [examples 目录](https://github.com/keras-team/keras/tree/master/examples) 中，你可以找到真实数据集的示例模型：
 
 - CIFAR10 小图片分类：具有实时数据增强的卷积神经网络 (CNN)
 - IMDB 电影评论情感分类：基于词序列的 LSTM
 - Reuters 新闻主题分类：多层感知器 (MLP)
-- MNIST 手写数字分类：MLP 和 CNN
+- MNIST 手写数字分类：MLP & CNN
 - 基于 LSTM 的字符级文本生成
 
-...等等。
+...以及更多。
 
 
 ### 基于多层感知器 (MLP) 的 softmax 多分类：
@@ -263,6 +263,8 @@ from keras.layers import Dense, Dropout
 from keras.layers import Embedding
 from keras.layers import LSTM
 
+max_features = 1024
+
 model = Sequential()
 model.add(Embedding(max_features, output_dim=256))
 model.add(LSTM(128))
@@ -284,6 +286,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.layers import Embedding
 from keras.layers import Conv1D, GlobalAveragePooling1D, MaxPooling1D
+
+seq_length = 64
 
 model = Sequential()
 model.add(Conv1D(64, 3, activation='relu', input_shape=(seq_length, 100)))
@@ -309,7 +313,7 @@ score = model.evaluate(x_test, y_test, batch_size=16)
 
 前两个 LSTM 返回完整的输出序列，但最后一个只返回输出序列的最后一步，从而降低了时间维度（即将输入序列转换成单个向量）。
 
-<img src="https://keras.io/img/regular_stacked_lstm.png" alt="stacked LSTM" style="width: 300px;"/>
+<img src="/img/regular_stacked_lstm.png" alt="stacked LSTM" style="width: 300px;"/>
 
 ```python
 from keras.models import Sequential
@@ -346,9 +350,9 @@ model.fit(x_train, y_train,
 ```
 
 
-### 带有状态 (stateful) 的 相同的栈式 LSTM 模型
+### "stateful" 渲染的的栈式 LSTM 模型
 
-有状态的循环神经网络模型中，在一个 batch 的样本处理完成后，其内部状态（记忆）会被记录并作为下一个 batch 的样本的初始状态。这允许处理更长的序列，同时保持计算复杂度的可控性。
+有状态 (stateful) 的循环神经网络模型中，在一个 batch 的样本处理完成后，其内部状态（记忆）会被记录并作为下一个 batch 的样本的初始状态。这允许处理更长的序列，同时保持计算复杂度的可控性。
 
 [你可以在 FAQ 中查找更多关于 stateful RNNs 的信息。](/getting-started/faq/#how-can-i-use-stateful-rnns)
 

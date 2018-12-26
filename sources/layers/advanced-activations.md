@@ -1,13 +1,13 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L18)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L19)</span>
 ### LeakyReLU
 
 ```python
 keras.layers.LeakyReLU(alpha=0.3)
 ```
 
-带泄漏的修正线性单元。
+带泄漏的 ReLU。
 
-当神经元未激活时，它仍可以赋予其一个很小的梯度：
+当神经元未激活时，它仍允许赋予一个很小的梯度：
 `f(x) = alpha * x for x < 0`,
 `f(x) = x for x >= 0`.
 
@@ -31,14 +31,14 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L57)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L59)</span>
 ### PReLU
 
 ```python
 keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=None)
 ```
 
-参数化的修正线性单元。
+参数化的 ReLU。
 
 形式：
 `f(x) = alpha * x for x < 0`,
@@ -71,12 +71,13 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L152)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L153)</span>
 ### ELU
 
 ```python
 keras.layers.ELU(alpha=1.0)
 ```
+
 指数线性单元。
 
 形式：
@@ -103,7 +104,7 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L191)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L193)</span>
 ### ThresholdedReLU
 
 ```python
@@ -136,7 +137,7 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L230)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L233)</span>
 ### Softmax
 
 ```python
@@ -161,14 +162,22 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L262)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/advanced_activations.py#L265)</span>
 ### ReLU
 
 ```python
-keras.layers.ReLU(max_value=None)
+keras.layers.ReLU(max_value=None, negative_slope=0.0, threshold=0.0)
 ```
 
 ReLU 激活函数。
+
+使用默认值时，它返回逐个元素的 `max(x，0)`。
+
+否则：
+
+- 如果 `x >= max_value`，返回 `f(x) = max_value`，
+- 如果 `threshold <= x < max_value`，返回 `f(x) = x`,
+- 否则，返回 `f(x) = negative_slope * (x - threshold)`。
 
 __输入尺寸__
 
@@ -183,3 +192,5 @@ __输出尺寸__
 __参数__
 
 - __max_value__: 浮点数，最大的输出值。
+- __negative_slope__: float >= 0. 负斜率系数。
+- __threshold__: float。"thresholded activation" 的阈值。

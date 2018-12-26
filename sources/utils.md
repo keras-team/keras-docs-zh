@@ -1,11 +1,11 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/generic_utils.py#L20)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/generic_utils.py#L21)</span>
 ### CustomObjectScope
 
 ```python
 keras.utils.CustomObjectScope()
 ```
 
-提供一个无法转义的`_GLOBAL_CUSTOM_OBJECTS` 范围。
+提供更改为 `_GLOBAL_CUSTOM_OBJECTS` 无法转义的范围。
 
 `with` 语句中的代码将能够通过名称访问自定义对象。
 对全局自定义对象的更改会在封闭的 `with` 语句中持续存在。
@@ -25,7 +25,7 @@ with CustomObjectScope({'MyObject':MyObject}):
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/io_utils.py#L16)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/io_utils.py#L25)</span>
 ### HDF5Matrix
 
 ```python
@@ -57,18 +57,18 @@ __参数__
 
 __返回__
 
-一个类数组的 HDF5 数据集。
+一个类似于数组的 HDF5 数据集。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/data_utils.py#L303)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/utils/data_utils.py#L302)</span>
 ### Sequence
 
 ```python
 keras.utils.Sequence()
 ```
 
-用于拟合数据序列的基类，例如一个数据集。
+用于拟合数据序列的基对象，例如一个数据集。
 
 每一个 `Sequence` 必须实现 `__getitem__` 和 `__len__` 方法。
 如果你想在迭代之间修改你的数据集，你可以实现 `on_epoch_end`。
@@ -86,7 +86,6 @@ __例子__
 from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
-import math
 
 # 这里，`x_set` 是图像的路径列表
 # 以及 `y_set` 是对应的类别
@@ -98,7 +97,7 @@ class CIFAR10Sequence(Sequence):
         self.batch_size = batch_size
 
     def __len__(self):
-        return math.ceil(len(self.x) / self.batch_size)
+        return int(np.ceil(len(self.x) / float(self.batch_size)))
 
     def __getitem__(self, idx):
         batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
@@ -115,19 +114,36 @@ class CIFAR10Sequence(Sequence):
 
 
 ```python
-keras.utils.to_categorical(y, num_classes=None)
+keras.utils.to_categorical(y, num_classes=None, dtype='float32')
 ```
 
 
 将类向量（整数）转换为二进制类矩阵。
 
-例如。用于 categorical_crossentropy。
+例如，用于 categorical_crossentropy。
 
 __参数__
 
 - __y__: 需要转换成矩阵的类矢量
 (从 0 到 num_classes 的整数)。
 - __num_classes__: 总类别数。
+- __dtype__: 字符串，输入所期望的数据类型 (`float32`, `float64`, `int32`...)
+
+__例子__
+
+```python
+# 考虑一组 3 个类 {0,1,2} 中的 5 个标签数组：
+> labels
+array([0, 2, 1, 2, 0])
+# `to_categorical` 将其转换为具有尽可能多表示类别数的列的矩阵。
+# 行数保持不变。
+> to_categorical(labels)
+array([[ 1.,  0.,  0.],
+       [ 0.,  0.,  1.],
+       [ 0.,  1.,  0.],
+       [ 0.,  0.,  1.],
+       [ 1.,  0.,  0.]], dtype=float32)
+```
 
 __返回__
 
@@ -236,7 +252,7 @@ __参数__
 
 
 ```python
-keras.utils.plot_model(model, to_file='model.png', show_shapes=False, show_layer_names=True, rankdir='TB')
+keras.utils.plot_model(model, to_file='model.png', show_shapes=False, show_layer_names=True, rankdir='TB', expand_nested=False, dpi=96)
 ```
 
 
@@ -252,6 +268,8 @@ __参数__
 一个指定绘图格式的字符串：
 'TB' 创建一个垂直绘图；
 'LR' 创建一个水平绘图。
+- __expand_nested__: 是否扩展嵌套模型为聚类。 
+- __dpi__: 点 DPI。
 
 ----
 
@@ -294,6 +312,84 @@ __返回__
 
 一个 Keras `Model` 实例，它可以像初始 `model` 参数一样使用，但它将工作负载分布在多个 GPU 上。
 
+__例子__
+
+例 1 - 训练在 CPU 上合并权重的模型
+
+```python
+import tensorflow as tf
+from keras.applications import Xception
+from keras.utils import multi_gpu_model
+import numpy as np
+
+num_samples = 1000
+height = 224
+width = 224
+num_classes = 1000
+
+# 实例化基础模型（或者「模版」模型）。
+# 我们推荐在 CPU 设备范围内做此操作，
+# 这样模型的权重就会存储在 CPU 内存中。
+# 否则它们会存储在 GPU 上，而完全被共享。
+with tf.device('/cpu:0'):
+    model = Xception(weights=None,
+                     input_shape=(height, width, 3),
+                     classes=num_classes)
+
+# 复制模型到 8 个 GPU 上。
+# 这假设你的机器有 8 个可用 GPU。
+parallel_model = multi_gpu_model(model, gpus=8)
+parallel_model.compile(loss='categorical_crossentropy',
+                       optimizer='rmsprop')
+
+# 生成虚拟数据
+x = np.random.random((num_samples, height, width, 3))
+y = np.random.random((num_samples, num_classes))
+
+# 这个 `fit` 调用将分布在 8 个 GPU 上。
+# 由于 batch size 是 256, 每个 GPU 将处理 32 个样本。
+parallel_model.fit(x, y, epochs=20, batch_size=256)
+
+# 通过模版模型存储模型（共享相同权重）：
+model.save('my_model.h5')
+```
+
+例 2 - 训练在 CPU 上利用 cpu_relocation 合并权重的模型
+
+```python
+..
+# 不需要更改模型定义的设备范围：
+model = Xception(weights=None, ..)
+
+try:
+    parallel_model = multi_gpu_model(model, cpu_relocation=True)
+    print("Training using multiple GPUs..")
+except ValueError:
+    parallel_model = model
+    print("Training using single GPU or CPU..")
+parallel_model.compile(..)
+..
+```
+
+例 3 - 训练在 GPU 上合并权重的模型（建议用于 NV-link）
+
+```python
+..
+# 不需要更改模型定义的设备范围：
+model = Xception(weights=None, ..)
+
+try:
+    parallel_model = multi_gpu_model(model, cpu_merge=False)
+    print("Training using multiple GPUs..")
+except:
+    parallel_model = model
+    print("Training using single GPU or CPU..")
+
+parallel_model.compile(..)
+..
+```
+
+
 __关于模型保存__
 
-要保存多 GPU 模型，请通过模板模型（传递给 multi_gpu_model 的参数）调用 .save(fname) 或 .save_weights(fname) 以进行存储，而不是通过 multi_gpu_model 返回的模型。
+要保存多 GPU 模型，请通过模板模型（传递给 `multi_gpu_model` 的参数）调用 `.save(fname)` 或 `.save_weights(fname)` 以进行存储，而不是通过 `multi_gpu_model` 返回的模型。

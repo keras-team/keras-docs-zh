@@ -1,4 +1,4 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L201)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L237)</span>
 ### RNN
 
 ```python
@@ -9,16 +9,20 @@ keras.layers.RNN(cell, return_sequences=False, return_state=False, go_backwards=
 
 __参数__
 
-- __cell__: 一个 RNN 单元实例。RNN 单元是一个具有以下项目的类：
-- 一个 `call(input_at_t, states_at_t)` 方法，
-它返回 `(output_at_t, states_at_t_plus_1)`。
-单元的调用方法也可以采用可选参数 `constants`，
-详见下面的小节 "关于传递外部常量的注意事项"。
-- 一个 `state_size` 属性。这可以是单个整数（单个状态），
-在这种情况下，它是循环层状态的大小（应该与单元输出的大小相同）。
-这也可以是整数的列表/元组（每个状态一个大小）。
-在这种情况下，第一项（`state_size [0]`）应该与单元输出的大小相同。
-`cell` 也可能是 RNN 单元实例的列表，在这种情况下，RNN 的单元将堆叠在另一个单元上，实现高效的堆叠 RNN。
+- __cell__: 一个 RNN 单元实例。RNN 单元是一个具有以下几项的类：
+    - 一个 `call(input_at_t, states_at_t)` 方法，
+      它返回 `(output_at_t, states_at_t_plus_1)`。
+      单元的调用方法也可以采引入可选参数 `constants`，
+      详见下面的小节「关于给 RNN 传递外部常量的说明」。
+    - 一个 `state_size` 属性。这可以是单个整数（单个状态），
+      在这种情况下，它是循环层状态的大小（应该与单元输出的大小相同）。
+      这也可以是整数表示的列表/元组（每个状态一个大小）。
+    - 一个 `output_size` 属性。 这可以是单个整数或者是一个 TensorShape，
+      它表示输出的尺寸。出于向后兼容的原因，如果此属性对于当前单元不可用，
+      则该值将由 `state_size` 的第一个元素推断。
+
+    `cell` 也可能是 RNN 单元实例的列表，在这种情况下，RNN 的单元将堆叠在另一个单元上，实现高效的堆叠 RNN。
+
 - __return_sequences__: 布尔值。是返回输出序列中的最后一个输出，还是全部序列。
 - __return_state__: 布尔值。除了输出之外是否返回最后一个状态。
 - __go_backwards__: 布尔值 (默认 False)。
@@ -43,24 +47,27 @@ __输入尺寸__
 
 __输出尺寸__
 
-- 如果 `return_state` 为 True，则返回张量列表。
+- 如果 `return_state`：返回张量列表。
 第一个张量为输出。剩余的张量为最后的状态，
 每个张量的尺寸为 `(batch_size, units)`。
+- 如果 `return_sequences`：返回 3D 张量，
+尺寸为 `(batch_size, timesteps, units)`。
 - 否则，返回尺寸为 `(batch_size, units)` 的 2D 张量。
 
-__屏蔽覆盖__
+__Masking__
 
-该层支持以可变数量的时间步长对输入数据进行屏蔽覆盖。
-要将屏蔽引入数据，请使用 [Embedding](embeddings.md) 层，
-并将`mask_zero` 参数设置为 `True`。
+该层支持以可变数量的时间步对输入数据进行 masking。
+要将 masking 引入你的数据，请使用 [Embedding](embeddings.md) 层，
+并将 `mask_zero` 参数设置为 `True`。
 
-__关于在 RNN 中使用状态的注意事项__
+__关于在 RNN 中使用「状态（statefulness）」的说明__
 
 你可以将 RNN 层设置为 `stateful`（有状态的），
-这意味着针对一批中的样本计算的状态将被重新用作下一批样品的初始状态。
+这意味着针对一个批次的样本计算的状态将被重新用作下一批样本的初始状态。
 这假定在不同连续批次的样品之间有一对一的映射。
 
 为了使状态有效：
+
 - 在层构造器中指定 `stateful=True`。
 - 为你的模型指定一个固定的批次大小，
 如果是顺序模型，为你的模型的第一层传递一个 `batch_input_shape=(...)` 参数。
@@ -73,7 +80,7 @@ __关于在 RNN 中使用状态的注意事项__
 
 要重置模型的状态，请在特定图层或整个模型上调用 `.reset_states()`。
 
-__关于指定 RNN 初始状态的注意事项__
+__关于指定 RNN 初始状态的说明__
 
 您可以通过使用关键字参数 `initial_state` 调用它们来符号化地指定 RNN 层的初始状态。
 `initial_state` 的值应该是表示 RNN 层初始状态的张量或张量列表。
@@ -81,7 +88,7 @@ __关于指定 RNN 初始状态的注意事项__
 您可以通过调用带有关键字参数 `states` 的 `reset_states` 方法来数字化地指定 RNN 层的初始状态。
 `states` 的值应该是一个代表 RNN 层初始状态的 Numpy 数组或者 Numpy 数组列表。
 
-__关于给 RNN 传递外部常量的注意事项__
+__关于给 RNN 传递外部常量的说明__
 
 你可以使用 `RNN.__call__`（以及 `RNN.call`）的 `constants` 关键字参数将「外部」常量传递给单元。
 这要求 `cell.call` 方法接受相同的关键字参数 `constants`。
@@ -133,21 +140,22 @@ y = layer(x)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L926)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L944)</span>
 ### SimpleRNN
 
 ```python
 keras.layers.SimpleRNN(units, activation='tanh', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-完全连接的 RNN，其输出将被反馈到输入。
+全连接的 RNN，其输出将被反馈到输入。
 
 __参数__
 
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
-如果传入 None，则不使用激活函数
+默认：双曲正切（`tanh`）。
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器，
@@ -190,17 +198,17 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1426)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1482)</span>
 ### GRU
 
 ```python
 keras.layers.GRU(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False, reset_after=False)
 ```
 
-门限循环单元网络 - Cho et al. 2014.
+门限循环单元网络（Gated Recurrent Unit） - Cho et al. 2014.
 
-有两种变体。默认的基于 1406.1078v3 并且在矩阵乘法之前将复位门应用于隐藏状态。
-另一种则是基于 1406.1078v1 并且顺序倒置。
+有两种变体。默认的是基于 1406.1078v3 的实现，同时在矩阵乘法之前将复位门应用于隐藏状态。
+另一种则是基于 1406.1078v1 的实现，它包括顺序倒置的操作。
 
 第二种变体与 CuDNNGRU(GPU-only) 兼容并且允许在 CPU 上进行推理。
 因此它对于 `kernel` 和 `recurrent_kernel` 有可分离偏置。
@@ -212,7 +220,7 @@ __参数__
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
 默认：双曲正切 (`tanh`)。
-如果传入 None，则不使用激活函数
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
@@ -261,7 +269,8 @@ __参数__
 如果为 True，则网络将展开，否则将使用符号循环。
 展开可以加速 RNN，但它往往会占用更多的内存。
 展开只适用于短序列。
-- __reset_after__: GRU 公约 (是否在矩阵乘法之前或者之后使用重置门)。
+- __reset_after__: 
+- GRU 公约 (是否在矩阵乘法之前或者之后使用重置门)。
 False =「之前」(默认)，Ture =「之后」( CuDNN 兼容)。
 
 __参考文献__
@@ -273,24 +282,27 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1881)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L2034)</span>
 ### LSTM
 
 ```python
 keras.layers.LSTM(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=False)
 ```
 
-长短期记忆网络层 - Hochreiter 1997.
+长短期记忆网络层（Long Short-Term Memory） - Hochreiter 1997.
 
 __参数__
 
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
-如果传入 None，则不使用激活函数
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
+默认：分段线性近似 sigmoid (`hard_sigmoid`)。
+如果传入 `None`，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
@@ -347,14 +359,14 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional_recurrent.py#L169)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional_recurrent.py#L788)</span>
 ### ConvLSTM2D
 
 ```python
 keras.layers.ConvLSTM2D(filters, kernel_size, strides=(1, 1), padding='valid', data_format=None, dilation_rate=(1, 1), activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, return_sequences=False, go_backwards=False, stateful=False, dropout=0.0, recurrent_dropout=0.0)
 ```
 
-卷积 LSTM.
+卷积 LSTM。
 
 它类似于 LSTM 层，但输入变换和循环变换都是卷积的。
 
@@ -362,20 +374,20 @@ __参数__
 
 - __filters__: 整数，输出空间的维度
 （即卷积中滤波器的输出数量）。
-- __kernel_size__: 一个整数，或者单个整数表示的元组或列表，
-指明 1D 卷积窗口的长度。
-- __strides__: 一个整数，或者单个整数表示的元组或列表，
+- __kernel_size__: 一个整数，或者 n 个整数表示的元组或列表，
+指明卷积窗口的维度。
+- __strides__: 一个整数，或者 n 个整数表示的元组或列表，
 指明卷积的步长。
 指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
 - __padding__: `"valid"` 或 `"same"` 之一 (大小写敏感)。
 - __data_format__: 字符串，
 `channels_last` (默认) 或 `channels_first` 之一。
 输入中维度的顺序。
-`channels_last` 对应输入尺寸为 `(batch, height, width, channels)`，
-`channels_first` 对应输入尺寸为 `(batch, channels, height, width)`。
+`channels_last` 对应输入尺寸为 `(batch, time, ..., channels)`，
+`channels_first` 对应输入尺寸为 `(batch, time, channels, ...)`。
 它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
 找到的 `image_data_format` 值。
-如果你从未设置它，将使用 "channels_last"。
+如果你从未设置它，将使用 `"channels_last"`。
 - __dilation_rate__: 一个整数，或 n 个整数的元组/列表，指定用于膨胀卷积的膨胀率。
 目前，指定任何 `dilation_rate` 值 != 1 与指定 stride 值 != 1 两者不兼容。
 - __activation__: 要使用的激活函数
@@ -425,29 +437,22 @@ __参数__
 __输入尺寸__
 
 - 如果 data_format='channels_first'，
-返回 5D 张量，尺寸为：
+输入 5D 张量，尺寸为：
 `(samples,time, channels, rows, cols)`。
 - 如果 data_format='channels_last'，
-返回 5D 张量，尺寸为：
+输入 5D 张量，尺寸为：
 `(samples,time, rows, cols, channels)`。
 
 __输出尺寸__
 
 - 如果 `return_sequences`，
-- 如果 data_format='channels_first'，
-返回 5D 张量，尺寸为：
-`(samples, time, filters, output_row, output_col)`。
-- 如果 data_format='channels_last'，
-返回 5D 张量，尺寸为：
-`(samples, time, output_row, output_col, filters)`。
+    - 如果 data_format='channels_first'，返回 5D 张量，尺寸为：`(samples, time, filters, output_row, output_col)`。
+    - 如果 data_format='channels_last'，返回 5D 张量，尺寸为：`(samples, time, output_row, output_col, filters)`。
 - 否则，
-- 如果 data_format ='channels_first'，
-返回 4D 张量，尺寸为：
-`(samples, filters, output_row, output_col)`。
-- 如果 data_format='channels_last'，
-返回 4D 张量，尺寸为：
-`(samples, output_row, output_col, filters)`。
-o_row 和 o_col 依赖于过滤器的尺寸和填充。
+    - 如果 data_format ='channels_first'，返回 4D 张量，尺寸为：`(samples, filters, output_row, output_col)`。
+    - 如果 data_format='channels_last'，返回 4D 张量，尺寸为：`(samples, output_row, output_col, filters)`。
+
+o_row 和 o_col 取决于 filter 和 padding 的尺寸。
 
 __异常__
 
@@ -456,13 +461,12 @@ __异常__
 __参考文献__
 
 - [Convolutional LSTM Network: A Machine Learning Approach for
-Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)
-
+Precipitation Nowcasting](http://arxiv.org/abs/1506.04214v1)。
 当前的实现不包括单元输出的反馈回路。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L768)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L779)</span>
 ### SimpleRNNCell
 
 ```python
@@ -476,7 +480,8 @@ __参数__
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
-如果传入 None，则不使用激活函数
+默认：双曲正切 (`tanh`)。
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器，
@@ -506,11 +511,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1138)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1163)</span>
 ### GRUCell
 
 ```python
-keras.layers.GRUCell(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1)
+keras.layers.GRUCell(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True, kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros', kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0, recurrent_dropout=0.0, implementation=1, reset_after=False)
 ```
 
 GRU 层的单元类。
@@ -520,10 +525,14 @@ __参数__
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
-如果传入 None，则不使用激活函数
+默认：双曲正切 (`tanh`)。
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
+默认：分段线性近似 sigmoid (`hard_sigmoid`)。
+如果传入 `None`，则不使用激活函数
+(即 线性激活：`a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
@@ -553,10 +562,17 @@ __参数__
 模式 1 将把它的操作结构化为更多的小的点积和加法操作，
 而模式 2 将把它们分批到更少，更大的操作中。
 这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
+- __reset_after__: 
+- GRU 公约 (是否在矩阵乘法之前或者之后使用重置门)。
+False = "before" (默认)，Ture = "after" ( CuDNN 兼容)。
+- __reset_after__: GRU convention (whether to apply reset gate after or
+before matrix multiplication). False = "before" (default),
+True = "after" (CuDNN compatible).
+
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1617)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L1756)</span>
 ### LSTMCell
 
 ```python
@@ -570,10 +586,12 @@ __参数__
 - __units__: 正整数，输出空间的维度。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
-如果传入 None，则不使用激活函数
+默认：双曲正切（`tanh`）。
+如果传入 `None`，则不使用激活函数
 (即 线性激活：`a(x) = x`)。
 - __recurrent_activation__: 用于循环时间步的激活函数
 (详见 [activations](../activations.md))。
+默认：分段线性近似 sigmoid (`hard_sigmoid`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器，
 用于输入的线性转换
@@ -607,37 +625,6 @@ __参数__
 模式 1 将把它的操作结构化为更多的小的点积和加法操作，
 而模式 2 将把它们分批到更少，更大的操作中。
 这些模式在不同的硬件和不同的应用中具有不同的性能配置文件。
-
-----
-
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/recurrent.py#L25)</span>
-### StackedRNNCells
-
-```python
-keras.layers.StackedRNNCells(cells)
-```
-
-允许将一堆 RNN 单元表现为一个单元的封装器。
-
-用于实现高效堆叠的 RNN。
-
-__参数__
-
-- __cells__: RNN 单元实例的列表。
-
-__例子__
-
-
-```python
-cells = [
-    keras.layers.LSTMCell(output_dim),
-    keras.layers.LSTMCell(output_dim),
-    keras.layers.LSTMCell(output_dim),
-]
-
-inputs = keras.Input((timesteps, input_dim))
-x = keras.layers.RNN(cells)(inputs)
-```
 
 ----
 
@@ -686,7 +673,7 @@ the output of the layer (its "activation").
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/cudnn_recurrent.py#L324)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/cudnn_recurrent.py#L328)</span>
 ### CuDNNLSTM
 
 ```python

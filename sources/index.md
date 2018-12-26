@@ -14,7 +14,7 @@ Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [Tensor
 - 同时支持卷积神经网络和循环神经网络，以及两者的组合。
 - 在 CPU 和 GPU 上无缝运行。
 
-查看文档，请访问 [Keras.io](https://keras.io/zh/)。
+查看文档，请访问 [Keras.io](https://keras-zh.readthedocs.io/)。
 
 Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
@@ -38,9 +38,9 @@ Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 ## 快速开始：30 秒上手 Keras
 
-Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [`Sequential`](https://keras.io/zh/getting-started/sequential-model-guide) 顺序模型，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 [Keras 函数式 API](https://keras.io/zh/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
+Keras 的核心数据结构是 __model__，一种组织网络层的方式。最简单的模型是 [Sequential 顺序模型](/getting-started/sequential-model-guide)，它由多个网络层线性堆叠。对于更复杂的结构，你应该使用 [Keras 函数式 API](/getting-started/functional-api-guide)，它允许构建任意的神经网络图。
 
-`Sequential` 顺序模型如下所示：
+`Sequential` 模型如下所示：
 
 ```python
 from keras.models import Sequential
@@ -101,8 +101,8 @@ classes = model.predict(x_test, batch_size=128)
 
 有关 Keras 更深入的教程，请查看：
 
-- [开始使用 Sequential 顺序模型](https://keras.io/zh/getting-started/sequential-model-guide)
-- [开始使用函数式 API](https://keras.io/zh/getting-started/functional-api-guide)
+- [开始使用 Sequential 模型](/getting-started/sequential-model-guide)
+- [开始使用函数式 API](/getting-started/functional-api-guide)
 
 在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统、基于栈式 LSTM 的文本生成等等。
 
@@ -138,7 +138,7 @@ sudo pip install keras
 pip install keras
 ```
 
-- **或者：使用 Github 源码安装 Keras：**
+- **或者：使用 GitHub 源码安装 Keras：**
 
 首先，使用 `git` 来克隆 Keras：
 
@@ -156,7 +156,7 @@ sudo python setup.py install
 ------------------
 
 
-## 使用 TensorFlow 以外的后端
+## 配置你的 Keras 后端
 
 默认情况下，Keras 将使用 TensorFlow 作为其张量操作库。请[跟随这些指引](https://keras.io/zh/backend/)来配置其他 Keras 后端。
 
@@ -169,8 +169,9 @@ sudo python setup.py install
 
 - [Keras Google group](https://groups.google.com/forum/#!forum/keras-users)。
 - [Keras Slack channel](https://kerasteam.slack.com)。 使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
+- 或者加入 Keras 深度学习交流群，协助文档的翻译工作，群号为 951623081。
 
-你也可以在 [Github issues](https://github.com/keras-team/keras/issues) 中发布**漏洞报告和新功能请求**（仅限于此）。注意请先阅读[规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
+你也可以在 [GitHub issues](https://github.com/keras-team/keras/issues) 中发布**漏洞报告和新功能请求**（仅限于此）。注意请先阅读[规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。
 
 
 ------------------

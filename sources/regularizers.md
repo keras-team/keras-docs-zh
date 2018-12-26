@@ -20,7 +20,7 @@ model.add(Dense(64, input_dim=64,
                 activity_regularizer=regularizers.l1(0.01)))
 ```
 
-## 可用的惩罚
+## 可用的正则化器
 
 ```python
 keras.regularizers.l1(0.)

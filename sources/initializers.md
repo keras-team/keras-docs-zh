@@ -13,7 +13,7 @@ model.add(Dense(64,
 
 ## 可用的初始化器
 
-下面这些是可用的内置初始化器，是 `keras.initializers` 模块的一部分:
+下面这些是可用的内置初始化器，是 `keras.initializers` 模块的一部分: 
 
 <span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L14)</span>
 ### Initializer
@@ -44,7 +44,7 @@ keras.initializers.Zeros()
 keras.initializers.Ones()
 ```
 
-将张量初始值设为1的初始化器。
+将张量初始值设为 1 的初始化器。
 
 ----
 
@@ -187,7 +187,7 @@ __参数__
 
 
 ```python
-lecun_uniform(seed=None)
+keras.initializers.lecun_uniform(seed=None)
 ```
 
 
@@ -197,18 +197,17 @@ LeCun 均匀初始化器。
 其中 `limit` 是 `sqrt(3 / fan_in)`，
 `fan_in` 是权值张量中的输入单位的数量。
 
-__Arguments__
+__参数__
 
 - __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
 一个初始化器。
 
 __参考文献__
 
-LeCun 98, Efficient Backprop,
-- __http__://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf
+[LeCun 98, Efficient Backprop](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
 
 ----
 
@@ -216,7 +215,7 @@ LeCun 98, Efficient Backprop,
 
 
 ```python
-glorot_normal(seed=None)
+keras.initializers.glorot_normal(seed=None)
 ```
 
 
@@ -226,18 +225,17 @@ Glorot 正态分布初始化器，也称为 Xavier 正态分布初始化器。
 其中 `fan_in` 是权值张量中的输入单位的数量，
 `fan_out` 是权值张量中的输出单位的数量。
 
-__Arguments__
+__参数__
 
 - __seed__: 一个 Python 整数。作为随机发生器的种子。
 
-__Returns__
+__返回__
 
 一个初始化器。
 
 __参考文献__
 
-Glorot & Bengio, AISTATS 2010
-- __http__://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
+[Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
 
 ----
 
@@ -245,7 +243,7 @@ Glorot & Bengio, AISTATS 2010
 
 
 ```python
-glorot_uniform(seed=None)
+keras.initializers.glorot_uniform(seed=None)
 ```
 
 
@@ -266,8 +264,7 @@ __返回__
 
 __参考文献__
 
-Glorot & Bengio, AISTATS 2010
-- __http__://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
+[Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
 
 ----
 
@@ -275,7 +272,7 @@ Glorot & Bengio, AISTATS 2010
 
 
 ```python
-he_normal(seed=None)
+keras.initializers.he_normal(seed=None)
 ```
 
 
@@ -294,7 +291,7 @@ __返回__
 
 __参考文献__
 
-He et al., http://arxiv.org/abs/1502.01852
+- [Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification](http://arxiv.org/abs/1502.01852)
 
 ----
 
@@ -302,7 +299,7 @@ He et al., http://arxiv.org/abs/1502.01852
 
 
 ```python
-lecun_normal(seed=None)
+keras.initializers.lecun_normal(seed=None)
 ```
 
 
@@ -330,7 +327,7 @@ __参考文献__
 
 
 ```python
-he_uniform(seed=None)
+keras.initializers.he_uniform(seed=None)
 ```
 
 
@@ -350,8 +347,7 @@ __返回__
 
 __参考文献__
 
-He et al., http://arxiv.org/abs/1502.01852
-
+- [Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification](http://arxiv.org/abs/1502.01852)
 
 
 一个初始化器可以作为一个字符串传递（必须匹配上面的一个可用的初始化器），或者作为一个可调用函数传递：

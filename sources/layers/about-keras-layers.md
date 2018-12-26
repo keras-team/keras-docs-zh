@@ -1,6 +1,6 @@
-# 关于Keras层
+# 关于 Keras 网络层
 
-所有Keras层都有很多共同的函数：
+所有 Keras 网络层都有很多共同的函数：
 
 - `layer.get_weights()`: 以含有Numpy矩阵的列表形式返回层的权重。
 - `layer.set_weights(weights)`: 从含有Numpy矩阵的列表中设置层的权重（与`get_weights`的输出形状相同）。
@@ -22,7 +22,7 @@ layer = layers.deserialize({'class_name': layer.__class__.__name__,
                             'config': config})
 ```
 
-如果一个层具有单个节点 (i.e. 如果它不是共享层), 你可以得到它的输入张量，输出张量，输入尺寸和输出尺寸:
+如果一个层具有单个节点 (i.e. 如果它不是共享层), 你可以得到它的输入张量、输出张量、输入尺寸和输出尺寸:
 
 - `layer.input`
 - `layer.output`

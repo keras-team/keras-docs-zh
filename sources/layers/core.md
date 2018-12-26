@@ -1,11 +1,11 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L743)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L767)</span>
 ### Dense
 
 ```python
 keras.layers.Dense(units, activation=None, use_bias=True, kernel_initializer='glorot_uniform', bias_initializer='zeros', kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, kernel_constraint=None, bias_constraint=None)
 ```
 
-就是普通的全连接层。
+就是你常用的的全连接层。
 
 `Dense` 实现以下操作：
 `output = activation(dot(input, kernel) + bias)`
@@ -36,7 +36,7 @@ __参数__
 - __activation__: 激活函数
 (详见 [activations](../activations.md))。
 若不指定，则不使用激活函数
-(即， “线性”激活: `a(x) = x`)。
+(即，「线性」激活: `a(x) = x`)。
 - __use_bias__: 布尔值，该层是否使用偏置向量。
 - __kernel_initializer__: `kernel` 权值矩阵的初始化器
 (详见 [initializers](../initializers.md))。
@@ -68,7 +68,7 @@ nD 张量，尺寸: `(batch_size, ..., units)`。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L280)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L276)</span>
 ### Activation
 
 ```python
@@ -97,7 +97,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L78)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L80)</span>
 ### Dropout
 
 ```python
@@ -123,11 +123,11 @@ __参数__
 
 __参考文献__
 
-- [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+- [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](http://www.jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L465)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L461)</span>
 ### Flatten
 
 ```python
@@ -145,9 +145,8 @@ __例__
 
 ```python
 model = Sequential()
-model.add(Conv2D(64, 3, 3,
-                 border_mode='same',
-                 input_shape=(3, 32, 32)))
+model.add(Conv2D(64, (3, 3),
+                 input_shape=(3, 32, 32), padding='same',))
 # 现在：model.output_shape == (None, 64, 32, 32)
 
 model.add(Flatten())
@@ -156,7 +155,7 @@ model.add(Flatten())
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/engine/topology.py#L1391)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/engine/input_layer.py#L114)</span>
 ### Input
 
 ```python
@@ -165,9 +164,9 @@ keras.engine.input_layer.Input()
 
 `Input()` 用于实例化 Keras 张量。
 
-Keras 张量是底层后端(Theano, TensorFlow or CNTK)
+Keras 张量是底层后端(Theano, TensorFlow 或 CNTK)
 的张量对象，我们增加了一些特性，使得能够通过了解模型的输入
-和输出来构建Keras模型。
+和输出来构建 Keras 模型。
 
 例如，如果 a, b 和 c 都是 Keras 张量，
 那么以下操作是可行的：
@@ -181,7 +180,7 @@ Keras 张量是底层后端(Theano, TensorFlow or CNTK)
 
 __参数__
 
-- __shape__: 一个尺寸元组（整数），不包含批量大小。A shape tuple (integer), not including the batch size.
+- __shape__: 一个尺寸元组（整数），不包含批量大小。
 例如，`shape=(32,)` 表明期望的输入是按批次的 32 维向量。
 - __batch_shape__: 一个尺寸元组（整数），包含批量大小。
 例如，`batch_shape=(10, 32)` 表明期望的输入是 10 个 32 维向量。
@@ -211,7 +210,7 @@ model = Model(x, y)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L314)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L310)</span>
 ### Reshape
 
 ```python
@@ -257,7 +256,7 @@ model.add(Reshape((-1, 2, 2)))
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L413)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L409)</span>
 ### Permute
 
 ```python
@@ -296,7 +295,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L500)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L523)</span>
 ### RepeatVector
 
 ```python
@@ -332,7 +331,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L542)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L565)</span>
 ### Lambda
 
 ```python
@@ -374,15 +373,15 @@ __参数__
 - __function__: 需要封装的函数。
 将输入张量作为第一个参数。
 - __output_shape__: 预期的函数输出尺寸。
-只在使用 Theano 时有意义。
-可以是元组或者函数。
-如果是元组，它只指定第一个维度；
-样本维度假设与输入相同：
-`output_shape = (input_shape[0], ) + output_shape`
-或者，输入是 `None` 且样本维度也是 `None`：
-`output_shape = (None, ) + output_shape`
-如果是函数，它指定整个尺寸为输入尺寸的一个函数：
-`output_shape = f(input_shape)`
+    只在使用 Theano 时有意义。
+    可以是元组或者函数。
+    如果是元组，它只指定第一个维度；
+        样本维度假设与输入相同：
+        `output_shape = (input_shape[0], ) + output_shape`
+        或者，输入是 `None` 且样本维度也是 `None`：
+        `output_shape = (None, ) + output_shape`
+        如果是函数，它指定整个尺寸为输入尺寸的一个函数：
+        `output_shape = f(input_shape)`
 - __arguments__: 可选的需要传递给函数的关键字参数。
 
 __输入尺寸__
@@ -398,7 +397,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L886)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L911)</span>
 ### ActivityRegularization
 
 ```python
@@ -458,7 +457,7 @@ model.add(LSTM(32))
 ```
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L139)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L140)</span>
 ### SpatialDropout1D
 
 ```python
@@ -471,11 +470,11 @@ Dropout 的 Spatial 1D 版本
 
 __参数__
 
-- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+- __rate__: 0 到 1 之间的浮点数。需要丢弃的输入比例。
 
 __输入尺寸__
 
-2D 张量，尺寸为：`(samples, timesteps, channels)`
+3D 张量，尺寸为：`(samples, timesteps, channels)`
 
 __输出尺寸__
 
@@ -487,7 +486,7 @@ __参考文献__
 
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L175)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L177)</span>
 ### SpatialDropout2D
 
 ```python
@@ -500,7 +499,7 @@ Dropout 的 Spatial 2D 版本
 
 __参数__
 
-- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+- __rate__: 0 到 1 之间的浮点数。需要丢弃的输入比例。
 - __data_format__：`channels_first` 或者 `channels_last`。在 `channels_first`  模式中，通道维度（即深度）位于索引 1，在 `channels_last` 模式中，通道维度位于索引 3。默认为 `image_data_format` 的值，你可以在 Keras 的配置文件 `~/.keras/keras.json` 中找到它。如果你从未设置过它，那么它将是 `channels_last`
 
 __输入尺寸__
@@ -517,7 +516,7 @@ __参考文献__
 
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L229)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/core.py#L227)</span>
 ### SpatialDropout3D
 
 ```python
@@ -530,7 +529,7 @@ Dropout 的 Spatial 3D 版本
 
 __参数__
 
-- __rate__: 0到1之间的浮点数。需要丢弃的输入比例。
+- __rate__: 0 到 1 之间的浮点数。需要丢弃的输入比例。
 - __data_format__：`channels_first` 或者 `channels_last`。在 `channels_first`  模式中，通道维度（即深度）位于索引 1，在 `channels_last` 模式中，通道维度位于索引 4。默认为 `image_data_format` 的值，你可以在 Keras 的配置文件 `~/.keras/keras.json` 中找到它。如果你从未设置过它，那么它将是 `channels_last`
 
 __输入尺寸__
