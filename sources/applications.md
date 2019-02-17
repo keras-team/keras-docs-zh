@@ -11,13 +11,14 @@ Keras 的应用模块（keras.applications）提供了带有预训练权值的�
 - [Xception](#xception)
 - [VGG16](#vgg16)
 - [VGG19](#vgg19)
-- [ResNet50](#resnet50)
+- [ResNet, ResNetV2, ResNeXt](#resnet)
 - [InceptionV3](#inceptionv3)
 - [InceptionResNetV2](#inceptionresnetv2)
 - [MobileNet](#mobilenet)
+- [MobileNetV2](#mobilenetv2)
 - [DenseNet](#densenet)
 - [NASNet](#nasnet)
-- [MobileNetV2](#mobilenetv2)
+
 
 所有的这些架构都兼容所有的后端 (TensorFlow, Theano 和 CNTK)，并且会在实例化时，根据 Keras 配置文件`〜/.keras/keras.json` 中设置的图像数据格式构建模型。举个例子，如果你设置 `image_data_format=channels_last`，则加载的模型将按照 TensorFlow 的维度顺序来构造，即「高度-宽度-深度」（Height-Width-Depth）的顺序。
 
@@ -175,7 +176,14 @@ model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=T
 | [Xception](#xception) | 88 MB | 0.790 | 0.945 | 22,910,480 | 126 |
 | [VGG16](#vgg16) | 528 MB | 0.713 | 0.901 | 138,357,544 | 23 |
 | [VGG19](#vgg19) | 549 MB | 0.713 | 0.900 | 143,667,240 | 26 |
-| [ResNet50](#resnet50) | 99 MB | 0.749 | 0.921 | 25,636,712 | 168 |
+| [ResNet50](#resnet) | 98 MB | 0.749 | 0.921 | 25,636,712 | - |
+| [ResNet101](#resnet) | 171 MB | 0.764 | 0.928 | 44,707,176 | - |
+| [ResNet152](#resnet) | 232 MB | 0.766 | 0.931 | 60,419,944 | - |
+| [ResNet50V2](#resnet) | 98 MB | 0.760 | 0.930 | 25,613,800 | - |
+| [ResNet101V2](#resnet) | 171 MB | 0.772 | 0.938 | 44,675,560 | - |
+| [ResNet152V2](#resnet) | 232 MB | 0.780 | 0.942 | 60,380,648 | - |
+| [ResNeXt50](#resnet) | 96 MB | 0.777 | 0.938 | 25,097,128 | - |
+| [ResNeXt101](#resnet) | 170 MB | 0.787 | 0.943 | 44,315,560 | - |
 | [InceptionV3](#inceptionv3) | 92 MB | 0.779 | 0.937 | 23,851,784 | 159 |
 | [InceptionResNetV2](#inceptionresnetv2) | 215 MB | 0.803 | 0.953 | 55,873,736 | 572 |
 | [MobileNet](#mobilenet) | 16 MB | 0.704 | 0.895 | 4,253,864 | 88 |
@@ -188,6 +196,8 @@ model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=T
 
 
 Top-1 准确率和 Top-5 准确率都是在 ImageNet 验证集上的结果。
+
+Depth 表示网络的拓扑深度。这包括激活层，批标准化层等。
 
 -----
 
@@ -312,14 +322,21 @@ VGG19 模型，权值由 ImageNet 训练而来。
 
 -----
 
-## ResNet50
+## ResNet
 
 
 ```python
-keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet.ResNet50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet.ResNet101(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet.ResNet152(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet_v2.ResNet50V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet_v2.ResNet101V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnet_v2.ResNet152V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnext.ResNeXt50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+keras.applications.resnext.ResNeXt101(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-ResNet50 模型，权值由 ImageNet 训练而来。
+ResNet, ResNetV2, ResNeXt 模型，权值由 ImageNet 训练而来。
 
 该模型可同时构建于 `channels_first` (通道，高度，宽度) 和 `channels_last`（高度，宽度，通道）两种输入维度顺序。
 
@@ -343,11 +360,17 @@ ResNet50 模型，权值由 ImageNet 训练而来。
 
 ### 参考文献
 
-- [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
+- `ResNet`: [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
+- `ResNetV2`: [Identity Mappings in Deep Residual Networks](https://arxiv.org/abs/1603.05027)
+- `ResNeXt`: [Aggregated Residual Transformations for Deep Neural Networks](https://arxiv.org/abs/1611.05431)
 
 ### License
 
-预训练权值由 [Kaiming He](https://github.com/KaimingHe/deep-residual-networks) 发布的预训练权值移植而来，基于 [MIT license](https://github.com/KaimingHe/deep-residual-networks/blob/master/LICENSE)。
+预训练权值由以下提供：
+
+- `ResNet`: [The original repository of Kaiming He](https://github.com/KaimingHe/deep-residual-networks) under the [MIT license](https://github.com/KaimingHe/deep-residual-networks/blob/master/LICENSE).
+- `ResNetV2`: [Facebook](https://github.com/facebook/fb.resnet.torch) under the [BSD license](https://github.com/facebook/fb.resnet.torch/blob/master/LICENSE).
+- `ResNeXt`: [Facebook AI Research](https://github.com/facebookresearch/ResNeXt) under the [BSD license](https://github.com/facebookresearch/ResNeXt/blob/master/LICENSE).
 
 -----
 
