@@ -1,11 +1,8 @@
+# 基于故事和问题训练两个循环神经网络。
 
-# Trains two recurrent neural networks based upon a story and a question.
+两者的合并向量将用于回答一系列 bAbI 任务。
 
-The resulting merged vector is then queried to answer a range of bAbI tasks.
-
-The results are comparable to those for an LSTM model provided in Weston et al.:
-"Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks"
-http://arxiv.org/abs/1502.05698
+这些结果与 Weston 等人提供的 LSTM 模型的结果相当：[Towards AI-Complete Question Answering: A Set of Prerequisite Toy Tasks](http://arxiv.org/abs/1502.05698)。
 
 Task Number                  | FB LSTM Baseline | Keras QA
 ---                          | ---              | ---
@@ -30,33 +27,25 @@ QA18 - Size Reasoning        | 52               | 90.8
 QA19 - Path Finding          | 8                | 9.0
 QA20 - Agent's Motivations   | 91               | 90.7
 
-For the resources related to the bAbI project, refer to:
-https://research.facebook.com/researchers/1543934539189348
+有关 bAbI 项目的相关资源，请参考: https://research.facebook.com/researchers/1543934539189348
 
-### Notes
+### 注意
 
-- With default word, sentence, and query vector sizes, the GRU model achieves:
-  - 52.1% test accuracy on QA1 in 20 epochs (2 seconds per epoch on CPU)
-  - 37.0% test accuracy on QA2 in 20 epochs (16 seconds per epoch on CPU)
-In comparison, the Facebook paper achieves 50% and 20% for the LSTM baseline.
+- 使用默认的单词、句子和查询向量尺寸，GRU 模型得到了以下效果：
+  - 20 轮迭代后，在 QA1 上达到了 52.1% 的测试准确率（在 CPU 上每轮迭代 2 秒）；
+  - 20 轮迭代后，在 QA2 上达到了 37.0% 的测试准确率（在 CPU 上每轮迭代 16 秒）。
 
-- The task does not traditionally parse the question separately. This likely
-improves accuracy and is a good example of merging two RNNs.
+    相比之下，Facebook的论文中 LSTM baseline 的准确率分别是 50% 和 20%。
 
-- The word vector embeddings are not shared between the story and question RNNs.
+- 这个任务并不是笼统地单独去解析问题。这应该可以提高准确率，且是合并两个 RNN 的一次较好实践。
 
-- See how the accuracy changes given 10,000 training samples (en-10k) instead
-of only 1000. 1000 was used in order to be comparable to the original paper.
+- 故事和问题的 RNN 之间不共享词向量（词嵌入）。
 
-- Experiment with GRU, LSTM, and JZS1-3 as they give subtly different results.
+- 注意观察 1000 个训练样本（en-10k）到 10,000 个的准确度如何变化。使用 1000 是为了与原始论文进行对比。
 
-- The length and noise (i.e. 'useless' story components) impact the ability of
-LSTMs / GRUs to provide the correct answer. Given only the supporting facts,
-these RNNs can achieve 100% accuracy on many tasks. Memory networks and neural
-networks that use attentional processes can efficiently search through this
-noise to find the relevant statements, improving performance substantially.
-This becomes especially obvious on QA2 and QA3, both far longer than QA1.
+- 尝试使用 GRU, LSTM 和 JZS1-3，因为它们会产生微妙的不同结果。
 
+- 长度和噪声（即「无用」的故事内容）会影响 LSTM/GRU 提供正确答案的能力。在只提供事实的情况下，这些 RNN可以在许多任务上达到 100% 的准确性。 使用注意力过程的记忆网络和神经网络可以有效地搜索这些噪声以找到相关的语句，从而大大提高性能。这在 QA2 和 QA3 上变得尤为明显，两者都远远显著于 QA1。
 
 ```python
 from __future__ import print_function
@@ -75,7 +64,7 @@ from keras.preprocessing.sequence import pad_sequences
 
 
 def tokenize(sent):
-    '''Return the tokens of a sentence including punctuation.
+    '''返回包含标点符号的句子的标记。
 
     >>> tokenize('Bob dropped the apple. Where is the apple?')
     ['Bob', 'dropped', 'the', 'apple', '.', 'Where', 'is', 'the', 'apple', '?']
@@ -84,10 +73,10 @@ def tokenize(sent):
 
 
 def parse_stories(lines, only_supporting=False):
-    '''Parse stories provided in the bAbi tasks format
+    '''解析 bAbi 任务格式中提供的故事
 
-    If only_supporting is true,
-    only the sentences that support the answer are kept.
+    如果 only_supporting 为 true，
+    则只保留支持答案的句子。
     '''
     data = []
     story = []
@@ -101,11 +90,11 @@ def parse_stories(lines, only_supporting=False):
             q, a, supporting = line.split('\t')
             q = tokenize(q)
             if only_supporting:
-                # Only select the related substory
+                # 只选择相关的子故事
                 supporting = map(int, supporting.split())
                 substory = [story[i - 1] for i in supporting]
             else:
-                # Provide all the substories
+                # 提供所有子故事
                 substory = [x for x in story if x]
             data.append((substory, q, a))
             story.append('')
@@ -116,11 +105,11 @@ def parse_stories(lines, only_supporting=False):
 
 
 def get_stories(f, only_supporting=False, max_length=None):
-    '''Given a file name, read the file, retrieve the stories,
-    and then convert the sentences into a single story.
+    '''给定文件名，读取文件，检索故事，
+    然后将句子转换为一个独立故事。
 
-    If max_length is supplied,
-    any stories longer than max_length tokens will be discarded.
+    如果提供了 max_length,
+    任何长于 max_length 的故事都将被丢弃。
     '''
     data = parse_stories(f.readlines(), only_supporting=only_supporting)
     flatten = lambda data: reduce(lambda x, y: x + y, data)
@@ -167,13 +156,13 @@ except:
           '$ mv tasks_1-20_v1-2.tar.gz ~/.keras/datasets/babi-tasks-v1-2.tar.gz')
     raise
 
-# Default QA1 with 1000 samples
+# 默认 QA1 任务，1000 样本
 # challenge = 'tasks_1-20_v1-2/en/qa1_single-supporting-fact_{}.txt'
-# QA1 with 10,000 samples
+# QA1 任务，10,000 样本
 # challenge = 'tasks_1-20_v1-2/en-10k/qa1_single-supporting-fact_{}.txt'
-# QA2 with 1000 samples
+# QA2 任务，1000 样本
 challenge = 'tasks_1-20_v1-2/en/qa2_two-supporting-facts_{}.txt'
-# QA2 with 10,000 samples
+# QA2 任务，10,000 样本
 # challenge = 'tasks_1-20_v1-2/en-10k/qa2_two-supporting-facts_{}.txt'
 with tarfile.open(path) as tar:
     train = get_stories(tar.extractfile(challenge.format('train')))
@@ -184,7 +173,7 @@ for story, q, answer in train + test:
     vocab |= set(story + q + [answer])
 vocab = sorted(vocab)
 
-# Reserve 0 for masking via pad_sequences
+# 保留 0 以留作 pad_sequences 进行 masking
 vocab_size = len(vocab) + 1
 word_idx = dict((c, i + 1) for i, c in enumerate(vocab))
 story_maxlen = max(map(len, (x for x, _, _ in train + test)))
