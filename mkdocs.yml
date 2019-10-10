@@ -1,16 +1,29 @@
 site_name: Keras 中文文档
-theme: readthedocs
+theme:
+  name: null
+  custom_dir: theme
+  static_templates:
+    - 404.html
+  include_search_page: true
+  search_index_only: false
+  highlightjs: true
+  hljs_languages: []
+  include_homepage_in_sidebar: true
+  prev_next_buttons_location: bottom
+  navigation_depth: 4
+  titles_only: false
+  sticky_navigation: true
+  collapse_navigation: true
+
 docs_dir: sources
-repo_url: https://github.com/keras-team/keras-docs-zh
+repo_url: http://github.com/keras-team/keras-docs-zh
 site_url: http://keras.io/zh/
-# theme_dir: ../keras/docs/theme
 site_description: 'Keras，Python 深度学习库中文文档。'
 
 dev_addr: '0.0.0.0:8000'
 google_analytics: ['UA-61785484-1', 'keras.io']
 
-
-pages:
+nav:
 - 主页: index.md
 - 为什么选择 Keras?: why-use-keras.md
 - 快速开始:
@@ -19,21 +32,21 @@ pages:
   - FAQ 常见问题解答: getting-started/faq.md
 - 模型:
   - 关于 Keras 模型: models/about-keras-models.md
-  - Sequential 顺序模型 API: models/sequential.md
-  - 函数式 API: models/model.md
-- Layers:
+  - Sequential 顺序模型: models/sequential.md
+  - Model (函数式 API): models/model.md
+- 网络层:
   - 关于 Keras 网络层: layers/about-keras-layers.md
   - 核心网络层: layers/core.md
-  - 卷积层 Convolutional: layers/convolutional.md
-  - 池化层 Pooling: layers/pooling.md
-  - 局部连接层 Locally-connected: layers/local.md
-  - 循环层 Recurrent: layers/recurrent.md
-  - 嵌入层 Embedding: layers/embeddings.md
-  - 融合层 Merge: layers/merge.md
-  - 高级激活层 Advanced Activations: layers/advanced-activations.md
-  - 标准化层 Normalization: layers/normalization.md
-  - 噪声层 Noise: layers/noise.md
-  - 层封装器 wrappers: layers/wrappers.md
+  - 卷积层 Convolutional Layers: layers/convolutional.md
+  - 池化层 Pooling Layers: layers/pooling.md
+  - 局部连接层 Locally-connected Layers: layers/local.md
+  - 循环层 Recurrent Layers: layers/recurrent.md
+  - 嵌入层 Embedding Layers: layers/embeddings.md
+  - 融合层 Merge Layers: layers/merge.md
+  - 高级激活层 Advanced Activations Layers: layers/advanced-activations.md
+  - 标准化层 Normalization Layers: layers/normalization.md
+  - 噪声层 Noise layers: layers/noise.md
+  - 层封装器 Layer wrappers: layers/wrappers.md
   - 编写你自己的层: layers/writing-your-own-keras-layers.md
 - 数据预处理:
   - 序列预处理: preprocessing/sequence.md
@@ -43,25 +56,35 @@ pages:
 - 评估标准 Metrics: metrics.md
 - 优化器 Optimizers: optimizers.md
 - 激活函数 Activations: activations.md
-- 回调函数 Callbacks: callbacks.md
+- 回调 Callbacks: callbacks.md
 - 常用数据集 Datasets: datasets.md
 - 应用 Applications: applications.md
 - 后端 Backend: backend.md
 - 初始化 Initializers: initializers.md
 - 正则化 Regularizers: regularizers.md
-- 约束 Constraints: constraints.md
+- 约束项 Constraints: constraints.md
 - 可视化 Visualization: visualization.md
 - Scikit-learn API: scikit-learn-api.md
-- 工具: utils.md
+- 工具 Utils: utils.md
 - 贡献: contributing.md
 - 经典样例:
-  - Addition RNN: examples/addition_rnn.md
+  - RNN 加法: examples/addition_rnn.md
+  - 自定义层 - antirectifier: examples/antirectifier.md
   - Baby RNN: examples/babi_rnn.md
   - Baby MemNN: examples/babi_memnn.md
   - CIFAR-10 CNN: examples/cifar10_cnn.md
-  - CIFAR-10 CNN-Capsule: examples/cifar10_cnn_capsule.md
-  - CIFAR-10 CNN with augmentation (TF): examples/cifar10_cnn_tfaugment2d.md
   - CIFAR-10 ResNet: examples/cifar10_resnet.md
-  - Convolution filter visualization: examples/conv_filter_visualization.md
-  - Image OCR: examples/image_ocr.md
-  - Bidirectional LSTM: examples/imdb_bidirectional_lstm.md
+  - 卷积滤波器可视化: examples/conv_filter_visualization.md
+  - 卷积 LSTM: examples/conv_lstm.md
+  - Deep Dream: examples/deep_dream.md
+  - 图片 OCR: examples/image_ocr.md
+  - 双向 LSTM: examples/imdb_bidirectional_lstm.md
+  - 1D CNN 文本分类: examples/imdb_cnn.md
+  - CNN-LSTM 情感分类: examples/imdb_cnn_lstm.md
+  - Fasttext 文本分类: examples/imdb_fasttext.md
+  - LSTM 情感分类: examples/imdb_lstm.md
+  - Sequence to sequence - 训练: examples/lstm_seq2seq.md
+  - Sequence to sequence - 预测: examples/lstm_seq2seq_restore.md
+  - Stateful LSTM: examples/lstm_stateful.md
+  - LSTM for 文本生成: examples/lstm_text_generation.md
+  - GAN 辅助分类器: examples/mnist_acgan.md

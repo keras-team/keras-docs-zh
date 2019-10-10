@@ -141,6 +141,117 @@ a = K.concatenate([b, c], axis=-1)
 ## 后端函数
 
 
+### backend
+
+
+```python
+backend.backend()
+```
+
+返回当前后端的名字 (例如 "tensorflow")。
+
+__返回__
+
+字符串，Keras 目前正在使用的后端名。
+
+__示例__
+
+```python
+>>> keras.backend.backend()
+'tensorflow'
+```
+
+----
+
+
+### symbolic
+
+
+```python
+keras.backend.symbolic(func)
+```
+
+在 TensorFlow 2.0 中用于进入 Keras 图的装饰器。
+
+__参数__
+
+- __func__: 需要装饰的函数。
+
+__返回__
+
+装饰后的函数。
+
+----
+
+### eager
+
+
+```python
+keras.backend.eager(func)
+```
+
+
+在 TensorFlow 2.0 中用于退出 Keras 图的装饰器。
+
+__参数__
+
+- __func__: 需要装饰的函数。
+
+__返回__
+
+装饰后的函数。
+
+----
+
+### get_uid
+
+
+```python
+keras.backend.get_uid(prefix='')
+```
+
+
+提供一个戴字符串前缀的独立 UID。
+
+__参数__
+
+- __prefix__: 字符串。
+
+__返回__
+
+一个整数。
+
+__示例__
+
+```python
+>>> keras.backend.get_uid('dense')
+1
+>>> keras.backend.get_uid('dense')
+2
+```
+
+
+----
+
+### manual_variable_initialization
+
+
+```python
+keras.backend.manual_variable_initialization(value)
+```
+
+
+设置手动变量初始化标识。
+
+这个布尔标识决定变量是否在实例化（默认）时初始化，或者让用户自己来处理初始化。
+
+__参数__
+
+- __value__: Python 布尔值。
+
+----
+
+
 ### epsilon
 
 
@@ -155,7 +266,7 @@ __返回__
 
 一个浮点数。
 
-__例子__
+__示例__
 
 ```python
 >>> keras.backend.epsilon()
@@ -163,6 +274,19 @@ __例子__
 ```
 
 ----
+
+### reset_uids
+
+
+```python
+keras.backend.reset_uids()
+```
+
+
+重置图标识。
+
+----
+
 
 ### set_epsilon
 
@@ -178,7 +302,7 @@ __参数__
 
 - __e__: 浮点数。新的 epsilon 值。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -206,7 +330,7 @@ __返回__
 
 字符串，当前默认的浮点类型。
 
-__例子__
+__示例__
 
 ```python
 >>> keras.backend.floatx()
@@ -229,7 +353,7 @@ __参数__
 
 - __floatx__: 字符串，'float16', 'float32', 或 'float64'。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -260,7 +384,7 @@ __返回__
 
 相同的 Numpy 数组，转换为它的新类型。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -286,13 +410,13 @@ keras.backend.image_data_format()
 ```
 
 
-返回默认图像数据格式约定 ('channels_first' 或 'channels_last')。
+返回默认图像数据格式约定。
 
 __返回__
 
 一个字符串，`'channels_first'` 或 `'channels_last'`
 
-__例子__
+__示例__
 
 ```python
 >>> keras.backend.image_data_format()
@@ -315,7 +439,7 @@ __参数__
 
 - __data_format__: 字符串。`'channels_first'` 或 `'channels_last'`。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -326,72 +450,6 @@ __例子__
 'channels_last'
 ```
 
-
-----
-
-### reset_uids
-
-
-```python
-keras.backend.reset_uids()
-```
-
-重置图的标识符。
-
-
-----
-
-### get_uid
-
-
-```python
-keras.backend.get_uid(prefix='')
-```
-
-
-获取默认计算图的 uid。
-
-__参数__
-
-- __prefix__: 图的可选前缀。
-
-__返回__
-
-图的唯一标识符。
-
-----
-
-### clear_session
-
-
-```python
-keras.backend.clear_session()
-```
-
-
-销毁当前的 TF 图并创建一个新图。
-
-有用于避免旧模型/网络层混乱。
-
-----
-
-### manual_variable_initialization
-
-
-```python
-keras.backend.manual_variable_initialization(value)
-```
-
-
-设置变量手动初始化的标志。
-
-这个布尔标志决定了变量是否应该在实例化时初始化（默认），
-或者用户是否应该自己处理初始化
-（例如通过 `tf.initialize_all_variables()`）。
-
-__参数__
-
-- __value__: Python 布尔值。
 
 ----
 
@@ -435,6 +493,22 @@ __异常__
 
 ----
 
+
+### clear_session
+
+
+```python
+keras.backend.clear_session()
+```
+
+
+销毁当前的 Keras 图并创建一个新图。
+
+有用于避免旧模型/网络层混乱。
+
+----
+
+
 ### is_sparse
 
 
@@ -452,7 +526,7 @@ __返回__
 
 布尔值。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -484,7 +558,7 @@ __返回__
 
 一个稠密张量。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -519,7 +593,7 @@ __返回__
 
 变量实例（包含 Keras 元数据）
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -535,6 +609,17 @@ array([[ 1.,  2.],
 ```
 
 ----
+
+
+### is_variable
+
+
+```python
+keras.backend.is_variable(x)
+```
+
+----
+
 
 ### constant
 
@@ -583,7 +668,7 @@ __异常__
 
 - __ValueError__: 如果 `x` 不是一个符号张量。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -592,19 +677,23 @@ __例子__
 >>> K.is_keras_tensor(np_var) # 一个 Numpy 数组不是一个符号张量。
 ValueError
 >>> k_var = tf.placeholder('float32', shape=(1,1))
->>> K.is_keras_tensor(k_var) # 在 Keras 之外间接创建的变量不是 Keras 张量。
+# 在 Keras 之外间接创建的变量不是 Keras 张量。
+>>> K.is_keras_tensor(k_var) 
 False
 >>> keras_var = K.variable(np_var)
->>> K.is_keras_tensor(keras_var)  # Keras 后端创建的变量不是 Keras 张量。
+# Keras 后端创建的变量不是 Keras 张量。
+>>> K.is_keras_tensor(keras_var)  
 False
 >>> keras_placeholder = K.placeholder(shape=(2, 4, 5))
->>> K.is_keras_tensor(keras_placeholder)  # 占位符不是 Keras 张量。
+# 占位符不是 Keras 张量。
+>>> K.is_keras_tensor(keras_placeholder)  
 False
 >>> keras_input = Input([10])
 >>> K.is_keras_tensor(keras_input) # 输入 Input 是 Keras 张量。
 True
 >>> keras_layer_output = Dense(10)(keras_input)
->>> K.is_keras_tensor(keras_layer_output) # 任何 Keras 层输出都是 Keras 张量。
+# 任何 Keras 层输出都是 Keras 张量。
+>>> K.is_keras_tensor(keras_layer_output) 
 True
 ```
 
@@ -643,7 +732,7 @@ __返回__
 
 张量实例（包括 Keras 元数据）。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -694,10 +783,10 @@ __返回__
 
 符号尺寸（它本身就是张量）。
 
-__例子__
+__示例__
 
 ```python
-# TensorFlow 例子
+# TensorFlow 示例
 >>> from keras import backend as K
 >>> tf_session = K.get_session()
 >>> val = np.array([[1, 2], [3, 4]])
@@ -734,7 +823,7 @@ __返回__
 
 整数元组（或 None 项）。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -774,7 +863,7 @@ __返回__
 
 整数 (标量), 轴的数量。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -796,6 +885,38 @@ def ndim(x):
 
 ----
 
+### size
+
+
+```python
+keras.backend.size(x, name=None)
+```
+
+
+返回张量尺寸。
+
+__参数__
+
+- __x__: 张量或变量。
+- __name__: 操作名称（可选）。
+
+__返回__
+
+张量尺寸
+
+__示例__
+
+```python
+>>> from keras import backend as K
+>>> val = np.array([[1, 2], [3, 4]])
+>>> kvar = K.variable(value=val)
+>>> K.size(inputs)
+<tf.Tensor: id=9, shape=(), dtype=int32, numpy=4>
+```
+
+----
+
+
 ### dtype
 
 
@@ -814,7 +935,7 @@ __返回__
 
 字符串，`x` 的 dtype。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -833,6 +954,14 @@ __例子__
 'float32_ref'
 ```
 
+__Numpy 实现__
+
+
+```python
+def dtype(x):
+    return x.dtype.name
+```
+
 ----
 
 ### eval
@@ -843,17 +972,17 @@ keras.backend.eval(x)
 ```
 
 
-估计一个变量的值。
+估计一个张量的值。
 
 __参数__
 
-- __x__: 变量。
+- __x__: 张量。
 
 __返回__
 
 Numpy 数组。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -861,6 +990,14 @@ __例子__
 >>> K.eval(kvar)
 array([[ 1.,  2.],
        [ 3.,  4.]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def eval(x):
+    return x
 ```
 
 ----
@@ -887,7 +1024,7 @@ __返回__
 请注意，如果 `shape` 是符号化的，我们不能返回一个变量，
 而会返回一个动态尺寸的张量。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -896,6 +1033,14 @@ __例子__
 array([[ 0.,  0.,  0.,  0.],
        [ 0.,  0.,  0.,  0.],
        [ 0.,  0.,  0.,  0.]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def zeros(shape, dtype=floatx(), name=None):
+    return np.zeros(shape, dtype=dtype)
 ```
 
 ----
@@ -922,7 +1067,7 @@ __返回__
 请注意，如果 `shape` 是符号化的，我们不能返回一个变量，
 而会返回一个动态尺寸的张量。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -931,6 +1076,14 @@ __例子__
 array([[ 1.,  1.,  1.,  1.],
        [ 1.,  1.,  1.,  1.],
        [ 1.,  1.,  1.,  1.]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def ones(shape, dtype=floatx(), name=None):
+    return np.ones(shape, dtype=dtype)
 ```
 
 ----
@@ -947,7 +1100,7 @@ keras.backend.eye(size, dtype=None, name=None)
 
 __参数__
 
-- __size__: 整数，行/列的数目。
+- __size__: 元组，行和列的数目。如果是整数，则为行数。
 - __dtype__: 字符串，返回的 Keras 变量的数据类型。
 - __name__: 字符串，返回的 Keras 变量的名称。
 
@@ -955,17 +1108,30 @@ __返回__
 
 Keras 变量，一个单位矩阵。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
->>> kvar = K.eye(3)
->>> K.eval(kvar)
+>>> K.eval(K.eye(3))
 array([[ 1.,  0.,  0.],
        [ 0.,  1.,  0.],
        [ 0.,  0.,  1.]], dtype=float32)
+>>> K.eval(K.eye((2, 3)))
+array([[1., 0., 0.],
+       [0., 1., 0.]], dtype=float32
 ```
 
+__Numpy 实现__
+
+
+```python
+def eye(size, dtype=None, name=None):
+    if isinstance(size, (list, tuple)):
+        n, m = size
+    else:
+        n, m = size, size
+    return np.eye(n, m, dtype=dtype)
+```
 
 ----
 
@@ -990,7 +1156,7 @@ __返回__
 
 一个 Keras 变量，其形状为 x，用零填充。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -1000,6 +1166,15 @@ __例子__
 array([[ 0.,  0.,  0.],
        [ 0.,  0.,  0.]], dtype=float32)
 ```
+
+__Numpy 实现__
+
+
+```python
+def zeros_like(x, dtype=floatx(), name=None):
+    return np.zeros_like(x, dtype=dtype)
+```
+
 
 ----
 
@@ -1024,7 +1199,7 @@ __返回__
 
 一个 Keras 变量，其形状为 x，用一填充。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -1034,6 +1209,15 @@ __例子__
 array([[ 1.,  1.,  1.],
        [ 1.,  1.,  1.]], dtype=float32)
 ```
+
+__Numpy 实现__
+
+
+```python
+def ones_like(x, dtype=floatx(), name=None):
+    return np.ones_like(x, dtype=dtype)
+```
+
 
 ----
 
@@ -1080,7 +1264,7 @@ __返回__
 
 一个 Keras 变量，以抽取的样本填充。
 
-__例子__
+__示例__
 
 ```python
 # TensorFlow 示例
@@ -1091,6 +1275,15 @@ __例子__
 array([[ 0.10940075,  0.10047495,  0.476143  ],
        [ 0.66137183,  0.00869417,  0.89220798]], dtype=float32)
 ```
+
+__Numpy 实现__
+
+
+```python
+def random_uniform_variable(shape, low, high, dtype=None, name=None, seed=None):
+    return (high - low) * np.random.random(shape).astype(dtype) + low
+```
+
 
 ----
 
@@ -1117,7 +1310,7 @@ __返回__
 
 一个 Keras 变量，以抽取的样本填充。
 
-__例子__
+__示例__
 
 ```python
 # TensorFlow 示例
@@ -1127,6 +1320,14 @@ __例子__
 >>> K.eval(kvar)
 array([[ 1.19591331,  0.68685907, -0.63814116],
        [ 0.92629528,  0.28055015,  1.70484698]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def random_normal_variable(shape, mean, scale, dtype=None, name=None, seed=None):
+    return scale * np.random.randn(*shape).astype(dtype) + mean
 ```
 
 ----
@@ -1149,7 +1350,7 @@ __返回__
 
 整数，`x` 中的元素数量，即，数组中静态维度的乘积。
 
-__例子__
+__示例__
 
 ```python
 >>> kvar = K.zeros((2,3))
@@ -1158,6 +1359,14 @@ __例子__
 >>> K.eval(kvar)
 array([[ 0.,  0.,  0.],
        [ 0.,  0.,  0.]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def count_params(x):
+    return x.size
 ```
 
 ----
@@ -1183,7 +1392,7 @@ __返回__
 
 Keras 张量，类型为 `dtype`。
 
-__例子__
+__示例__
 
 ```python
 >>> from keras import backend as K
@@ -1311,7 +1520,7 @@ __返回__
 
 一个张量，`x` 和 `y` 的点积。
 
-__例子__
+__示例__
 
 ```python
 # 张量之间的点积
@@ -1332,12 +1541,20 @@ __例子__
 ```
 
 ```python
-# 类 Theano 行为的例子
+# 类 Theano 行为的示例
 >>> x = K.random_uniform_variable(shape=(2, 3), low=0, high=1)
 >>> y = K.ones((4, 3, 5))
 >>> xy = K.dot(x, y)
 >>> K.int_shape(xy)
 (2, 4, 5)
+```
+
+__Numpy 实现__
+
+
+```python
+def dot(x, y):
+    return np.dot(x, y)
 ```
 
 ----
@@ -1363,23 +1580,21 @@ __参数__
 
 - __x__: `ndim >= 2` 的 Keras 张量或变量。
 - __y__: `ndim >= 2` 的 Keras 张量或变量。
-- __axes__: 表示目标维度的整数或列表。
-`axes[0]` 和 `axes[1]` 的长度必须相同。
+- __axes__: 整数或元组 (int, int)。 需要归约的目标维度。
 
 __返回__
 
 一个尺寸等于 `x` 的尺寸（减去总和的维度）和 `y` 的尺寸（减去批次维度和总和的维度）的连接的张量。
 如果最后的秩为 1，我们将它重新转换为 `(batch_size, 1)`。
 
-__例子__
+__示例__
 
 假设 `x = [[1, 2], [3, 4]]` 和 `y = [[5, 6], [7, 8]]`，
 `batch_dot(x, y, axes=1) = [[17], [53]]` 是 `x.dot(y.T)` 的主对角线，
 尽管我们不需要计算非对角元素。
 
 伪代码：
-
-```python
+```
 inner_products = []
 for xi, yi in zip(x, y):
     inner_products.append(xi.dot(yi))
@@ -1403,10 +1618,73 @@ result = stack(inner_products)
 ```python
 >>> x_batch = K.ones(shape=(32, 20, 1))
 >>> y_batch = K.ones(shape=(32, 30, 20))
->>> xy_batch_dot = K.batch_dot(x_batch, y_batch, axes=[1, 2])
+>>> xy_batch_dot = K.batch_dot(x_batch, y_batch, axes=(1, 2))
 >>> K.int_shape(xy_batch_dot)
 (32, 1, 30)
 ```
+
+__Numpy 实现__
+
+
+<details>
+<summary>展示 Numpy 实现</summary>
+
+```python
+def batch_dot(x, y, axes=None):
+    if x.ndim < 2 or y.ndim < 2:
+        raise ValueError('Batch dot requires inputs of rank 2 or more.')
+
+    if isinstance(axes, int):
+        axes = [axes, axes]
+    elif isinstance(axes, tuple):
+        axes = list(axes)
+
+    if axes is None:
+        if y.ndim == 2:
+            axes = [x.ndim - 1, y.ndim - 1]
+        else:
+            axes = [x.ndim - 1, y.ndim - 2]
+
+    if any([isinstance(a, (list, tuple)) for a in axes]):
+        raise ValueError('Multiple target dimensions are not supported. ' +
+                         'Expected: None, int, (int, int), ' +
+                         'Provided: ' + str(axes))
+
+    # 处理负轴
+    if axes[0] < 0:
+        axes[0] += x.ndim
+    if axes[1] < 0:
+        axes[1] += y.ndim
+
+    if 0 in axes:
+        raise ValueError('Can not perform batch dot over axis 0.')
+
+    if x.shape[0] != y.shape[0]:
+        raise ValueError('Can not perform batch dot on inputs'
+                         ' with different batch sizes.')
+
+    d1 = x.shape[axes[0]]
+    d2 = y.shape[axes[1]]
+    if d1 != d2:
+        raise ValueError('Can not do batch_dot on inputs with shapes ' +
+                         str(x.shape) + ' and ' + str(y.shape) +
+                         ' with axes=' + str(axes) + '. x.shape[%d] != '
+                         'y.shape[%d] (%d != %d).' % (axes[0], axes[1], d1, d2))
+
+    result = []
+    axes = [axes[0] - 1, axes[1] - 1]  # 忽略批次维度
+    for xi, yi in zip(x, y):
+        result.append(np.tensordot(xi, yi, axes))
+    result = np.array(result)
+
+    if result.ndim == 1:
+        result = np.expand_dims(result, -1)
+
+    return result
+```
+
+</details>
+
 
 ----
 
@@ -1428,7 +1706,7 @@ __返回__
 
 一个张量。
 
-__例子__
+__示例__
 
 ```python
 >>> var = K.variable([[1, 2, 3], [4, 5, 6]])
@@ -1450,6 +1728,14 @@ array([[ 1.,  4.],
 >>> input_transposed
 <tf.Tensor 'transpose_4:0' shape=(3, 2) dtype=float32>
 
+```
+
+__Numpy 实现__
+
+
+```python
+def transpose(x):
+    return np.transpose(x)
 ```
 
 ----
@@ -1634,6 +1920,14 @@ __返回__
 
 `x` 在 `axis` 轴的累加和的张量。
 
+__Numpy 实现__
+
+
+```python
+def cumsum(x, axis=0):
+    return np.cumsum(x, axis=axis)
+```
+
 ----
 
 ### cumprod
@@ -1653,6 +1947,14 @@ __参数__
 __返回__
 
 `x` 在 `axis` 轴的累乘的张量。
+
+__Numpy 实现__
+
+
+```python
+def cumprod(x, axis=0):
+    return np.cumprod(x, axis=axis)
+```
 
 ----
 
@@ -1676,6 +1978,16 @@ __参数__
 __返回__
 
 `x` 元素的方差的张量。
+
+__Numpy 实现__
+
+
+```python
+def var(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.var(x, axis=axis, keepdims=keepdims)
+```
 
 ----
 
@@ -1701,6 +2013,16 @@ __返回__
 
 `x` 元素的标准差的张量。
 
+__Numpy 实现__
+
+
+```python
+def std(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.std(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### mean
@@ -1725,6 +2047,16 @@ __返回__
 
 `x` 元素的均值的张量。
 
+__Numpy 实现__
+
+
+```python
+def mean(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.mean(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### any
@@ -1748,6 +2080,16 @@ __返回__
 
 一个 uint8 张量 (0s 和 1s)。
 
+__Numpy 实现__
+
+
+```python
+def any(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.any(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### all
@@ -1770,6 +2112,16 @@ __返回__
 
 一个 uint8 张量 (0s 和 1s)。
 
+__Numpy 实现__
+
+
+```python
+def all(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return np.all(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### argmax
@@ -1789,6 +2141,14 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+
+```python
+def argmax(x, axis=-1):
+    return np.argmax(x, axis=axis)
+```
 
 ----
 
@@ -1810,6 +2170,14 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+
+```python
+def argmin(x, axis=-1):
+    return np.argmin(x, axis=axis)
+```
 
 ----
 
@@ -1870,6 +2238,16 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+
+```python
+def sqrt(x):
+    y = np.sqrt(x)
+    y[np.isnan(y)] = 0.
+    return y
+```
 
 ----
 
@@ -1938,6 +2316,16 @@ __返回__
 
 归约后的张量。
 
+__Numpy 实现__
+
+
+```python
+def logsumexp(x, axis=None, keepdims=False):
+    if isinstance(axis, list):
+        axis = tuple(axis)
+    return sp.special.logsumexp(x, axis=axis, keepdims=keepdims)
+```
+
 ----
 
 ### round
@@ -2001,6 +2389,14 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+
+```python
+def pow(x, a=1.):
+    return np.power(x, a)
+```
+
 ----
 
 ### clip
@@ -2015,12 +2411,20 @@ keras.backend.clip(x, min_value, max_value)
 __参数__
 
 - __x__: 张量或变量。
-- __min_value__: Python 浮点或整数。
-- __max_value__: Python 浮点或整数。
+- __min_value__: Python 浮点，整数或张量。
+- __max_value__: Python 浮点，整数或张量。
 
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+
+```python
+def clip(x, min_value, max_value):
+    return np.clip(x, min_value, max_value)
+```
 
 ----
 
@@ -2551,6 +2955,27 @@ __返回__
 
 一个平铺的张量。
 
+__示例__
+
+```python
+>>> from keras import backend as K
+>>> kvar = K.variable(np.random.random((2, 3)))
+>>> kvar_tile = K.tile(K.eye(2), (2, 3))
+>>> K.eval(kvar_tile)
+array([[1., 0., 1., 0., 1., 0.],
+       [0., 1., 0., 1., 0., 1.],
+       [1., 0., 1., 0., 1., 0.],
+       [0., 1., 0., 1., 0., 1.]], dtype=float32)
+```
+
+__Numpy 实现__
+
+
+```python
+def tile(x, n):
+    return np.tile(x, n)
+```
+
 ----
 
 ### flatten
@@ -2732,6 +3157,14 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+
+```python
+def stack(x, axis=0):
+    return np.stack(x, axis=axis)
+```
+
 ----
 
 ### one_hot
@@ -2809,6 +3242,20 @@ __返回__
 new_x = x[start[0]: start[0] + size[0], ..., start[-1]: start[-1] + size[-1]]
 ```
 
+__异常__
+
+- __ValueError__: 如果维度和索引的尺寸不匹配。
+
+__Numpy 实现__
+
+
+```python
+def slice(x, start, size):
+    slices = [py_slice(i, i + j) for i, j in zip(start, size)]
+    return x[tuple(slices)]
+```
+
+
 ----
 
 ### get_value
@@ -2863,7 +3310,7 @@ keras.backend.set_value(x, value)
 
 __参数__
 
-- __x__: 需要设置新值的张量。
+- __x__: 需要设置新值的变量。
 - __value__: 需要设置的值，
 一个尺寸相同的 Numpy 数组。
 
@@ -2897,7 +3344,7 @@ keras.backend.print_tensor(x, message='')
 
 请注意，`print_tensor` 返回一个与 `x` 相同的新张量，应该在后面的代码中使用它。否则在评估过程中不会考虑打印操作。
 
-__例子__
+__示例__
 
 ```python
 >>> x = K.print_tensor(x, message="x is: ")
@@ -2924,20 +3371,6 @@ keras.backend.function(inputs, outputs, updates=None)
 
 实例化 Keras 函数。
 
-__参数__
-
-- __inputs__: 占位符张量列表。
-- __outputs__: 输出张量列表。
-- __updates__: 更新操作列表。
-- __**kwargs__: 需要传递给 `tf.Session.run` 的参数。
-
-__返回__
-
-输出值为 Numpy 数组。
-
-__异常__
-
-- __ValueError__: 如果无效的 kwargs 被传入。
 
 ----
 
@@ -3029,6 +3462,57 @@ __异常__
 - __ValueError__: 如果 `unroll` 为 `True` 但输入时间步并不是固定的数字。
 - __ValueError__: 如果提供了 `mask` (非 `None`) 但未提供 `states` (`len(states)` == 0)。
 
+__Numpy 实现__
+
+
+<details>
+<summary>展示 Numpy 实现</summary>
+
+```python
+def rnn(step_function, inputs, initial_states,
+        go_backwards=False, mask=None, constants=None,
+        unroll=False, input_length=None):
+    if constants is None:
+        constants = []
+    output_sample, _ = step_function(inputs[:, 0], initial_states + constants)
+    if mask is not None:
+        if mask.dtype != np.bool:
+            mask = mask.astype(np.bool)
+        if mask.shape != inputs.shape[:2]:
+            raise ValueError(
+                'mask should have `shape=(samples, time)`, '
+                'got {}'.format(mask.shape))
+        def expand_mask(mask_, x):
+            # expand mask so that `mask[:, t].ndim == x.ndim`
+            while mask_.ndim < x.ndim + 1:
+                mask_ = np.expand_dims(mask_, axis=-1)
+            return mask_
+        output_mask = expand_mask(mask, output_sample)
+        states_masks = [expand_mask(mask, state) for state in initial_states]
+    if input_length is None:
+        input_length = inputs.shape[1]
+    assert input_length == inputs.shape[1]
+    time_index = range(input_length)
+    if go_backwards:
+        time_index = time_index[::-1]
+    outputs = []
+    states_tm1 = initial_states  # tm1 means "t minus one" as in "previous timestep"
+    output_tm1 = np.zeros(output_sample.shape)
+    for t in time_index:
+        output_t, states_t = step_function(inputs[:, t], states_tm1 + constants)
+        if mask is not None:
+            output_t = np.where(output_mask[:, t], output_t, output_tm1)
+            states_t = [np.where(state_mask[:, t], state_t, state_tm1)
+                        for state_mask, state_t, state_tm1
+                        in zip(states_masks, states_t, states_tm1)]
+        outputs.append(output_t)
+        states_tm1 = states_t
+        output_tm1 = output_t
+    return outputs[-1], np.stack(outputs, axis=1), states_tm1
+```
+
+</details>
+
 ----
 
 ### switch
@@ -3057,6 +3541,17 @@ __返回__
 __异常__
 
 - __ValueError__: 如果 `condition` 的秩大于两个表达式的秩序。
+
+__Numpy 实现__
+
+
+```python
+def switch(condition, then_expression, else_expression):
+    cond_float = condition.astype(floatx())
+    while cond_float.ndim < then_expression.ndim:
+        cond_float = cond_float[..., np.newaxis]
+    return cond_float * then_expression + (1 - cond_float) * else_expression
+```
 
 ----
 
@@ -3254,6 +3749,14 @@ __返回__
 
 一个张量。
 
+__Numpy 实现__
+
+
+```python
+def softsign(x):
+    return x / (1 + np.abs(x))
+```
+
 ----
 
 ### categorical_crossentropy
@@ -3438,6 +3941,27 @@ __参数__
 __返回__
 
 一个张量。
+
+__Numpy 实现__
+
+<details>
+<summary>展示 Numpy 实现</summary>
+
+```python
+def dropout(x, level, noise_shape=None, seed=None):
+    if noise_shape is None:
+        noise_shape = x.shape
+    if learning_phase():
+        noise = np.random.choice([0, 1],
+                                 noise_shape,
+                                 replace=True,
+                                 p=[level, 1 - level])
+        return x * noise / (1 - level)
+    else:
+        return x
+```
+
+</details>
 
 ----
 
@@ -3793,6 +4317,75 @@ __异常__
 - __ValueError__: if `pool_mode` 既不是 `"max"` 也不是 `"avg"`。
 
 ----
+### local_conv1d
+
+
+```python
+keras.backend.local_conv1d(inputs, kernel, kernel_size, strides, data_format=None)
+```
+
+
+在不共享权值的情况下，运用 1D 卷积。
+
+__参数__
+
+- __inputs__: 3D 张量，尺寸为 (batch_size, steps, input_dim)
+- __kernel__: 卷积的非共享权重,
+尺寸为 (output_items, feature_dim, filters)
+- __kernel_size__: 一个整数的元组，
+指定 1D 卷积窗口的长度。
+- __strides__: 一个整数的元组，
+指定卷积步长。
+- __data_format__: 数据格式，channels_first 或 channels_last。
+
+__返回__
+
+运用不共享权重的 1D 卷积之后的张量，尺寸为 (batch_size, output_length, filters)。
+
+__异常__
+
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
+
+----
+
+### local_conv2d
+
+
+```python
+keras.backend.local_conv2d(inputs, kernel, kernel_size, strides, output_shape, data_format=None)
+```
+
+
+在不共享权值的情况下，运用 2D 卷积。
+
+__参数__
+
+- __inputs__: 如果 `data_format='channels_first'`，
+则为尺寸为 (batch_size, filters, new_rows, new_cols) 的 4D 张量。
+如果 `data_format='channels_last'`，
+则为尺寸为 (batch_size, new_rows, new_cols, filters) 的 4D 张量。
+- __kernel__: 卷积的非共享权重,
+尺寸为 (output_items, feature_dim, filters)
+- __kernel_size__: 2 个整数的元组，
+指定 2D 卷积窗口的宽度和高度。
+- __strides__: 2 个整数的元组，
+指定 2D 卷积沿宽度和高度方向的步长。
+- __output_shape__: 元组 (output_row, output_col) 。
+- __data_format__: 数据格式，channels_first 或 channels_last。
+
+__返回__
+
+一个 4D 张量。
+
+- 如果 `data_format='channels_first'`，尺寸为 (batch_size, filters, new_rows, new_cols)。
+- 如果 `data_format='channels_last'`，尺寸为 (batch_size, new_rows, new_cols, filters)
+
+
+__异常__
+
+- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
+
+----
 
 ### bias_add
 
@@ -3820,6 +4413,27 @@ __异常__
 1. 无效的 `data_format` 参数。
 2. 无效的偏置向量尺寸。
 偏置应该是一个 `ndim(x)-1` 维的向量或张量。
+
+__Numpy 实现__
+
+
+<details>
+<summary>展示 Numpy 实现</summary>
+
+```python
+def bias_add(x, y, data_format):
+    if data_format == 'channels_first':
+        if y.ndim > 1:
+            y = np.reshape(y, y.shape[::-1])
+        for _ in range(x.ndim - y.ndim - 1):
+            y = np.expand_dims(y, -1)
+    else:
+        for _ in range(x.ndim - y.ndim - 1):
+            y = np.expand_dims(y, 0)
+    return x + y
+```
+
+</details>
 
 ----
 
@@ -3973,7 +4587,7 @@ __返回__
 
 
 ```python
-keras.backend.ctc_decode(y_pred, input_length, greedy=True, beam_width=100, top_paths=1)
+keras.backend.ctc_decode(y_pred, input_length, greedy=True, beam_width=100, top_paths=1, merge_repeated=False)
 ```
 
 
@@ -3988,18 +4602,39 @@ __参数__
 - __input_length__: 张量 `(samples,)`，
 包含 `y_pred` 中每个批次样本的序列长度。
 - __greedy__: 如果为 `True`，则执行更快速的最优路径搜索，而不使用字典。
-- __beam_width__: 如果 `greedy` 为 `false`，将使用该宽度的 beam 搜索解码器搜索。
-- __top_paths__: 如果 `greedy` 为 `false`，
+- __beam_width__: 如果 `greedy` 为 `False`，将使用该宽度的 beam 搜索解码器搜索。
+- __top_paths__: 如果 `greedy` 为 `alse`，
 将返回多少条最可能的路径。
 
 __返回__
 
 - __Tuple__:
-- __List__: 如果 `greedy` 为 `true`，返回包含解码序列的一个元素的列表。
-如果为 `false`，返回最可能解码序列的 `top_paths`。
+- __List__: 如果 `greedy` 为 `True`，返回包含解码序列的一个元素的列表。
+如果为 `False`，返回最可能解码序列的 `top_paths`。
 - __Important__: 空白标签返回为 `-1`。包含每个解码序列的对数概率的张量 `(top_paths,)`。
 
 ----
+
+### control_dependencies
+
+
+```python
+keras.backend.control_dependencies(control_inputs)
+```
+
+
+一个指定控制依赖的上下文管理器。
+
+__参数__
+
+- __control_inputs__: 一系列的对象的操作或张量，它们必须在执行上下文中定义的操作之前执行。它也可以是 None，表示清空控制依赖。
+
+__Returns__
+
+一个上下文管理器。
+    
+----
+
 
 ### map_fn
 
@@ -4066,95 +4701,3 @@ __参数__
 __返回__
 
 与 `initializer` 类型和尺寸相同的张量。
-
-----
-
-### local_conv1d
-
-
-```python
-keras.backend.local_conv1d(inputs, kernel, kernel_size, strides, data_format=None)
-```
-
-
-在不共享权值的情况下，运用 1D 卷积。
-
-__参数__
-
-- __inputs__: 3D 张量，尺寸为 (batch_size, steps, input_dim)
-- __kernel__: 卷积的非共享权重,
-尺寸为 (output_items, feature_dim, filters)
-- __kernel_size__: 一个整数的元组，
-指定 1D 卷积窗口的长度。
-- __strides__: 一个整数的元组，
-指定卷积步长。
-- __data_format__: 数据格式，channels_first 或 channels_last。
-
-__返回__
-
-运用不共享权重的 1D 卷积之后的张量，尺寸为 (batch_size, output_length, filters)。
-
-__异常__
-
-- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
-
-----
-
-### local_conv2d
-
-
-```python
-keras.backend.local_conv2d(inputs, kernel, kernel_size, strides, output_shape, data_format=None)
-```
-
-
-在不共享权值的情况下，运用 2D 卷积。
-
-__参数__
-
-- __inputs__: 如果 `data_format='channels_first'`，
-则为尺寸为 (batch_size, filters, new_rows, new_cols) 的 4D 张量。
-如果 `data_format='channels_last'`，
-则为尺寸为 (batch_size, new_rows, new_cols, filters) 的 4D 张量。
-- __kernel__: 卷积的非共享权重,
-尺寸为 (output_items, feature_dim, filters)
-- __kernel_size__: 2 个整数的元组，
-指定 2D 卷积窗口的宽度和高度。
-- __strides__: 2 个整数的元组，
-指定 2D 卷积沿宽度和高度方向的步长。
-- __output_shape__: 元组 (output_row, output_col) 。
-- __data_format__: 数据格式，channels_first 或 channels_last。
-
-__返回__
-
-一个 4D 张量。
-
-- 如果 `data_format='channels_first'`，尺寸为 (batch_size, filters, new_rows, new_cols)。
-- 如果 `data_format='channels_last'`，尺寸为 (batch_size, new_rows, new_cols, filters)
-
-
-__异常__
-
-- __ValueError__: 如果 `data_format` 既不是 `channels_last` 也不是 `channels_first`。
-
-----
-
-### backend
-
-
-```python
-backend.backend()
-```
-
-公开可用的方法，以确定当前后端。
-
-__返回__
-
-字符串，Keras 目前正在使用的后端名。
-
-__例子__
-
-```python
->>> keras.backend.backend()
-'tensorflow'
-```

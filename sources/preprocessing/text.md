@@ -1,12 +1,12 @@
 
 ### Text Preprocessing
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/preprocessing/text.py#L138)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/preprocessing/text.py#L139)</span>
 ### Tokenizer
 
 ```python
 keras.preprocessing.text.Tokenizer(num_words=None, 
-                                   filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	', 
+                                   filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', 
                                    lower=True, 
                                    split=' ', 
                                    char_level=False, 
@@ -18,11 +18,11 @@ keras.preprocessing.text.Tokenizer(num_words=None,
 
 该类允许使用两种方法向量化一个文本语料库：
 将每个文本转化为一个整数序列（每个整数都是词典中标记的索引）；
-或者将其转化为一个向量，其中每个标记的系数可以是二进制值、词频、TF-IDF权重等。
+或者将其转化为一个向量，其中每个标记的系数可以是二进制值、词频、TF-IDF 权重等。
 
 __参数__
 
-- __num_words__: 需要保留的最大词数，基于词频。只有最常出现的 `num_words` 词会被保留。
+- __num_words__: 需要保留的最大词数，基于词频。只有最常出现的 `num_words-1` 词会被保留。
 - __filters__: 一个字符串，其中每个元素是一个将从文本中过滤掉的字符。默认值是所有标点符号，加上制表符和换行符，减去 `'` 字符。
 - __lower__: 布尔值。是否将文本转换为小写。
 - __split__: 字符串。按该字符串切割文本。
@@ -41,9 +41,11 @@ __参数__
 
 
 ```python
-keras.preprocessing.text.hashing_trick(text, n,
+keras.preprocessing.text.hashing_trick(text, 
+                                       n, 
                                        hash_function=None, 
-                                       filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	', lower=True, 
+                                       filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', 
+                                       lower=True, 
                                        split=' ')
 ```
 
@@ -55,7 +57,7 @@ __参数__
 - __text__: 输入文本（字符串）。
 - __n__: 散列空间维度。
 - __hash_function__: 默认为 python 散列函数，可以是 'md5' 或任意接受输入字符串并返回整数的函数。注意 'hash' 不是稳定的散列函数，所以它在不同的运行中不一致，而 'md5' 是一个稳定的散列函数。
-- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：``!"#$%&()*+,-./:;<=>?@[\]^_`{|}~\t\n``，包含基本标点符号，制表符和换行符。
 - __lower__: 布尔值。是否将文本转换为小写。
 - __split__: 字符串。按该字符串切割文本。
 
@@ -75,8 +77,9 @@ __返回__
 
 
 ```python
-keras.preprocessing.text.one_hot(text, n, 
-                                 filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', 
+keras.preprocessing.text.one_hot(text, 
+                                 n, 
+                                 filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', 
                                  lower=True, 
                                  split=' ')
 ```
@@ -90,7 +93,7 @@ __参数__
 
 - __text__: 输入文本（字符串）。
 - __n__: 整数。词汇表尺寸。
-- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：``!"#$%&()*+,-./:;<=>?@[\]^_`{|}~\t\n``，包含基本标点符号，制表符和换行符。
 - __lower__: 布尔值。是否将文本转换为小写。
 - __split__: 字符串。按该字符串切割文本。
 
@@ -107,7 +110,7 @@ __返回__
 
 ```python
 keras.preprocessing.text.text_to_word_sequence(text, 
-                                               filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~	', 
+                                               filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', 
                                                lower=True, 
                                                split=' ')
 ```
@@ -117,7 +120,7 @@ keras.preprocessing.text.text_to_word_sequence(text,
 __参数__
 
 - __text__: 输入文本（字符串）。
-- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：`!"#$%&()*+,-./:;<=>?@[\]^_{|}~`，包含基本标点符号，制表符和换行符。
+- __filters__: 要过滤的字符列表（或连接），如标点符号。默认：``!"#$%&()*+,-./:;<=>?@[\]^_`{|}~\t\n``，包含基本标点符号，制表符和换行符。
 - __lower__: 布尔值。是否将文本转换为小写。
 - __split__: 字符串。按该字符串切割文本。
 

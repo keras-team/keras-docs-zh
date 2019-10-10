@@ -10,7 +10,7 @@ keras.layers.Embedding(input_dim, output_dim, embeddings_initializer='uniform', 
 
 该层只能用作模型中的第一层。
 
-__例子__
+__示例__
 
 
 ```python
@@ -36,10 +36,12 @@ __参数__
 (详见 [initializers](../initializers.md))。
 - __embeddings_regularizer__: `embeddings` matrix 的正则化方法
 (详见 [regularizer](../regularizers.md))。
+- __activity_regularizer__: 应用到层输出的正则化函数 (它的 "activation")。
+    (详见 [regularizer](../regularizers.md))。
 - __embeddings_constraint__: `embeddings` matrix 的约束函数
 (详见 [constraints](../constraints.md))。
 - __mask_zero__: 是否把 0 看作为一个应该被遮蔽的特殊的 "padding" 值。
-这对于可变长的 [循环神经网络层](recurrent.md) 十分有用。
+这对于可变长的[循环神经网络层](recurrent.md) 十分有用。
 如果设定为 `True`，那么接下来的所有层都必须支持 masking，否则就会抛出异常。
 如果 mask_zero 为 `True`，作为结果，索引 0 就不能被用于词汇表中
 （input_dim 应该与 vocabulary + 1 大小相同）。

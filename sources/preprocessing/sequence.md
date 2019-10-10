@@ -26,7 +26,7 @@ __返回__
 
 一个 [Sequence](https://keras.io/zh/utils/#sequence) 实例。
 
-__例子__
+__示例__
 
 ```python
 from keras.preprocessing.sequence import TimeseriesGenerator

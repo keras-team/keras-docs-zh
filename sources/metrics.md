@@ -26,7 +26,7 @@ __参数__
   - __y_true__: 真实标签，Theano/Tensorflow 张量。
   - __y_pred__: 预测值。和 y_true 相同尺寸的 Theano/TensorFlow 张量。
 
-__返回值__
+__返回__
   
   返回一个表示全部数据点平均值的张量。
 
@@ -35,11 +35,19 @@ __返回值__
 ## 可使用的评价函数
 
 
+### accuracy
+
+
+```python
+keras.metrics.accuracy(y_true, y_pred)
+```
+
+
 ### binary_accuracy
 
 
 ```python
-binary_accuracy(y_true, y_pred)
+keras.metrics.binary_accuracy(y_true, y_pred, threshold=0.5)
 ```
 
 ----
@@ -48,7 +56,7 @@ binary_accuracy(y_true, y_pred)
 
 
 ```python
-categorical_accuracy(y_true, y_pred)
+keras.metrics.categorical_accuracy(y_true, y_pred)
 ```
 
 ----
@@ -57,7 +65,7 @@ categorical_accuracy(y_true, y_pred)
 
 
 ```python
-sparse_categorical_accuracy(y_true, y_pred)
+keras.metrics.sparse_categorical_accuracy(y_true, y_pred)
 ```
 
 ----
@@ -66,7 +74,7 @@ sparse_categorical_accuracy(y_true, y_pred)
 
 
 ```python
-top_k_categorical_accuracy(y_true, y_pred, k=5)
+keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=5)
 ```
 
 ----
@@ -75,9 +83,43 @@ top_k_categorical_accuracy(y_true, y_pred, k=5)
 
 
 ```python
-sparse_top_k_categorical_accuracy(y_true, y_pred, k=5)
+keras.metrics.sparse_top_k_categorical_accuracy(y_true, y_pred, k=5)
 ```
 
+
+----
+
+### cosine_proximity
+
+
+```python
+keras.metrics.cosine_proximity(y_true, y_pred, axis=-1)
+```
+
+----
+
+### clone_metric
+
+
+```python
+keras.metrics.clone_metric(metric)
+```
+
+若有状态，返回评估指标的克隆，否则返回其本身。
+
+
+----
+
+### clone_metrics
+
+
+```python
+keras.metrics.clone_metrics(metrics)
+```
+
+克隆给定的评估指标序列/字典。
+
+除以上评估指标，你还可以使用在损失函数页描述的损失函数作为评估指标。
 
 ----
 

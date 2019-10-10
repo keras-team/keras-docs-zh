@@ -14,7 +14,7 @@ from keras.constraints import max_norm
 model.add(Dense(64, kernel_constraint=max_norm(2.)))
 ```
 
-## 可用的约束
+## 预定义的约束
 
 
 <span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L22)</span>
@@ -30,7 +30,7 @@ MaxNorm 最大范数权值约束。
 
 __参数__
 
-- __m__: 输入权值的最大范数。
+- __max_value__: 输入权值的最大范数。
 - __axis__: 整数，需要计算权值范数的轴。
     例如，在 `Dense` 层中权值矩阵的尺寸为 `(input_dim, output_dim)`，
     设置 `axis` 为 `0` 以约束每个长度为 `(input_dim,)` 的权值向量。
@@ -45,7 +45,7 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L62)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L61)</span>
 ### NonNeg
 
 ```python
@@ -56,7 +56,7 @@ keras.constraints.NonNeg()
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L71)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L69)</span>
 ### UnitNorm
 
 ```python
@@ -76,7 +76,7 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L100)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/constraints.py#L98)</span>
 ### MinMaxNorm
 
 ```python

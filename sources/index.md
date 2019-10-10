@@ -6,20 +6,33 @@
 
 ## 你恰好发现了 Keras。
 
-Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow), [CNTK](https://github.com/Microsoft/cntk), 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
+Keras 是一个用 Python 编写的高级神经网络 API，它能够以 [TensorFlow](https://github.com/tensorflow/tensorflow), [CNTK](https://github.com/Microsoft/cntk) 或者 [Theano](https://github.com/Theano/Theano) 作为后端运行。Keras 的开发重点是支持快速的实验。*能够以最小的时延把你的想法转换为实验结果，是做好研究的关键。*
 
-如果你在以下情况下需要深度学习库，请使用 Keras：
+如果你在以下情况下需要深度学习库，请使用 Keras:
 
 - 允许简单而快速的原型设计（由于用户友好，高度模块化，可扩展性）。
 - 同时支持卷积神经网络和循环神经网络，以及两者的组合。
 - 在 CPU 和 GPU 上无缝运行。
 
-查看文档，请访问 [Keras.io](https://keras-zh.readthedocs.io/)。
+查看文档，请访问 [Keras.io](https://keras.io/zh/)。备份网址：[Keras-zh](https://keras-zh.readthedocs.io/)。
 
 Keras 兼容的 Python 版本: __Python 2.7-3.6__。
 
 
 ------------------
+
+## 多后端 Keras 和 tf.keras:
+
+**目前，我们推荐使用 TensorFlow 后端的 Keras 用户切换至 TensorFlow 2.0 的 `tf.keras`。**
+`tf.keras` 具有更好的维护，并且更好地集成了 TensorFlow 功能（eager执行，分布式支持及其他）。
+
+Keras 2.2.5 是最后一个实现 2.2.* API 的 Keras 版本。它是最后一个仅支持 TensorFlow 1（以及 Theano 和 CNTK）的版本。
+
+Keras 的当前版本是 2.3.0，它对 API 做了重大的调整，并且添加了 TensorFlow 2.0 的支持。2.3.0 将会是最后一个多后端 Keras 主版本。多后端 Keras 已被 `tf.keras` 取代。
+
+多后端 Keras 中存在的错误修复仅会持续到 2020 年 4 月（作为次要版本的一部分）。
+
+关于 Keras 未来的更多信息，详见 [the Keras meeting notes](http://bit.ly/keras-meeting-notes)。
 
 
 ## 指导原则
@@ -104,7 +117,7 @@ classes = model.predict(x_test, batch_size=128)
 - [开始使用 Sequential 模型](/getting-started/sequential-model-guide)
 - [开始使用函数式 API](/getting-started/functional-api-guide)
 
-在代码仓库的 [examples 目录](https://github.com/keras-team/keras/tree/master/examples)中，你会找到更多高级模型：基于记忆网络的问答系统、基于栈式 LSTM 的文本生成等等。
+在代码仓库的 [examples](https://github.com/keras-team/keras/tree/master/examples) 目录中，你会找到更多高级模型：基于记忆网络的问答系统、基于栈式 LSTM 的文本生成等等。
 
 
 ------------------
@@ -112,7 +125,7 @@ classes = model.predict(x_test, batch_size=128)
 
 ## 安装指引
 
-在安装 Keras 之前，请安装以下后端引擎之一：TensorFlow，Theano，或者 CNTK。我们推荐 TensorFlow 后端。
+在安装 Keras 之前，请安装以下后端引擎之一: TensorFlow, Theano 或者 CNTK。我们推荐 TensorFlow 后端。
 
 - [TensorFlow 安装指引](https://www.tensorflow.org/install/)。
 - [Theano 安装指引](http://deeplearning.net/software/theano/install.html#install)。
@@ -122,11 +135,14 @@ classes = model.predict(x_test, batch_size=128)
 
 - [cuDNN](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/) (如果你计划在 GPU 上运行 Keras，建议安装)。
 - HDF5 和 [h5py](http://docs.h5py.org/en/latest/build.html) (如果你需要将 Keras 模型保存到磁盘，则需要这些)。
-- [graphviz](https://graphviz.gitlab.io/download/) 和 [pydot](https://github.com/erocarrera/pydot) (用于[可视化工具](https://keras.io/zh/visualization/)绘制模型图)。
+- [graphviz](https://graphviz.gitlab.io/download/) 和 [pydot](https://github.com/erocarrera/pydot) (用于绘制模型图的[可视化工具](https://keras.io/zh/visualization/))。
 
 然后你就可以安装 Keras 本身了。有两种方法安装 Keras：
 
-- **使用 PyPI 安装 Keras (推荐)：**
+- **使用 PyPI 安装 Keras（推荐）：**
+
+注意：这些安装步骤假定你在 Linux 或 Mac 环境中。
+如果你使用的是 Windows，则需要删除 `sudo` 才能运行以下命令。
 
 ```sh
 sudo pip install keras
@@ -168,7 +184,7 @@ sudo python setup.py install
 你可以提出问题并参与开发讨论：
 
 - [Keras Google group](https://groups.google.com/forum/#!forum/keras-users)。
-- [Keras Slack channel](https://kerasteam.slack.com)。 使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
+- [Keras Slack channel](https://kerasteam.slack.com)。使用 [这个链接](https://keras-slack-autojoin.herokuapp.com/) 向该频道请求邀请函。
 - 或者加入 Keras 深度学习交流群，协助文档的翻译工作，群号为 951623081。
 
 你也可以在 [GitHub issues](https://github.com/keras-team/keras/issues) 中发布**漏洞报告和新功能请求**（仅限于此）。注意请先阅读[规范文档](https://github.com/keras-team/keras/blob/master/CONTRIBUTING.md)。

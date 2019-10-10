@@ -1,10 +1,10 @@
 # 开始使用 Keras 函数式 API
 
-Keras 函数式 API 是定义复杂模型（如多输出模型、有向无环图，或具有共享层的模型）的方法。
+Keras 函数式 API 是定义复杂模型（如多输出模型、有向无环图或具有共享层的模型）的方法。
 
 这部分文档假设你已经对 `Sequential` 顺序模型比较熟悉。
 
-让我们先从一些简单的例子开始。
+让我们先从一些简单的示例开始。
 
 -----
 
@@ -24,9 +24,9 @@ from keras.models import Model
 inputs = Input(shape=(784,))
 
 # 层的实例是可调用的，它以张量为参数，并且返回一个张量
-x = Dense(64, activation='relu')(inputs)
-x = Dense(64, activation='relu')(x)
-predictions = Dense(10, activation='softmax')(x)
+output_1 = Dense(64, activation='relu')(inputs)
+output_2 = Dense(64, activation='relu')(output_1)
+predictions = Dense(10, activation='softmax')(output_2)
 
 # 这部分创建了一个包含输入层和三个全连接层的模型
 model = Model(inputs=inputs, outputs=predictions)
@@ -78,12 +78,13 @@ processed_sequences = TimeDistributed(model)(input_sequences)
 
 让我们用函数式 API 来实现它。
 
-主要输入接收新闻标题本身，即一个整数序列（每个整数编码一个词）。
-这些整数在 1 到 10,000 之间（10,000 个词的词汇表），且序列长度为 100 个词。
+主要输入接收新闻标题本身，即一个整数序列（每个整数编码一个词）。这些整数在 1 到 10,000 之间（10,000 个词的词汇表），且序列长度为 100 个词。
 
 ```python
 from keras.layers import Input, Embedding, LSTM, Dense
 from keras.models import Model
+import numpy as np
+np.random.seed(0)  # 设置随机种子，用于复现结果
 
 # 标题输入：接收一个含有 100 个整数的序列，每个整数在 1 到 10000 之间。
 # 注意我们可以通过传递一个 "name" 参数来命名任何层。
@@ -136,7 +137,11 @@ model.compile(optimizer='rmsprop', loss='binary_crossentropy',
 我们可以通过传递输入数组和目标数组的列表来训练模型：
 
 ```python
-model.fit([headline_data, additional_data], [labels, labels],
+headline_data = np.round(np.abs(np.random.rand(12, 100) * 100))
+additional_data = np.random.randn(12, 5)
+headline_labels = np.random.randn(12, 1)
+additional_labels = np.random.randn(12, 1)
+model.fit([headline_data, additional_data], [headline_labels, additional_labels],
           epochs=50, batch_size=32)
 ```
 
@@ -149,8 +154,18 @@ model.compile(optimizer='rmsprop',
 
 # 然后使用以下方式训练：
 model.fit({'main_input': headline_data, 'aux_input': additional_data},
-          {'main_output': labels, 'aux_output': labels},
+          {'main_output': headline_labels, 'aux_output': additional_labels},
           epochs=50, batch_size=32)
+```
+
+若使用此模型做推理，可以
+```python
+model.predict({'main_input': headline_data, 'aux_input': additional_data})
+```
+
+或者
+```python
+pred = model.predict([headline_data, additional_data])
 ```
 
 -----
@@ -250,7 +265,7 @@ assert lstm.get_output_at(1) == encoded_b
 
 够简单，对吧？
 
-`input_shape` 和 `output_shape` 这两个属性也是如此：只要该层只有一个节点，或者只要所有节点具有相同的输入/输出尺寸，那么「层输出/输入尺寸」的概念就被很好地定义，并且将由 `layer.output_shape` / `layer.input_shape` 返回。但是比如说，如果将一个 `Conv2D` 层先应用于尺寸为 `(32，32，3)` 的输入，再应用于尺寸为 `(64, 64, 3)` 的输入，那么这个层就会有多个输入/输出尺寸，你将不得不通过指定它们所属节点的索引来获取它们：
+`input_shape` 和 `output_shape` 这两个属性也是如此：只要该层只有一个节点，或者只要所有节点具有相同的输入/输出尺寸，那么「层输出/输入尺寸」的概念就被很好地定义，且将由 `layer.output_shape` / `layer.input_shape` 返回。但是比如说，如果将一个 `Conv2D` 层先应用于尺寸为 `(32，32，3)` 的输入，再应用于尺寸为 `(64, 64, 3)` 的输入，那么这个层就会有多个输入/输出尺寸，你将不得不通过指定它们所属节点的索引来获取它们：
 
 ```python
 a = Input(shape=(32, 32, 3))

@@ -1,5 +1,4 @@
-
-#Trains a ResNet on the CIFAR10 dataset.
+# 在 CIFAR10 数据集上训练 ResNet。
 
 ResNet v1:
 [Deep Residual Learning for Image Recognition
@@ -49,16 +48,16 @@ from keras.datasets import cifar10
 import numpy as np
 import os
 
-# Training parameters
-batch_size = 32  # orig paper trained all networks with batch_size=128
+# 训练参数
+batch_size = 32  # 原论文按照 batch_size=128 训练所有的网络
 epochs = 200
 data_augmentation = True
 num_classes = 10
 
-# Subtracting pixel mean improves accuracy
+# 减去像素均值可提高准确度
 subtract_pixel_mean = True
 
-# Model parameter
+# 模型参数
 # ----------------------------------------------------------------------------
 #           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
 # Model     |  n   | ResNet v1 | ResNet v1 | ResNet v2 | ResNet v2 | GTX1080Ti
@@ -74,30 +73,30 @@ subtract_pixel_mean = True
 # ---------------------------------------------------------------------------
 n = 3
 
-# Model version
+# 模型版本
 # Orig paper: version = 1 (ResNet v1), Improved ResNet: version = 2 (ResNet v2)
 version = 1
 
-# Computed depth from supplied model parameter n
+# 从提供的模型参数 n 计算的深度
 if version == 1:
     depth = n * 6 + 2
 elif version == 2:
     depth = n * 9 + 2
 
-# Model name, depth and version
+# 模型名称、深度和版本
 model_type = 'ResNet%dv%d' % (depth, version)
 
-# Load the CIFAR10 data.
+# 载入 CIFAR10 数据。
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-# Input image dimensions.
+# 输入图像维度。
 input_shape = x_train.shape[1:]
 
-# Normalize data.
+# 数据标准化。
 x_train = x_train.astype('float32') / 255
 x_test = x_test.astype('float32') / 255
 
-# If subtract pixel mean is enabled
+# 如果使用减去像素均值
 if subtract_pixel_mean:
     x_train_mean = np.mean(x_train, axis=0)
     x_train -= x_train_mean
@@ -108,22 +107,22 @@ print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 print('y_train shape:', y_train.shape)
 
-# Convert class vectors to binary class matrices.
+# 将类向量转换为二进制类矩阵。
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 def lr_schedule(epoch):
-    """Learning Rate Schedule
+    """学习率调度
 
-    Learning rate is scheduled to be reduced after 80, 120, 160, 180 epochs.
-    Called automatically every epoch as part of callbacks during training.
+    学习率将在 80, 120, 160, 180 轮后依次下降。
+    他作为训练期间回调的一部分，在每个时期自动调用。
 
-    # Arguments
-        epoch (int): The number of epochs
+    # 参数
+        epoch (int): 轮次
 
-    # Returns
-        lr (float32): learning rate
+    # 返回
+        lr (float32): 学习率
     """
     lr = 1e-3
     if epoch > 180:
@@ -145,20 +144,20 @@ def resnet_layer(inputs,
                  activation='relu',
                  batch_normalization=True,
                  conv_first=True):
-    """2D Convolution-Batch Normalization-Activation stack builder
+    """2D 卷积批量标准化 - 激活栈构建器
 
-    # Arguments
-        inputs (tensor): input tensor from input image or previous layer
-        num_filters (int): Conv2D number of filters
-        kernel_size (int): Conv2D square kernel dimensions
-        strides (int): Conv2D square stride dimensions
-        activation (string): activation name
-        batch_normalization (bool): whether to include batch normalization
-        conv_first (bool): conv-bn-activation (True) or
+    # 参数
+        inputs (tensor): 从输入图像或前一层来的输入张量
+        num_filters (int): Conv2D 过滤器数量
+        kernel_size (int): Conv2D 方形核维度
+        strides (int): Conv2D 方形步幅维度
+        activation (string): 激活函数名
+        batch_normalization (bool): 是否包含批标准化
+        conv_first (bool): conv-bn-activation (True) 或
             bn-activation-conv (False)
 
-    # Returns
-        x (tensor): tensor as input to the next layer
+    # 返回
+        x (tensor): 作为下一层输入的张量
     """
     conv = Conv2D(num_filters,
                   kernel_size=kernel_size,
@@ -184,46 +183,44 @@ def resnet_layer(inputs,
 
 
 def resnet_v1(input_shape, depth, num_classes=10):
-    """ResNet Version 1 Model builder [a]
+    """ResNet 版本 1 模型构建器 [a]
 
-    Stacks of 2 x (3 x 3) Conv2D-BN-ReLU
-    Last ReLU is after the shortcut connection.
-    At the beginning of each stage, the feature map size is halved (downsampled)
-    by a convolutional layer with strides=2, while the number of filters is
-    doubled. Within each stage, the layers have the same number filters and the
-    same number of filters.
-    Features maps sizes:
+    2 x (3 x 3) Conv2D-BN-ReLU 的堆栈
+    最后一个 ReLU 在快捷连接之后。
+    在每个阶段的开始，特征图大小由具有 strides=2 的卷积层减半（下采样），
+    而滤波器的数量加倍。在每个阶段中，这些层具有相同数量的过滤器和相同的特征图尺寸。
+    特征图尺寸:
     stage 0: 32x32, 16
     stage 1: 16x16, 32
     stage 2:  8x8,  64
-    The Number of parameters is approx the same as Table 6 of [a]:
+    参数数量与 [a] 中表 6 接近:
     ResNet20 0.27M
     ResNet32 0.46M
     ResNet44 0.66M
     ResNet56 0.85M
     ResNet110 1.7M
 
-    # Arguments
-        input_shape (tensor): shape of input image tensor
-        depth (int): number of core convolutional layers
-        num_classes (int): number of classes (CIFAR10 has 10)
+    # 参数
+        input_shape (tensor): 输入图像张量的尺寸
+        depth (int): 核心卷积层的数量
+        num_classes (int): 类别数 (CIFAR10 为 10)
 
-    # Returns
-        model (Model): Keras model instance
+    # 返回
+        model (Model): Keras 模型实例
     """
     if (depth - 2) % 6 != 0:
         raise ValueError('depth should be 6n+2 (eg 20, 32, 44 in [a])')
-    # Start model definition.
+    # 开始模型定义
     num_filters = 16
     num_res_blocks = int((depth - 2) / 6)
 
     inputs = Input(shape=input_shape)
     x = resnet_layer(inputs=inputs)
-    # Instantiate the stack of residual units
+    # 实例化残差单元的堆栈
     for stack in range(3):
         for res_block in range(num_res_blocks):
             strides = 1
-            if stack > 0 and res_block == 0:  # first layer but not first stack
+            if stack > 0 and res_block == 0:  # 第一层但不是第一个栈
                 strides = 2  # downsample
             y = resnet_layer(inputs=x,
                              num_filters=num_filters,
@@ -232,8 +229,7 @@ def resnet_v1(input_shape, depth, num_classes=10):
                              num_filters=num_filters,
                              activation=None)
             if stack > 0 and res_block == 0:  # first layer but not first stack
-                # linear projection residual shortcut connection to match
-                # changed dims
+                # 线性投影残差快捷键连接，以匹配更改的 dims
                 x = resnet_layer(inputs=x,
                                  num_filters=num_filters,
                                  kernel_size=1,
@@ -244,57 +240,54 @@ def resnet_v1(input_shape, depth, num_classes=10):
             x = Activation('relu')(x)
         num_filters *= 2
 
-    # Add classifier on top.
-    # v1 does not use BN after last shortcut connection-ReLU
+    # 在顶层加分类器。
+    # v1 不在最后一个快捷连接 ReLU 后使用 BN
     x = AveragePooling2D(pool_size=8)(x)
     y = Flatten()(x)
     outputs = Dense(num_classes,
                     activation='softmax',
                     kernel_initializer='he_normal')(y)
 
-    # Instantiate model.
+    # 实例化模型。
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
 
 def resnet_v2(input_shape, depth, num_classes=10):
-    """ResNet Version 2 Model builder [b]
+    """ResNet 版本 2 模型构建器 [b]
 
-    Stacks of (1 x 1)-(3 x 3)-(1 x 1) BN-ReLU-Conv2D or also known as
-    bottleneck layer
-    First shortcut connection per layer is 1 x 1 Conv2D.
-    Second and onwards shortcut connection is identity.
-    At the beginning of each stage, the feature map size is halved (downsampled)
-    by a convolutional layer with strides=2, while the number of filter maps is
-    doubled. Within each stage, the layers have the same number filters and the
-    same filter map sizes.
-    Features maps sizes:
+    (1 x 1)-(3 x 3)-(1 x 1) BN-ReLU-Conv2D 的堆栈，也被称为瓶颈层。
+    每一层的第一个快捷连接是一个 1 x 1 Conv2D。
+    第二个及以后的快捷连接是 identity。
+    在每个阶段的开始，特征图大小由具有 strides=2 的卷积层减半（下采样），
+    而滤波器的数量加倍。在每个阶段中，这些层具有相同数量的过滤器和相同的特征图尺寸。
+    特征图尺寸:
     conv1  : 32x32,  16
     stage 0: 32x32,  64
     stage 1: 16x16, 128
     stage 2:  8x8,  256
 
-    # Arguments
-        input_shape (tensor): shape of input image tensor
-        depth (int): number of core convolutional layers
-        num_classes (int): number of classes (CIFAR10 has 10)
+    # 参数
+        input_shape (tensor): 输入图像张量的尺寸
+        depth (int): 核心卷积层的数量
+        num_classes (int): 类别数 (CIFAR10 为 10)
 
-    # Returns
-        model (Model): Keras model instance
+    # 返回
+        model (Model): Keras 模型实例
     """
     if (depth - 2) % 9 != 0:
         raise ValueError('depth should be 9n+2 (eg 56 or 110 in [b])')
-    # Start model definition.
+    # 开始模型定义。
     num_filters_in = 16
     num_res_blocks = int((depth - 2) / 9)
 
     inputs = Input(shape=input_shape)
-    # v2 performs Conv2D with BN-ReLU on input before splitting into 2 paths
+    # v2 在将输入分离为两个路径前执行带 BN-ReLU 的 Conv2D 操作。
     x = resnet_layer(inputs=inputs,
                      num_filters=num_filters_in,
                      conv_first=True)
 
-    # Instantiate the stack of residual units
+    # 实例化残差单元的栈
     for stage in range(3):
         for res_block in range(num_res_blocks):
             activation = 'relu'
@@ -310,7 +303,7 @@ def resnet_v2(input_shape, depth, num_classes=10):
                 if res_block == 0:  # first layer but not first stage
                     strides = 2    # downsample
 
-            # bottleneck residual unit
+            # 瓶颈残差单元
             y = resnet_layer(inputs=x,
                              num_filters=num_filters_in,
                              kernel_size=1,
@@ -326,8 +319,7 @@ def resnet_v2(input_shape, depth, num_classes=10):
                              kernel_size=1,
                              conv_first=False)
             if res_block == 0:
-                # linear projection residual shortcut connection to match
-                # changed dims
+                # 线性投影残差快捷键连接，以匹配更改的 dims
                 x = resnet_layer(inputs=x,
                                  num_filters=num_filters_out,
                                  kernel_size=1,
@@ -338,7 +330,7 @@ def resnet_v2(input_shape, depth, num_classes=10):
 
         num_filters_in = num_filters_out
 
-    # Add classifier on top.
+    # 在顶层添加分类器
     # v2 has BN-ReLU before Pooling
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
@@ -348,7 +340,7 @@ def resnet_v2(input_shape, depth, num_classes=10):
                     activation='softmax',
                     kernel_initializer='he_normal')(y)
 
-    # Instantiate model.
+    # 实例化模型。
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
@@ -364,14 +356,14 @@ model.compile(loss='categorical_crossentropy',
 model.summary()
 print(model_type)
 
-# Prepare model model saving directory.
+# 准备模型保存路径。
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 model_name = 'cifar10_%s_model.{epoch:03d}.h5' % model_type
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
 filepath = os.path.join(save_dir, model_name)
 
-# Prepare callbacks for model saving and for learning rate adjustment.
+# 准备保存模型和学习速率调整的回调。
 checkpoint = ModelCheckpoint(filepath=filepath,
                              monitor='val_acc',
                              verbose=1,
@@ -386,7 +378,7 @@ lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
 
 callbacks = [checkpoint, lr_reducer, lr_scheduler]
 
-# Run training, with or without data augmentation.
+# 运行训练，是否数据增强可选。
 if not data_augmentation:
     print('Not using data augmentation.')
     model.fit(x_train, y_train,
@@ -397,60 +389,60 @@ if not data_augmentation:
               callbacks=callbacks)
 else:
     print('Using real-time data augmentation.')
-    # This will do preprocessing and realtime data augmentation:
+    # 这将做预处理和实时数据增强。
     datagen = ImageDataGenerator(
-        # set input mean to 0 over the dataset
+        # 在整个数据集上将输入均值置为 0
         featurewise_center=False,
-        # set each sample mean to 0
+        # 将每个样本均值置为 0
         samplewise_center=False,
-        # divide inputs by std of dataset
+        # 将输入除以整个数据集的 std
         featurewise_std_normalization=False,
-        # divide each input by its std
+        # 将每个输入除以其自身 std
         samplewise_std_normalization=False,
-        # apply ZCA whitening
+        # 应用 ZCA 白化
         zca_whitening=False,
-        # epsilon for ZCA whitening
+        # ZCA 白化的 epsilon 值
         zca_epsilon=1e-06,
-        # randomly rotate images in the range (deg 0 to 180)
+        # 随机图像旋转角度范围 (deg 0 to 180)
         rotation_range=0,
-        # randomly shift images horizontally
+        # 随机水平平移图像
         width_shift_range=0.1,
-        # randomly shift images vertically
+        # 随机垂直平移图像
         height_shift_range=0.1,
-        # set range for random shear
+        # 设置随机裁剪范围
         shear_range=0.,
-        # set range for random zoom
+        # 设置随机缩放范围
         zoom_range=0.,
-        # set range for random channel shifts
+        # 设置随机通道切换范围
         channel_shift_range=0.,
-        # set mode for filling points outside the input boundaries
+        # 设置输入边界之外的点的数据填充模式
         fill_mode='nearest',
-        # value used for fill_mode = "constant"
+        # 在 fill_mode = "constant" 时使用的值
         cval=0.,
-        # randomly flip images
+        # 随机翻转图像
         horizontal_flip=True,
-        # randomly flip images
+        # 随机翻转图像
         vertical_flip=False,
-        # set rescaling factor (applied before any other transformation)
+        # 设置重缩放因子 (应用在其他任何变换之前)
         rescale=None,
-        # set function that will be applied on each input
+        # 设置应用在每一个输入的预处理函数
         preprocessing_function=None,
-        # image data format, either "channels_first" or "channels_last"
+        # 图像数据格式 "channels_first" 或 "channels_last" 之一
         data_format=None,
-        # fraction of images reserved for validation (strictly between 0 and 1)
+        # 保留用于验证的图像的比例 (严格控制在 0 和 1 之间)
         validation_split=0.0)
 
-    # Compute quantities required for featurewise normalization
-    # (std, mean, and principal components if ZCA whitening is applied).
+    # 计算大量的特征标准化操作
+    # (如果应用 ZCA 白化，则计算 std, mean, 和 principal components)。
     datagen.fit(x_train)
 
-    # Fit the model on the batches generated by datagen.flow().
+    # 在由 datagen.flow() 生成的批次上拟合模型。
     model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                         validation_data=(x_test, y_test),
                         epochs=epochs, verbose=1, workers=4,
                         callbacks=callbacks)
 
-# Score trained model.
+# 评估训练模型
 scores = model.evaluate(x_test, y_test, verbose=1)
 print('Test loss:', scores[0])
 print('Test accuracy:', scores[1])

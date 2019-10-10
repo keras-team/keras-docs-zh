@@ -11,7 +11,7 @@ Keras 的应用模块（keras.applications）提供了带有预训练权值的�
 - [Xception](#xception)
 - [VGG16](#vgg16)
 - [VGG19](#vgg19)
-- [ResNet, ResNetV2, ResNeXt](#resnet)
+- [ResNet, ResNetV2](#resnet)
 - [InceptionV3](#inceptionv3)
 - [InceptionResNetV2](#inceptionresnetv2)
 - [MobileNet](#mobilenet)
@@ -20,7 +20,7 @@ Keras 的应用模块（keras.applications）提供了带有预训练权值的�
 - [NASNet](#nasnet)
 
 
-所有的这些架构都兼容所有的后端 (TensorFlow, Theano 和 CNTK)，并且会在实例化时，根据 Keras 配置文件`〜/.keras/keras.json` 中设置的图像数据格式构建模型。举个例子，如果你设置 `image_data_format=channels_last`，则加载的模型将按照 TensorFlow 的维度顺序来构造，即「高度-宽度-深度」（Height-Width-Depth）的顺序。
+所有的这些架构都兼容所有的后端 (TensorFlow, Theano 和 CNTK)，并且会在实例化时，根据 Keras 配置文件`〜/.keras/keras.json` 中设置的图像数据格式构建模型。举个例子，如果你设置 `image_data_format=channels_last`，则加载的模型将按照 TensorFlow 的维度顺序来构造，即「高度-宽度-深度」(Height-Width-Depth) 的顺序。
 
 注意：
 
@@ -182,8 +182,6 @@ model = InceptionV3(input_tensor=input_tensor, weights='imagenet', include_top=T
 | [ResNet50V2](#resnet) | 98 MB | 0.760 | 0.930 | 25,613,800 | - |
 | [ResNet101V2](#resnet) | 171 MB | 0.772 | 0.938 | 44,675,560 | - |
 | [ResNet152V2](#resnet) | 232 MB | 0.780 | 0.942 | 60,380,648 | - |
-| [ResNeXt50](#resnet) | 96 MB | 0.777 | 0.938 | 25,097,128 | - |
-| [ResNeXt101](#resnet) | 170 MB | 0.787 | 0.943 | 44,315,560 | - |
 | [InceptionV3](#inceptionv3) | 92 MB | 0.779 | 0.937 | 23,851,784 | 159 |
 | [InceptionResNetV2](#inceptionresnetv2) | 215 MB | 0.803 | 0.953 | 55,873,736 | 572 |
 | [MobileNet](#mobilenet) | 16 MB | 0.704 | 0.895 | 4,253,864 | 88 |
@@ -213,31 +211,31 @@ keras.applications.xception.Xception(include_top=True, weights='imagenet', input
 
 在 ImageNet 上，该模型取得了验证集 top1 0.790 和 top5 0.945 的准确率。
 
-注意该模型只支持 `channels_last` 的维度顺序（高度、宽度、通道）。
+该模型可同时构建于 `channels_first` (通道，高度，宽度) 和 `channels_last`（高度，宽度，通道）两种输入维度顺序。
 
 模型默认输入尺寸是 299x299。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效（否则输入形状必须是 `(299, 299, 3)`，因为预训练模型是以这个大小训练的）。它必须拥有 3 个输入通道，且宽高必须不小于 71。例如 `(150, 150, 3)` 是一个合法的输入尺寸。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个 4D 张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个 2D 张量。
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个 2D 张量。
     - `'max'` 代表全局最大池化。
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
-一个 Keras `Model` 对象.
+一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - [Xception: Deep Learning with Depthwise Separable Convolutions](https://arxiv.org/abs/1610.02357)
 
-### License
+__License__
 
 预训练权值由我们自己训练而来，基于 MIT license 发布。
 
@@ -257,27 +255,27 @@ VGG16 模型，权值由 ImageNet 训练而来。
 
 模型默认输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则输入形状必须是 `(244, 244, 3)`（对于 `channels_last` 数据格式），或者 `(3, 244, 244)`（对于 `channels_first` 数据格式）。它必须拥有 3 个输入通道，且宽高必须不小于 32。例如 `(200, 200, 3)` 是一个合法的输入尺寸。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
-    - `'max'` 代表全局最大池化
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化。
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
 一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556)：如果在研究中使用了VGG，请引用该论文。
 
-### License
+__License__
 
 预训练权值由 [VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) 发布的预训练权值移植而来，基于 [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/)。
 
@@ -296,7 +294,7 @@ VGG19 模型，权值由 ImageNet 训练而来。
 
 模型默认输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
@@ -308,15 +306,15 @@ VGG19 模型，权值由 ImageNet 训练而来。
     - `'max'` 代表全局最大池化
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
 一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556)：如果在研究中使用了VGG，请引用该论文。
 
-### License
+__License__
 
 预训练权值由 [VGG at Oxford](http://www.robots.ox.ac.uk/~vgg/research/very_deep/) 发布的预训练权值移植而来，基于 [Creative Commons Attribution License](https://creativecommons.org/licenses/by/4.0/)。
 
@@ -332,45 +330,41 @@ keras.applications.resnet.ResNet152(include_top=True, weights='imagenet', input_
 keras.applications.resnet_v2.ResNet50V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 keras.applications.resnet_v2.ResNet101V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 keras.applications.resnet_v2.ResNet152V2(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-keras.applications.resnext.ResNeXt50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-keras.applications.resnext.ResNeXt101(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
 ```
 
-ResNet, ResNetV2, ResNeXt 模型，权值由 ImageNet 训练而来。
+ResNet, ResNetV2 模型，权值由 ImageNet 训练而来。
 
 该模型可同时构建于 `channels_first` (通道，高度，宽度) 和 `channels_last`（高度，宽度，通道）两种输入维度顺序。
 
 模型默认输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则输入形状必须是 `(244, 244, 3)`（对于 `channels_last` 数据格式），或者 `(3, 244, 244)`（对于 `channels_first` 数据格式）。它必须拥有 3 个输入通道，且宽高必须不小于 32。例如 `(200, 200, 3)` 是一个合法的输入尺寸。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
     - `'max'` 代表全局最大池化
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
 一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - `ResNet`: [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385)
 - `ResNetV2`: [Identity Mappings in Deep Residual Networks](https://arxiv.org/abs/1603.05027)
-- `ResNeXt`: [Aggregated Residual Transformations for Deep Neural Networks](https://arxiv.org/abs/1611.05431)
 
-### License
+__License__
 
 预训练权值由以下提供：
 
 - `ResNet`: [The original repository of Kaiming He](https://github.com/KaimingHe/deep-residual-networks) under the [MIT license](https://github.com/KaimingHe/deep-residual-networks/blob/master/LICENSE).
 - `ResNetV2`: [Facebook](https://github.com/facebook/fb.resnet.torch) under the [BSD license](https://github.com/facebook/fb.resnet.torch/blob/master/LICENSE).
-- `ResNeXt`: [Facebook AI Research](https://github.com/facebookresearch/ResNeXt) under the [BSD license](https://github.com/facebookresearch/ResNeXt/blob/master/LICENSE).
 
 -----
 
@@ -387,27 +381,27 @@ Inception V3 模型，权值由 ImageNet 训练而来。
 
 模型默认输入尺寸是 299x299。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则输入形状必须是 `(299, 299, 3)`（对于 `channels_last` 数据格式），或者 `(3, 299, 299)`（对于 `channels_first` 数据格式）。它必须拥有 3 个输入通道，且宽高必须不小于 139。例如 `(150, 150, 3)` 是一个合法的输入尺寸。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
-    - `'max'` 代表全局最大池化
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化。
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
 一个 Keras `Model` 对象。
 
-### 参考文献		
+__参考文献__		
 
 - [Rethinking the Inception Architecture for Computer Vision](http://arxiv.org/abs/1512.00567)
 
-### License
+__License__
 
 预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
@@ -426,27 +420,27 @@ Inception-ResNet V2 模型，权值由 ImageNet 训练而来。
 
 模型默认输入尺寸是 299x299。
 
-### 参数
+__参数__
 
 - __include_top__: 是否包括顶层的全连接层。
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则输入形状必须是 `(299, 299, 3)`（对于 `channels_last` 数据格式），或者 `(3, 299, 299)`（对于 `channels_first` 数据格式）。它必须拥有 3 个输入通道，且宽高必须不小于 139。例如 `(150, 150, 3)` 是一个合法的输入尺寸。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
     - `'max'` 代表全局最大池化
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
-### 返回值
+__返回__
 
 一个 Keras `Model` 对象。
 
-### 参考文献		
+__参考文献__
 
 - [Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning](https://arxiv.org/abs/1602.07261)
 
-### License
+__License__
 
 预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
@@ -461,11 +455,11 @@ keras.applications.mobilenet.MobileNet(input_shape=None, alpha=1.0, depth_multip
 
 在 ImageNet 上预训练的 MobileNet 模型。
 
-注意，该模型目前只支持 `channels_last` 的维度顺序（高度、宽度、通道）。
+该模型可同时构建于 `channels_first` (通道，高度，宽度) 和 `channels_last`（高度，宽度，通道）两种输入维度顺序。
 
 模型默认输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则输入形状必须是 `(224, 224, 3)`（`channels_last` 格式）或 `(3, 224, 224)`（`channels_first` 格式）。它必须为 3 个输入通道，且宽高必须不小于 32，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
 - __alpha__: 控制网络的宽度：
@@ -478,8 +472,8 @@ keras.applications.mobilenet.MobileNet(input_shape=None, alpha=1.0, depth_multip
 - __weights__: `None` 代表随机初始化， `'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（比如 `layers.Input()` 输出的 tensor）。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
     - `'max'` 代表全局最大池化
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
@@ -487,11 +481,11 @@ keras.applications.mobilenet.MobileNet(input_shape=None, alpha=1.0, depth_multip
 
 一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/pdf/1704.04861.pdf)
 
-### License
+__License__
 
 预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
@@ -512,7 +506,7 @@ keras.applications.densenet.DenseNet201(include_top=True, weights='imagenet', in
 
 模型默认输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __blocks__: 四个 Dense Layers 的 block 数量。
 - __include_top__: 是否包括顶层的全连接层。
@@ -529,7 +523,7 @@ keras.applications.densenet.DenseNet201(include_top=True, weights='imagenet', in
 
 一个 Keras `Model` 对象。
 
-### 参考文献
+__参考文献__
 
 - [Densely Connected Convolutional Networks](https://arxiv.org/abs/1608.06993) (CVPR 2017 Best Paper Award)
 
@@ -551,7 +545,7 @@ keras.applications.nasnet.NASNetMobile(input_shape=None, include_top=True, weigh
 
 NASNetLarge 模型默认的输入尺寸是 331x331，NASNetMobile 模型默认的输入尺寸是 224x224。
 
-### 参数
+__参数__
 
 - __input_shape__: 可选，输入尺寸元组，仅当 `include_top=False` 时有效，否则对于 NASNetMobile 模型来说，输入形状必须是 `(224, 224, 3)`（`channels_last` 格式）或 `(3, 224, 224)`（`channels_first` 格式），对于 NASNetLarge 来说，输入形状必须是 `(331, 331, 3)` （`channels_last` 格式）或 `(3, 331, 331)`（`channels_first` 格式）。它必须为 3 个输入通道，且宽高必须不小于 32，比如 `(200, 200, 3)` 是一个合法的输入尺寸。
 - __include_top__: 是否包括顶层的全连接层。
@@ -567,11 +561,11 @@ NASNetLarge 模型默认的输入尺寸是 331x331，NASNetMobile 模型默认�
 
 一个 Keras `Model` 实例。
 
-### 参考文献
+__参考文献__
 
 - [Learning Transferable Architectures for Scalable Image Recognition](https://arxiv.org/abs/1707.07012)
 
-### License
+__License__
 
 预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE)。
 
@@ -580,27 +574,18 @@ NASNetLarge 模型默认的输入尺寸是 331x331，NASNetMobile 模型默认�
 
 
 ```python
-keras.applications.mobilenet_v2.MobileNetV2(input_shape=None, alpha=1.0, depth_multiplier=1, include_top=True, weights='imagenet', input_tensor=None, pooling=None, classes=1000)
+keras.applications.mobilenet_v2.MobileNetV2(input_shape=None, alpha=1.0, include_top=True, weights='imagenet', input_tensor=None, pooling=None, classes=1000)
 ```
 
 在 ImageNet 上预训练的 MobileNetV2 模型。
 
-请注意，该模型仅支持 `'channels_last'` 数据格式（高度，宽度，通道)。
+该模型可同时构建于 `channels_first` (通道，高度，宽度) 和 `channels_last`（高度，宽度，通道）两种输入维度顺序。
 
 模型默认输出尺寸为 224x224。
 
-### 参数
+__参数__
 
-- __input_shape__: optional shape tuple, to be specified if you would
-    like to use a model with an input img resolution that is not
-    (224, 224, 3).
-    It should have exactly 3 inputs channels (224, 224, 3).
-    You can also omit this option if you would like
-    to infer input_shape from an input_tensor.
-    If you choose to include both input_tensor and input_shape then
-    input_shape will be used if they match, if the shapes
-    do not match then we will throw an error.
-    E.g. `(160, 160, 3)` would be one valid value.
+- __input_shape__: 可选尺寸元组，以确认你是否想使用一个输入图像像素不为 (224, 224, 3) 的模型。输入形状必须是 `(224, 224, 3)`。你也可以忽略这个选项，如果你像从 input_tensor来推断 input_shape。如果你选择同时包含 input_tensor 和 input_shape，那么如果匹配的话会使用 input_shape，如果不匹配会抛出错误。例如，`(160, 160, 3)` 是一个有效的值。
 - __alpha__: 控制网络的宽度。这在 MobileNetV2 论文中被称作宽度乘子。
     - 如果 `alpha` < 1.0，则同比例减少每层的滤波器个数。
     - 如果 `alpha` > 1.0，则同比例增加每层的滤波器个数。
@@ -610,9 +595,9 @@ keras.applications.mobilenet_v2.MobileNetV2(input_shape=None, alpha=1.0, depth_m
 - __weights__: `None` 代表随机初始化，`'imagenet'` 代表加载在 ImageNet 上预训练的权值。
 - __input_tensor__: 可选，Keras tensor 作为模型的输入（即 `layers.Input()` 输出的 tensor）。
 - __pooling__: 可选，当 `include_top` 为 `False` 时，该参数指定了特征提取时的池化方式。
-    - `None` 代表不池化，直接输出最后一层卷积层的输出，该输出是一个四维张量。
-    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积层后面再加一层全局平均池化层，输出是一个二维张量。
-    - `'max'` 代表全局最大池化
+    - `None` 代表不池化，直接输出最后一层卷积块的输出，该输出是一个 4D 张量。
+    - `'avg'` 代表全局平均池化（GlobalAveragePooling2D），相当于在最后一层卷积块后面再加一层全局平均池化层，输出是一个二维张量。
+    - `'max'` 代表全局最大池化。
 - __classes__: 可选，图片分类的类别数，仅当 `include_top` 为 `True` 并且不加载预训练权值时可用。
 
 ### 返回
@@ -621,12 +606,12 @@ keras.applications.mobilenet_v2.MobileNetV2(input_shape=None, alpha=1.0, depth_m
 
 ### 异常
 
-__ValueError__: 如果 `weights` 参数非法，或非法的输入尺寸，或者当 weights='imagenet' 时，非法的 depth_multiplier, alpha, rows。
+__ValueError__: 如果 `weights` 参数非法，或非法的输入尺寸，或者当 weights='imagenet' 时，非法的 alpha, rows。
 
-### 参考文献
+__参考文献__
 
 - [MobileNetV2: Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381)
 
-### License
+__License__
 
 预训练权值基于 [Apache License](https://github.com/tensorflow/models/blob/master/LICENSE).

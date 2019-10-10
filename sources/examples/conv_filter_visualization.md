@@ -1,9 +1,9 @@
 
-#Visualization of the filters of VGG16, via gradient ascent in input space.
+# 可视化 VGG16 的过滤器，通过输入空间梯度提升。
 
-This script can run on CPU in a few minutes.
+该脚本可以在几分钟内在 CPU 上运行完。
 
-Results example: ![Visualization](http://i.imgur.com/4nj4KjN.jpg)
+结果示例: ![Visualization](http://i.imgur.com/4nj4KjN.jpg)
 
 
 ```python
@@ -19,36 +19,36 @@ from keras import backend as K
 
 
 def normalize(x):
-    """utility function to normalize a tensor.
+    """用于标准化张量的实用函数。
 
-    # Arguments
-        x: An input tensor.
+    # 参数
+        x: 输入张量。
 
-    # Returns
-        The normalized input tensor.
+    # 返回
+        标准化的输入张量。
     """
     return x / (K.sqrt(K.mean(K.square(x))) + K.epsilon())
 
 
 def deprocess_image(x):
-    """utility function to convert a float array into a valid uint8 image.
+    """用于将 float 数组转换为有效 uint8 图像的实用函数。
 
-    # Arguments
-        x: A numpy-array representing the generated image.
+    # 参数
+        x: 表示生成图像的 numpy 数组。
 
-    # Returns
-        A processed numpy-array, which could be used in e.g. imshow.
+    # 返回
+        经处理的 numpy 阵列，可用于 imshow 等。
     """
-    # normalize tensor: center on 0., ensure std is 0.25
+    # 标准化张量: center 为 0., 保证 std 为 0.25
     x -= x.mean()
     x /= (x.std() + K.epsilon())
     x *= 0.25
 
-    # clip to [0, 1]
+    # 裁剪为 [0, 1]
     x += 0.5
     x = np.clip(x, 0, 1)
 
-    # convert to RGB array
+    # 转换为 RGB 数组
     x *= 255
     if K.image_data_format() == 'channels_first':
         x = x.transpose((1, 2, 0))
@@ -57,16 +57,16 @@ def deprocess_image(x):
 
 
 def process_image(x, former):
-    """utility function to convert a valid uint8 image back into a float array.
-       Reverses `deprocess_image`.
+    """用于将 float 数组转换为有效 uint8 图像转换回 float 数组的实用函数。
+       `deprocess_image` 反向操作。
 
-    # Arguments
-        x: A numpy-array, which could be used in e.g. imshow.
-        former: The former numpy-array.
-                Need to determine the former mean and variance.
+    # 参数
+        x: numpy 数组，可用于 imshow 等。
+        former: 前身 numpy 数组，
+                需要确定前者的均值和方差。
 
-    # Returns
-        A processed numpy-array representing the generated image.
+    # 返回
+        一个处理后的 numpy 数组，表示一幅生成图像。
     """
     if K.image_data_format() == 'channels_first':
         x = x.transpose((2, 0, 1))
@@ -81,59 +81,57 @@ def visualize_layer(model,
                     upscaling_factor=1.2,
                     output_dim=(412, 412),
                     filter_range=(0, None)):
-    """Visualizes the most relevant filters of one conv-layer in a certain model.
+    """可视化某个模型中一个转换层的最相关过滤器。
 
-    # Arguments
-        model: The model containing layer_name.
-        layer_name: The name of the layer to be visualized.
-                    Has to be a part of model.
-        step: step size for gradient ascent.
-        epochs: Number of iterations for gradient ascent.
-        upscaling_steps: Number of upscaling steps.
-                         Starting image is in this case (80, 80).
-        upscaling_factor: Factor to which to slowly upgrade
-                          the image towards output_dim.
-        output_dim: [img_width, img_height] The output image dimensions.
-        filter_range: Tupel[lower, upper]
-                      Determines the to be computed filter numbers.
-                      If the second value is `None`,
-                      the last filter will be inferred as the upper boundary.
+    # 参数
+        model: 包含 layer_name 的模型。
+        layer_name: 需要可视化的层的名称。
+                    必须是模型的一部分。
+        step: 梯度提升步长。
+        epochs: 梯度提升迭代轮次。
+        upscaling_steps: upscaling 步数。
+                         起始图像为 (80, 80)。
+        upscaling_factor: 将图像缓慢提升到 output_dim 的因子。
+        output_dim: [img_width, img_height] 输出图像维度。
+        filter_range: 元组 [lower, upper]
+                      决定需要计算的过滤器数目。
+                      如果第二个值为 `None`,
+                      最后一个过滤器将被推断为上边界。
     """
 
     def _generate_filter_image(input_img,
                                layer_output,
                                filter_index):
-        """Generates image for one particular filter.
+        """为一个特定的过滤器生成图像。
 
-        # Arguments
-            input_img: The input-image Tensor.
-            layer_output: The output-image Tensor.
-            filter_index: The to be processed filter number.
-                          Assumed to be valid.
+        # 参数
+            input_img: 输入图像张量。
+            layer_output: 输出图像张量。
+            filter_index: 需要处理的过滤器数目。
+                          假设可用。
 
-        #Returns
-            Either None if no image could be generated.
-            or a tuple of the image (array) itself and the last loss.
+        # 返回
+            要么是 None，如果无法生成图像。
+            要么是图像（数组）本身以及最后的 loss 组成的元组。
         """
         s_time = time.time()
 
-        # we build a loss function that maximizes the activation
-        # of the nth filter of the layer considered
+        # 构建一个损失函数，使所考虑的层的第 n 个过滤器的激活最大化
         if K.image_data_format() == 'channels_first':
             loss = K.mean(layer_output[:, filter_index, :, :])
         else:
             loss = K.mean(layer_output[:, :, :, filter_index])
 
-        # we compute the gradient of the input picture wrt this loss
+        # 计算这种损失的输入图像的梯度
         grads = K.gradients(loss, input_img)[0]
 
-        # normalization trick: we normalize the gradient
+        # 标准化技巧：将梯度标准化
         grads = normalize(grads)
 
-        # this function returns the loss and grads given the input picture
+        # 此函数返回给定输入图片的损失和梯度
         iterate = K.function([input_img], [loss, grads])
 
-        # we start from a gray image with some random noise
+        # 从带有一些随机噪音的灰色图像开始
         intermediate_dim = tuple(
             int(x / (upscaling_factor ** upscaling_steps)) for x in output_dim)
         if K.image_data_format() == 'channels_first':
@@ -144,31 +142,30 @@ def visualize_layer(model,
                 (1, intermediate_dim[0], intermediate_dim[1], 3))
         input_img_data = (input_img_data - 0.5) * 20 + 128
 
-        # Slowly upscaling towards the original size prevents
-        # a dominating high-frequency of the to visualized structure
-        # as it would occur if we directly compute the 412d-image.
-        # Behaves as a better starting point for each following dimension
-        # and therefore avoids poor local minima
+        # 缓慢放大原始图像的尺寸可以防止可视化结构的主导高频现象发生
+        # （如果我们直接计算 412d-image 时该现象就会发生。）
+        # 作为每个后续维度的更好起点，因此它避免了较差的局部最小值
         for up in reversed(range(upscaling_steps)):
-            # we run gradient ascent for e.g. 20 steps
+            # 执行 20 次梯度提升
             for _ in range(epochs):
                 loss_value, grads_value = iterate([input_img_data])
                 input_img_data += grads_value * step
 
-                # some filters get stuck to 0, we can skip them
+                # s一些过滤器被卡在了 0，我们可以跳过它们
                 if loss_value <= K.epsilon():
                     return None
 
-            # Calulate upscaled dimension
+            # 计算放大维度
             intermediate_dim = tuple(
                 int(x / (upscaling_factor ** up)) for x in output_dim)
-            # Upscale
+            # 放大
             img = deprocess_image(input_img_data[0])
             img = np.array(pil_image.fromarray(img).resize(intermediate_dim,
                                                            pil_image.BICUBIC))
-            input_img_data = [process_image(img, input_img_data[0])]
+            input_img_data = np.expand_dims(
+                process_image(img, input_img_data[0]), 0)
 
-        # decode the resulting input image
+        # 解码生成的输入图像
         img = deprocess_image(input_img_data[0])
         e_time = time.time()
         print('Costs of filter {:3}: {:5.0f} ( {:4.2f}s )'.format(filter_index,
@@ -177,30 +174,29 @@ def visualize_layer(model,
         return img, loss_value
 
     def _draw_filters(filters, n=None):
-        """Draw the best filters in a nxn grid.
+        """在 nxn 网格中绘制最佳过滤器。
 
-        # Arguments
-            filters: A List of generated images and their corresponding losses
-                     for each processed filter.
-            n: dimension of the grid.
-               If none, the largest possible square will be used
+        # 参数
+            filters: 每个已处理过滤器的生成图像及其相应的损失的列表。
+            n: 网格维度。
+               如果为 None，将使用最大可能的方格
         """
         if n is None:
             n = int(np.floor(np.sqrt(len(filters))))
 
-        # the filters that have the highest loss are assumed to be better-looking.
-        # we will only keep the top n*n filters.
+        # 假设损失最大的过滤器看起来更好看。
+        # 我们只保留顶部 n*n 过滤器。
         filters.sort(key=lambda x: x[1], reverse=True)
         filters = filters[:n * n]
 
-        # build a black picture with enough space for
-        # e.g. our 8 x 8 filters of size 412 x 412, with a 5px margin in between
+        # 构建一个有足够空间的黑色图像
+        # 例如，8 x 8 个过滤器，总尺寸为 412 x 412，每个过滤器 5px 间隔的图像
         MARGIN = 5
         width = n * output_dim[0] + (n - 1) * MARGIN
         height = n * output_dim[1] + (n - 1) * MARGIN
         stitched_filters = np.zeros((width, height, 3), dtype='uint8')
 
-        # fill the picture with our saved filters
+        # 用我们保存的过滤器填充图像
         for i in range(n):
             for j in range(n):
                 img, _ = filters[i * n + j]
@@ -210,20 +206,20 @@ def visualize_layer(model,
                     width_margin: width_margin + output_dim[0],
                     height_margin: height_margin + output_dim[1], :] = img
 
-        # save the result to disk
+        # 将结果保存到磁盘
         save_img('vgg_{0:}_{1:}x{1:}.png'.format(layer_name, n), stitched_filters)
 
-    # this is the placeholder for the input images
+    # 这是输入图像的占位符
     assert len(model.inputs) == 1
     input_img = model.inputs[0]
 
-    # get the symbolic outputs of each "key" layer (we gave them unique names).
+    # 获取每个『关键』图层的符号输出（我们给它们唯一的名称）。
     layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
 
     output_layer = layer_dict[layer_name]
     assert isinstance(output_layer, layers.Conv2D)
 
-    # Compute to be processed filter range
+    # 计算要处理的过滤范围
     filter_lower = filter_range[0]
     filter_upper = (filter_range[1]
                     if filter_range[1] is not None
@@ -233,7 +229,7 @@ def visualize_layer(model,
            and filter_upper > filter_lower)
     print('Compute filters {:} to {:}'.format(filter_lower, filter_upper))
 
-    # iterate through each filter and generate its corresponding image
+    # 迭代每个过滤器并生成其相应的图像
     processed_filters = []
     for f in range(filter_lower, filter_upper):
         img_loss = _generate_filter_image(input_img, output_layer.output, f)
@@ -247,15 +243,15 @@ def visualize_layer(model,
 
 
 if __name__ == '__main__':
-    # the name of the layer we want to visualize
+    # 我们想要可视化的图层的名称
     # (see model definition at keras/applications/vgg16.py)
     LAYER_NAME = 'block5_conv1'
 
-    # build the VGG16 network with ImageNet weights
+    # 构建 ImageNet 权重预训练的 VGG16 网络
     vgg = vgg16.VGG16(weights='imagenet', include_top=False)
     print('Model loaded.')
     vgg.summary()
 
-    # example function call
+    # 调用示例函数
     visualize_layer(vgg, LAYER_NAME)
 ```

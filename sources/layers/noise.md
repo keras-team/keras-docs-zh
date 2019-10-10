@@ -80,6 +80,7 @@ __参数__
 
 - __rate__: float，丢弃概率（与 `Dropout` 相同）。
 这个乘性噪声的标准差为 `sqrt(rate / (1 - rate))`。
+- __noise_shape__: 一个类型为 `int32` 的 1D `Tensor`，表示随机生成 keep/drop 标识的尺寸。
 - __seed__: 用作随机种子的 Python 整数。
 
 __输入尺寸__

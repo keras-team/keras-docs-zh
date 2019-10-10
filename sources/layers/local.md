@@ -10,7 +10,7 @@ keras.layers.LocallyConnected1D(filters, kernel_size, strides=1, padding='valid'
 `LocallyConnected1D` 层与 `Conv1D` 层的工作方式相同，除了权值不共享外，
 也就是说，在输入的每个不同部分应用不同的一组过滤器。
 
-__例子__
+__示例__
 
 ```python
 # 将长度为 3 的非共享权重 1D 卷积应用于
@@ -31,9 +31,10 @@ __参数__
 指明 1D 卷积窗口的长度。
 - __strides__: 一个整数，或者单个整数表示的元组或列表，
 指明卷积的步长。
-指定任何 stride 值 != 1 与指定 `dilation_rate` 值 != 1 两者不兼容。
+指定任何 `stride!=1` 与指定 `dilation_rate!=1` 两者不兼容。
 - __padding__: 当前仅支持 `"valid"` (大小写敏感)。
 `"same"` 可能会在未来支持。
+- __data_format__: 字符串，`channels_first`, `channels_last` 之一。
 - __activation__: 要使用的激活函数
 (详见 [activations](../activations.md))。
 如果你不指定，则不使用激活函数
@@ -65,7 +66,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/local.py#L182)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/local.py#L183)</span>
 ### LocallyConnected2D
 
 ```python
@@ -77,7 +78,7 @@ keras.layers.LocallyConnected2D(filters, kernel_size, strides=(1, 1), padding='v
 `LocallyConnected2D` 层与 `Conv2D` 层的工作方式相同，除了权值不共享外，
 也就是说，在输入的每个不同部分应用不同的一组过滤器。
 
-__例子__
+__示例__
 
 ```python
 # 在 32x32 图像上应用 3x3 非共享权值和64个输出过滤器的卷积
@@ -135,9 +136,9 @@ __参数__
 __输入尺寸__
 
 4D 张量，尺寸为：
-`(samples, channels, rows, cols)`，如果 data_format='channels_first'；
+`(samples, channels, rows, cols)`，如果 `data_format='channels_first'`；
 或者 4D 张量，尺寸为：
-`(samples, rows, cols, channels)`，如果 data_format='channels_last'。
+`(samples, rows, cols, channels)`，如果 `data_format='channels_last'`。
 
 __输出尺寸__
 

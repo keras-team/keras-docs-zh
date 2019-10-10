@@ -1,11 +1,11 @@
 
 # 图像预处理
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/preprocessing/image.py#L232)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/preprocessing/image.py#L238)</span>
 ## ImageDataGenerator 类
 
 ```python
-keras.preprocessing.image.ImageDataGenerator(featurewise_center=False,  
+keras.preprocessing.image.ImageDataGenerator(featurewise_center=False, 
                                              samplewise_center=False, 
                                              featurewise_std_normalization=False, 
                                              samplewise_std_normalization=False, 
@@ -24,9 +24,10 @@ keras.preprocessing.image.ImageDataGenerator(featurewise_center=False,
                                              vertical_flip=False, 
                                              rescale=None, 
                                              preprocessing_function=None, 
-                                             data_format=None, 
+                                             data_format='channels_last', 
                                              validation_split=0.0, 
-                                             dtype=None)
+                                             interpolation_order=1, 
+                                             dtype='float32')
 ```
 
 通过实时数据增强生成张量图像数据批次。数据将不断循环（按批次）。
@@ -50,6 +51,7 @@ __参数__
     - 1-D array-like: 数组中的随机元素。
     - int: 来自间隔 `(-height_shift_range, +height_shift_range)` 之间的整数个像素。
     - `height_shift_range=2` 时，可能值是整数 `[-1, 0, +1]`，与 `height_shift_range=[-1, 0, +1]` 相同；而 `height_shift_range=1.0` 时，可能值是 `[-1.0, +1.0)` 之间的浮点数。
+- __brightness_range__: 两个浮点数的元组或列表。从中选择亮度偏移值的范围。
 - __shear_range__: 浮点数。剪切强度（以弧度逆时针方向剪切角度）。
 - __zoom_range__: 浮点数 或 `[lower, upper]`。随机缩放范围。如果是浮点数，`[lower, upper] = [1-zoom_range, 1+zoom_range]`。
 - __channel_shift_range__: 浮点数。随机通道转换的范围。
@@ -68,7 +70,7 @@ __参数__
 - __dtype__: 生成数组使用的数据类型。
 
 
-__例子__
+__示例__
 
 使用 `.flow(x, y)` 的例子：
 
@@ -174,6 +176,47 @@ model.fit_generator(
     epochs=50)
 ```
 
+使用 `.flow_from_dataframe(dataframe, directory` 的例子:
+
+```python
+
+train_df = pandas.read_csv("./train.csv")
+valid_df = pandas.read_csv("./valid.csv")
+
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
+
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_dataframe(
+        dataframe=train_df,
+        directory='data/train',
+        x_col="filename",
+        y_col="class",
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='binary')
+
+validation_generator = test_datagen.flow_from_dataframe(
+        dataframe=valid_df,
+        directory='data/validation',
+        x_col="filename",
+        y_col="class",
+        target_size=(150, 150),
+        batch_size=32,
+        class_mode='binary')
+
+model.fit_generator(
+        train_generator,
+        steps_per_epoch=2000,
+        epochs=50,
+        validation_data=validation_generator,
+        validation_steps=800)
+```
+
 ---
 
 ### ImageDataGenerator 类方法
@@ -223,9 +266,9 @@ fit(x, augment=False, rounds=1, seed=None)
 
 __参数__
 
-- __x__: 样本数据。秩应该为 4。对于灰度数据，通道轴的值应该为 1；对于 RGB 数据，值应该为 3。
+- __x__: 样本数据。秩应该为 4。对于灰度数据，通道轴的值应该为 1；对于 RGB 数据，值应该为 3；对于 RGBA 数据，值应该为 4。
 - __augment__: 布尔值（默认为 False）。是否使用随机样本扩张。
-- __rounds__: 整数（默认为 1）。如果数据数据增强（augment=True），表明在数据上进行多少次增强。
+- __rounds__: 整数（默认为 1）。如果数据数据增强（`augment=True`），表明在数据上进行多少次增强。
 - __seed__: 整数（默认 None）。随机种子。
 
 ---
@@ -241,7 +284,7 @@ flow(x, y=None, batch_size=32, shuffle=True, sample_weight=None, seed=None, save
 
 __参数__
 
- - __x__: 输入数据。秩为 4 的 Numpy 矩阵或元组。如果是元组，第一个元素应该包含图像，第二个元素是另一个 Numpy 数组或一列 Numpy 数组，它们不经过任何修改就传递给输出。可用于将模型杂项数据与图像一起输入。对于灰度数据，图像数组的通道轴的值应该为 1，而对于 RGB 数据，其值应该为 3。
+ - __x__: 输入数据。秩为 4 的 Numpy 矩阵或元组。如果是元组，第一个元素应该包含图像，第二个元素是另一个 Numpy 数组或一列 Numpy 数组，它们不经过任何修改就传递给输出。可用于将模型杂项数据与图像一起输入。对于灰度数据，图像数组的通道轴的值应该为 1；对于 RGB 数据，其值应该为 3；对于 RGBA 数据，值应该为 4。
 - __y__: 标签。
 - __batch_size__: 整数 (默认为 32)。
 - __shuffle__: 布尔值 (默认为 True)。
@@ -262,7 +305,7 @@ __返回__
 
 
 ```python
-flow_from_dataframe(dataframe, directory, x_col='filename', y_col='class', has_ext=True, target_size=(256, 256), color_mode='rgb', classes=None, class_mode='categorical', batch_size=32, shuffle=True, seed=None, save_to_dir=None, save_prefix='', save_format='png', subset=None, interpolation='nearest')
+flow_from_dataframe(dataframe, directory=None, x_col='filename', y_col='class', weight_col=None, target_size=(256, 256), color_mode='rgb', classes=None, class_mode='categorical', batch_size=32, shuffle=True, seed=None, save_to_dir=None, save_prefix='', save_format='png', subset=None, interpolation='nearest', validate_filenames=True)
 ```
 
 
@@ -273,42 +316,53 @@ flow_from_dataframe(dataframe, directory, x_col='filename', y_col='class', has_e
 
 __参数__
 
-- __dataframe__: Pandas dataframe，一列为图像的文件名，另一列为图像的类别，
-或者是可以作为原始目标数据多个列。
-- __directory__: 字符串，目标目录的路径，其中包含在 dataframe 中映射的所有图像。
-- __x_col__: 字符串，dataframe 中包含目标图像文件夹的目录的列。
-- __y_col__: 字符串或字符串列表，dataframe 中将作为目标数据的列。
-- __has_ext__: 布尔值，如果 dataframe[x_col] 中的文件名具有扩展名则为 True，否则为 False。
-- __target_size__: 整数元组 `(height, width)`，默认为 `(256, 256)`。
-                 所有找到的图都会调整到这个维度。
-- __color_mode__: "grayscale", "rbg" 之一。默认："rgb"。
-                图像是否转换为 1 个或 3 个颜色通道。
+- __dataframe__: Pandas dataframe，其中一列字符串包含对应目录（或绝对路径，如果 `directory` 为 None）的图片文件路径。
+    它应该根据 `class_mode` 来包含其他列：
+    - 如果 `class_mode` 是 `"categorical"` (默认值)，它必须包含 `y_col` 列表示每张图片的类别。
+      这一列的值可以是字符串/列表/元组，如果是一个单独的类，或者是列表/元组，如果是多个类。
+    - 如果 `class_mode` 是 `"binary"` 或 `"sparse"`，它必须包含给定的 `y_col` 列表示每张图片的字符串类别。
+    - 如果 `class_mode` 是 `"raw"` 或 `"multi_output"`，它必须包含  `y_col` 中指定的列。
+    - 如果 `class_mode` 是 `"input"` 或 `None`，则不需要额外的列。
+    
+- __directory__: 字符串，读取图片的目录的路径，如果是 `None`,
+    `x_col` 列中的数据必须是绝对路径。
+- __x_col__: 字符串，`dataframe` 中包含文件名列（或者绝对路径，如果 `directory` 是 `None`）。
+- __y_col__: 字符串或字符串列表，`dataframe` 中将作为目标数据的列。
+- __weight_col__: 字符串，`dataframe` 中包含样本权重的列。默认为 `None`。
+- __target_size__: 整数元组 `(height, width)`，默认为 `(256, 256)`。所有找到的图都会调整到这个维度。
+- __color_mode__: "grayscale", "rbg", "rgba" 之一。默认："rgb"。
+    图像是否转换为 1 个或 3 个颜色通道。
 - __classes__: 可选的类别列表
     (例如， `['dogs', 'cats']`)。默认：None。
-     如未提供，类比列表将自动从 y_col 中推理出来，y_col 将会被映射为类别索引）。
-     包含从类名到类索引的映射的字典可以通过属性 `class_indices` 获得。
-- __class_mode__: "categorical", "binary", "sparse", "input", "other" or None 之一。
-     默认："categorical"。决定返回标签数组的类型：
-     - `"categorical"` 将是 2D one-hot 编码标签，
-     - `"binary"` 将是 1D 二进制标签，
-     - `"sparse"` 将是 1D 整数标签，
-     - `"input"` 将是与输入图像相同的图像（主要用于与自动编码器一起使用），
-     - `"other"` 将是 y_col 数据的 numpy 数组，
-     - None, 不返回任何标签（生成器只会产生批量的图像数据，这对使用 `model.predict_generator()`, `model.evaluate_generator()` 等很有用）。
+    如未提供，类比列表将自动从 `y_col` 中推理出来，`y_col` 将会被映射为类别索引）。
+    包含从类名到类索引的映射的字典可以通过属性 `class_indices` 获得。
+- __class_mode__: "binary", "categorical", "input", "multi_output", "raw", sparse" 或 None 之一。默认："categorical"。
+    决定返回标签数组的类型：
+    - `"binary"`: 1D numpy 数组二进制标签；
+    - `"categorical"`: 2D numpy 数组 one-hot 编码标签，支持多标签输出；
+    - `"input"`: 与输入图像相同的图像（主要用于与自动编码器一起使用）；
+    - `"multi_output"`: 不同列的值的列表；
+    - `"raw"`: `y_col` 列中值的 numpy 数组；
+    - `"sparse"`: 1D numpy 数组整数标签；
+    - `"other"` 将是 y_col 数据的 numpy 数组；
+    - `None`: 不返回任何标签（生成器只会产生批量的图像数据，这对使用 `model.predict_generator()`, `model.evaluate_generator()` 等很有用）。
 - __batch_size__: 批量数据的尺寸（默认：32）。
 - __shuffle__: 是否混洗数据（默认：True）
 - __seed__: 可选的混洗和转换的随即种子。
 - __save_to_dir__: None 或 str (默认: None).
-                 这允许你可选地指定要保存正在生成的增强图片的目录（用于可视化您正在执行的操作）。
+    这允许你可选地指定要保存正在生成的增强图片的目录（用于可视化您正在执行的操作）。
 - __save_prefix__: 字符串。保存图片的文件名前缀（仅当 `save_to_dir` 设置时可用）。
 - __save_format__: "png", "jpeg" 之一（仅当 `save_to_dir` 设置时可用）。默认："png"。
 - __follow_links__: 是否跟随类子目录中的符号链接（默认：False）。
 - __subset__: 数据子集 (`"training"` 或 `"validation"`)，如果在 `ImageDataGenerator` 中设置了 `validation_split`。
 - __interpolation__: 在目标大小与加载图像的大小不同时，用于重新采样图像的插值方法。
-     支持的方法有 `"nearest"`, `"bilinear"`, and `"bicubic"`。
-     如果安装了 1.1.3 以上版本的 PIL 的话，同样支持 `"lanczos"`。
-     如果安装了 3.4.0 以上版本的 PIL 的话，同样支持 `"box"` 和 `"hamming"`。
-     默认情况下，使用 `"nearest"`。
+    支持的方法有 `"nearest"`, `"bilinear"`, and `"bicubic"`。
+    如果安装了 1.1.3 以上版本的 PIL 的话，同样支持 `"lanczos"`。
+    如果安装了 3.4.0 以上版本的 PIL 的话，同样支持 `"box"` 和 `"hamming"`。
+    默认情况下，使用 `"nearest"`。
+- __validate_filenames__: 布尔值，是否验证 `x_col` 中的图片路径。
+    如果 `True`，将忽略无效的图片。禁用这一选项会加速这一函数的执行。
+    默认：`True`。
 
 __Returns__
 
@@ -327,9 +381,9 @@ flow_from_directory(directory, target_size=(256, 256), color_mode='rgb', classes
 
 __参数__
 
-- __directory__: 目标目录的路径。每个类应该包含一个子目录。任何在子目录树下的 PNG, JPG, BMP, PPM 或 TIF 图像，都将被包含在生成器中。更多细节，详见 [此脚本](https://gist.github.com/fchollet/%20%20%20%20%20%20%20%200830affa1f7f19fd47b06d4cf89ed44d)。
+- __directory__: 字符串，目标目录的路径。每个类应该包含一个子目录。任何在子目录树下的 PNG, JPG, BMP, PPM 或 TIF 图像，都将被包含在生成器中。更多细节，详见[此脚本](https://gist.github.com/fchollet/0830affa1f7f19fd47b06d4cf89ed44d)。
 - __target_size__: 整数元组 `(height, width)`，默认：`(256, 256)`。所有的图像将被调整到的尺寸。
-- __color_mode__: "grayscale", "rbg" 之一。默认："rgb"。图像是否被转换成 1 或 3 个颜色通道。
+- __color_mode__: "grayscale", "rbg", "rgba" 之一。默认："rgb"。图像是否被转换成 1，3 或 4 个颜色通道。
 - __classes__: 可选的类的子目录列表（例如 `['dogs', 'cats']`）。默认：None。如果未提供，类的列表将自动从 `directory` 下的 子目录名称/结构 中推断出来，其中每个子目录都将被作为不同的类（类名将按字典序映射到标签的索引）。包含从类名到类索引的映射的字典可以通过 `class_indices` 属性获得。
 - __class_mode__:  "categorical", "binary", "sparse", "input" 或 None 之一。默认："categorical"。决定返回的标签数组的类型：
     - "categorical" 将是 2D one-hot 编码标签，
@@ -404,6 +458,12 @@ standardize(x)
 ```
 
 将标准化配置应用于一批输入。
+
+由于该函数主要在内部用于对图像进行标准化处理并将其馈送到网络，所以 `x` 会就地更改。 
+如果要创建 `x` 的副本，则会带来很大的性能成本。
+如果要应用此方法而不更改就地输入，则可以在这之前调用创建副本的方法：
+
+standarize(np.copy(x))
 
 __参数__
 

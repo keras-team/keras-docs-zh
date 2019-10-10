@@ -1,11 +1,12 @@
-Deep Dreaming in Keras.
+# Keras 实现的 Deep Dreaming。
 
-Run the script with:
-```
+按以下命令执行该脚本：
+```python
 python deep_dream.py path_to_your_base_image.jpg prefix_for_results
 ```
-e.g.:
-```
+
+例如：
+```python
 python deep_dream.py img/mypic.jpg results/dream
 ```
 
@@ -31,11 +32,8 @@ args = parser.parse_args()
 base_image_path = args.base_image_path
 result_prefix = args.result_prefix
 
-# These are the names of the layers
-# for which we try to maximize activation,
-# as well as their weight in the final loss
-# we try to maximize.
-# You can tweak these setting to obtain new visual effects.
+# 这些是我们尝试最大化激活的层的名称，以及它们们在我们试图最大化的最终损失中的权重。
+# 你可以调整这些设置以获得新的视觉效果。
 settings = {
     'features': {
         'mixed2': 0.2,
@@ -47,8 +45,7 @@ settings = {
 
 
 def preprocess_image(image_path):
-    # Util function to open, resize and format pictures
-    # into appropriate tensors.
+    # 用于打开，调整图片大小并将图片格式化为适当的张量的实用函数。
     img = load_img(image_path)
     img = img_to_array(img)
     img = np.expand_dims(img, axis=0)
@@ -57,7 +54,7 @@ def preprocess_image(image_path):
 
 
 def deprocess_image(x):
-    # Util function to convert a tensor into a valid image.
+    # 函数将张量转换为有效图像的实用函数。
     if K.image_data_format() == 'channels_first':
         x = x.reshape((3, x.shape[2], x.shape[3]))
         x = x.transpose((1, 2, 0))
@@ -71,38 +68,37 @@ def deprocess_image(x):
 
 K.set_learning_phase(0)
 
-# Build the InceptionV3 network with our placeholder.
-# The model will be loaded with pre-trained ImageNet weights.
+# 使用我们的占位符构建 InceptionV3 网络。
+# 该模型将加载预先训练的 ImageNet 权重。
 model = inception_v3.InceptionV3(weights='imagenet',
                                  include_top=False)
 dream = model.input
 print('Model loaded.')
 
-# Get the symbolic outputs of each "key" layer (we gave them unique names).
+# 获取每个『关键』层的符号输出（我们为它们指定了唯一的名称）。
 layer_dict = dict([(layer.name, layer) for layer in model.layers])
 
-# Define the loss.
+# 定义损失。
 loss = K.variable(0.)
 for layer_name in settings['features']:
-    # Add the L2 norm of the features of a layer to the loss.
+    # 将层特征的 L2 范数添加到损失中。
     if layer_name not in layer_dict:
         raise ValueError('Layer ' + layer_name + ' not found in model.')
     coeff = settings['features'][layer_name]
     x = layer_dict[layer_name].output
-    # We avoid border artifacts by only involving non-border pixels in the loss.
+    # 我们通过仅涉及损失中的非边界像素来避免边界伪影。
     scaling = K.prod(K.cast(K.shape(x), 'float32'))
     if K.image_data_format() == 'channels_first':
-        loss += coeff * K.sum(K.square(x[:, :, 2: -2, 2: -2])) / scaling
+        loss = loss + coeff * K.sum(K.square(x[:, :, 2: -2, 2: -2])) / scaling
     else:
-        loss += coeff * K.sum(K.square(x[:, 2: -2, 2: -2, :])) / scaling
+        loss = loss + coeff * K.sum(K.square(x[:, 2: -2, 2: -2, :])) / scaling
 
-# Compute the gradients of the dream wrt the loss.
+# 计算 dream 即损失的梯度。
 grads = K.gradients(loss, dream)[0]
-# Normalize gradients.
+# 标准化梯度。
 grads /= K.maximum(K.mean(K.abs(grads)), K.epsilon())
 
-# Set up function to retrieve the value
-# of the loss and gradients given an input image.
+# 设置函数，以检索给定输入图像的损失和梯度的值。
 outputs = [loss, grads]
 fetch_loss_and_grads = K.function([dream], outputs)
 
@@ -140,27 +136,24 @@ def gradient_ascent(x, iterations, step, max_loss=None):
 
 """Process:
 
-- Load the original image.
-- Define a number of processing scales (i.e. image shapes),
-    from smallest to largest.
-- Resize the original image to the smallest scale.
-- For every scale, starting with the smallest (i.e. current one):
-    - Run gradient ascent
-    - Upscale image to the next scale
-    - Reinject the detail that was lost at upscaling time
-- Stop when we are back to the original size.
+- 载入原始图像。
+- 定义一系列预处理规模 (即图像尺寸)，从最小到最大。
+- 将原始图像调整为最小尺寸。
+- 对于每个规模，从最小的（即当前的）开始：
+    - 执行梯度提升
+    - 将图像放大到下一个比例
+    - 重新投射在提升时丢失的细节
+- 当我们回到原始大小时停止。
 
-To obtain the detail lost during upscaling, we simply
-take the original image, shrink it down, upscale it,
-and compare the result to the (resized) original image.
+为了获得在放大过程中丢失的细节，我们只需将原始图像缩小，放大，然后将结果与（调整大小的）原始图像进行比较即可。
 """
 
 
-# Playing with these hyperparameters will also allow you to achieve new effects
-step = 0.01  # Gradient ascent step size
-num_octave = 3  # Number of scales at which to run gradient ascent
-octave_scale = 1.4  # Size ratio between scales
-iterations = 20  # Number of ascent steps per scale
+# 把玩这些超参数也可以让你获得新的效果
+step = 0.01  # 梯度提升步长
+num_octave = 3  # 运行梯度提升的规模数
+octave_scale = 1.4  # 规模之间的比
+iterations = 20  # 每个规模的提升步数
 max_loss = 10.
 
 img = preprocess_image(base_image_path)

@@ -33,65 +33,63 @@ model.compile(loss='mean_squared_error', optimizer='sgd')
 ```python
 from keras import optimizers
 
-# 所有参数梯度将被裁剪，让其l2范数最大为1：g * 1 / max(1, l2_norm)
+# 所有参数梯度将被裁剪，让其 l2 范数最大为 1：g * 1 / max(1, l2_norm)
 sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
 ```
 
 ```python
 from keras import optimizers
 
-# 所有参数d 梯度将被裁剪到数值范围内：
-# 最大值0.5
-# 最小值-0.5
+# 所有参数 d 梯度将被裁剪到数值范围内：
+# 最大值 0.5
+# 最小值 -0.5
 sgd = optimizers.SGD(lr=0.01, clipvalue=0.5)
 ```
 
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L157)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L164)</span>
 ### SGD
 
 ```python
-keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
+keras.optimizers.SGD(learning_rate=0.01, momentum=0.0, nesterov=False)
 ```
 
 随机梯度下降优化器。
 
 包含扩展功能的支持：
+
 - 动量（momentum）优化,
 - 学习率衰减（每次参数更新后）
 - Nestrov 动量 (NAG) 优化
 
 __参数__
 
-- __lr__: float >= 0. 学习率。
+- __learning_rate__: float >= 0. 学习率。
 - __momentum__: float >= 0. 参数，用于加速 SGD 在相关方向上前进，并抑制震荡。
-- __decay__: float >= 0. 每次参数更新后学习率衰减值。
 - __nesterov__: boolean. 是否使用 Nesterov 动量。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L220)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L229)</span>
 ### RMSprop
 
 ```python
-keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
+keras.optimizers.RMSprop(learning_rate=0.001, rho=0.9)
 ```
 
-RMSProp 优化器.
+RMSProp 优化器。
 
 建议使用优化器的默认参数
-（除了学习率 lr，它可以被自由调节）
+（除了学习率，它可以被自由调节）
 
 
-这个优化器通常是训练循环神经网络RNN的不错选择。
+这个优化器通常是训练循环神经网络 RNN 的不错选择。
 
 __参数__
 
-- __lr__: float >= 0. 学习率。
-- __rho__: float >= 0. RMSProp梯度平方的移动均值的衰减率.
-- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`。
-- __decay__: float >= 0. 每次参数更新后学习率衰减值。
+- __learning_rate__: float >= 0. 学习率。
+- __rho__: float >= 0. RMSProp 梯度平方的移动均值的衰减率。
 
 __参考文献__
 
@@ -99,11 +97,11 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L288)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L303)</span>
 ### Adagrad
 
 ```python
-keras.optimizers.Adagrad(lr=0.01, epsilon=None, decay=0.0)
+keras.optimizers.Adagrad(learning_rate=0.01)
 ```
 
 Adagrad 优化器。
@@ -114,9 +112,7 @@ Adagrad 是一种具有特定参数学习率的优化器，它根据参数在训
 
 __参数__
 
-- __lr__: float >= 0. 学习率.
-- __epsilon__: float >= 0. 若为 `None`, 默认为 `K.epsilon()`.
-- __decay__: float >= 0. 每次参数更新后学习率衰减值.
+- __learning_rate__: float >= 0. 学习率。
 
 __参考文献__
 
@@ -124,11 +120,11 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L353)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L376)</span>
 ### Adadelta
 
 ```python
-keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=None, decay=0.0)
+keras.optimizers.Adadelta(learning_rate=1.0, rho=0.95)
 ```
 
 Adadelta 优化器。
@@ -141,10 +137,8 @@ Adadelta 是 Adagrad 的一个具有更强鲁棒性的的扩展版本，它不�
 
 __参数__
 
-- __lr__: float >= 0. 学习率，建议保留默认值。
-- __rho__: float >= 0. Adadelta梯度平方移动均值的衰减率。
-- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`。
-- __decay__: float >= 0. 每次参数更新后学习率衰减值。
+- __learning_rate__: float >= 0. 初始学习率，默认为 1。建议保留默认值。
+- __rho__: float >= 0. Adadelta 梯度平方移动均值的衰减率。
 
 __参考文献__
 
@@ -152,11 +146,11 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L436)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L467)</span>
 ### Adam
 
 ```python
-keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+keras.optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, amsgrad=False)
 ```
 
 Adam 优化器。
@@ -166,11 +160,9 @@ Adam 优化器。
 
 __参数__
 
-- __lr__: float >= 0. 学习率。
+- __learning_rate__: float >= 0. 学习率。
 - __beta_1__: float, 0 < beta < 1. 通常接近于 1。
 - __beta_2__: float, 0 < beta < 1. 通常接近于 1。
-- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`。
-- __decay__: float >= 0. 每次参数更新后学习率衰减值。
 - __amsgrad__: boolean. 是否应用此算法的 AMSGrad 变种，来自论文 "On the Convergence of Adam and Beyond"。
 
 __参考文献__
@@ -180,11 +172,11 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L527)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L567)</span>
 ### Adamax
 
 ```python
-keras.optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999)
 ```
 
 Adamax 优化器，来自 Adam 论文的第七小节.
@@ -194,10 +186,9 @@ Adamax 优化器，来自 Adam 论文的第七小节.
 
 __参数__
 
-- __lr__: float >= 0. 学习率。
-- __beta_1/beta_2__: floats, 0 < beta < 1. 通常接近于 1。
-- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`。
-- __decay__: float >= 0. 每次参数更新后学习率衰减值。
+- __learning_rate__: float >= 0. 学习率。
+- __beta_1__: floats, 0 < beta < 1. 通常接近于 1。
+- __beta_2__: floats, 0 < beta < 1. 通常接近于 1。
 
 __参考文献__
 
@@ -205,11 +196,11 @@ __参考文献__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L605)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/optimizers.py#L645)</span>
 ### Nadam
 
 ```python
-keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, schedule_decay=0.004)
+keras.optimizers.Nadam(learning_rate=0.002, beta_1=0.9, beta_2=0.999)
 ```
 
 Nesterov 版本 Adam 优化器。
@@ -223,12 +214,11 @@ Nadam 是采用 Nesterov momentum 版本的 Adam 优化器。
 
 __参数__
 
-- __lr__: float >= 0. 学习率。
-- __beta_1/beta_2__: floats, 0 < beta < 1. 通常接近于 1。
-- __epsilon__: float >= 0. 模糊因子. 若为 `None`, 默认为 `K.epsilon()`。
+- __learning_rate__: float >= 0. 学习率。
+- __beta_1__: floats, 0 < beta < 1. 通常接近于 1。
+- __beta_2__: floats, 0 < beta < 1. 通常接近于 1。
 
 __参考文献__
 
 - [Nadam report](http://cs229.stanford.edu/proj2015/054_report.pdf)
 - [On the importance of initialization and momentum in deep learning](http://www.cs.toronto.edu/~fritz/absps/momentum.pdf)
-

@@ -25,21 +25,21 @@
 
 截至 2018 年中期，Keras 拥有超过 250,000 名个人用户。与其他任何深度学习框架相比，Keras 在行业和研究领域的应用率更高（除 TensorFlow 之外，且 Keras API 是 TensorFlow 的官方前端，通过 `tf.keras` 模块使用）。
 
-您已经不断与使用 Keras 构建的功能进行交互 - 它在 Netflix, Uber, Yelp, Instacart, Zocdoc, Square 等众多网站上使用。它尤其受以深度学习作为产品核心的创业公司的欢迎。
+你已经不断与使用 Keras 构建的功能进行交互 - 它在 Netflix, Uber, Yelp, Instacart, Zocdoc, Square 等众多网站上被使用。它尤其受以深度学习作为产品核心的创业公司的欢迎。
 
-Keras也是深度学习研究人员的最爱，在上载到预印本服务器 [arXiv.org](https://arxiv.org/archive/cs) 的科学论文中被提及的次数位居第二。Keras 还被大型科学组织的研究人员采用，特别是 CERN 和 NASA。
+Keras 也是深度学习研究人员的最爱，在上传到预印本服务器 [arXiv.org](https://arxiv.org/archive/cs) 的科学论文中被提及的次数位居第二。Keras 还被大型科学组织的研究人员采用，特别是 CERN 和 NASA。
 
 ---
 
 ## Keras 可以轻松将模型转化为产品
 
-与任何其他深度学习框架相比，你的 Keras 模型可以在更广泛的平台上轻松部署：
+与任何其他深度学习框架相比，你的 Keras 模型可以轻松地部署在更广泛的平台上：
 
 - 在 iOS 上，通过 [Apple’s CoreML](https://developer.apple.com/documentation/coreml)（苹果为 Keras 提供官方支持）。这里有一个[教程](https://www.pyimagesearch.com/2018/04/23/running-keras-models-on-ios-with-coreml/)。
-- 在 Android 上，通过 TensorFlow Android runtime，例如：[Not Hotdog app](https://medium.com/@timanglade/how-hbos-silicon-valley-built-not-hotdog-with-mobile-tensorflow-keras-react-native-ef03260747f3)。
-- 在浏览器中，通过 GPU 加速的 JavaScript 运行时，例如：[Keras.js](https://transcranial.github.io/keras-js/#/) 和 [WebDNN](https://mil-tokyo.github.io/webdnn/)。
+- 在 Android 上，通过 TensorFlow Android runtime。例如 [Not Hotdog app](https://medium.com/@timanglade/how-hbos-silicon-valley-built-not-hotdog-with-mobile-tensorflow-keras-react-native-ef03260747f3)。
+- 在浏览器中，通过 GPU 加速的 JavaScript 运行时，例如 [Keras.js](https://transcranial.github.io/keras-js/#/) 和 [WebDNN](https://mil-tokyo.github.io/webdnn/)。
 - 在 Google Cloud 上，通过 [TensorFlow-Serving](https://www.tensorflow.org/serving/)。
-- [在 Python webapp 后端（比如 Flask app）中](https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html)。
+- [在 Python webapp 后端中（比如 Flask app）](https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html)。
 - 在 JVM 上，通过 [SkyMind 提供的 DL4J 模型导入](https://deeplearning4j.org/model-import-keras)。
 - 在 Raspberry Pi 树莓派上。
 
@@ -53,13 +53,13 @@ Keras也是深度学习研究人员的最爱，在上载到预印本服务器 [a
  - 微软的 CNTK 后端
  - Theano 后端
 
-亚马逊也正在为 Keras 开发 MXNet 后端。
+亚马逊也有一个[使用 MXNet 作为后端的 Keras 分支](https://github.com/awslabs/keras-apache-mxnet)。
 
 如此一来，你的 Keras 模型可以在 CPU 之外的不同硬件平台上训练：
 
-- [NVIDIA GPU](https://developer.nvidia.com/deep-learning)
-- [Google TPU](https://cloud.google.com/tpu/)，通过 TensorFlow 后端和 Google Cloud
-- OpenCL 支持的 GPU, 比如 AMD, 通过 [PlaidML Keras 后端](https://github.com/plaidml/plaidml)
+- [NVIDIA GPUs](https://developer.nvidia.com/deep-learning)
+- [Google TPUs](https://cloud.google.com/tpu/)，通过 TensorFlow 后端和 Google Cloud
+- OpenCL 支持的 GPUs，比如 AMD, 通过 [PlaidML Keras 后端](https://github.com/plaidml/plaidml)
 
 ---
 

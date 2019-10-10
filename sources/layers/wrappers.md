@@ -1,4 +1,4 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/wrappers.py#L114)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/wrappers.py#L116)</span>
 ### TimeDistributed
 
 ```python
@@ -50,7 +50,7 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/wrappers.py#L333)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/wrappers.py#L335)</span>
 ### Bidirectional
 
 ```python
@@ -65,12 +65,13 @@ __参数__
 - __merge_mode__: 前向和后向 RNN 的输出的结合模式。
 为 {'sum', 'mul', 'concat', 'ave', None} 其中之一。
 如果是 None，输出不会被结合，而是作为一个列表被返回。
+- __weights__: 双向模型中要加载的初始权重。
 
 __异常__
 
 - __ValueError__: 如果参数 `merge_mode` 非法。
 
-__例__
+__示例__
 
 
 ```python

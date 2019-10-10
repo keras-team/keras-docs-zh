@@ -1,4 +1,5 @@
-Example script to generate text from Nietzsche's writings.
+
+#Example script to generate text from Nietzsche's writings.
 
 At least 20 epochs are required before the generated text
 starts sounding coherent.
@@ -60,7 +61,7 @@ model = Sequential()
 model.add(LSTM(128, input_shape=(maxlen, len(chars))))
 model.add(Dense(len(chars), activation='softmax'))
 
-optimizer = RMSprop(lr=0.01)
+optimizer = RMSprop(learning_rate=0.01)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
 
@@ -98,7 +99,6 @@ def on_epoch_end(epoch, _):
             next_index = sample(preds, diversity)
             next_char = indices_char[next_index]
 
-            generated += next_char
             sentence = sentence[1:] + next_char
 
             sys.stdout.write(next_char)

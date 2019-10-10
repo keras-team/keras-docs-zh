@@ -15,7 +15,7 @@ from keras.datasets import cifar10
 - __返回：__
   - 2 个元组：
     - __x_train, x_test__: uint8 数组表示的 RGB 图像数据，尺寸为 (num_samples, 3, 32, 32) 或 (num_samples, 32, 32, 3)，基于 `image_data_format` 后端设定的 `channels_first` 或 `channels_last`。
-    - __y_train, y_test__: uint8 数组表示的类别标签（范围在 0-9 之间的整数），尺寸为 (num_samples,)。
+    - __y_train, y_test__: uint8 数组表示的类别标签（范围在 0-9 之间的整数），尺寸为 (num_samples, 1)。
 
 
 ---
@@ -35,7 +35,7 @@ from keras.datasets import cifar100
 - __返回：__
     - 2 个元组：
         - __x_train, x_test__: uint8 数组表示的 RGB 图像数据，尺寸为 (num_samples, 3, 32, 32) 或 (num_samples, 32, 32, 3)，基于 `image_data_format` 后端设定的 `channels_first` 或 `channels_last`。
-        - __y_train, y_test__: uint8 数组表示的类别标签，尺寸为 (num_samples,)。
+        - __y_train, y_test__: uint8 数组表示的类别标签，尺寸为 (num_samples, 1)。
 
 - __参数：__
     - __label_mode__: "fine" 或者 "coarse"
@@ -198,6 +198,5 @@ from keras.datasets import boston_housing
     - __seed__: 在计算测试分割之前对数据进行混洗的随机种子。
     - __test_split__: 需要保留作为测试数据的比例。
 
-- __返回：__
-  Numpy 数组的元组: `(x_train, y_train), (x_test, y_test)`。
+- __返回：__ Numpy 数组的元组: `(x_train, y_train), (x_test, y_test)`。
     

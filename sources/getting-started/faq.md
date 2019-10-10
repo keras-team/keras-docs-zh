@@ -43,9 +43,9 @@
 <span id="how-can-i-run-keras-on-gpu"></span>
 ### 如何在 GPU 上运行 Keras?
 
-如果你以 TensorFlow 或 CNTK 后端运行，只要检测到任何可用的 GPU，那么代码将自动在 GPU 上运行。
+如果你以 **TensorFlow** 或 **CNTK** 后端运行，只要检测到任何可用的 GPU，那么代码将自动在 GPU 上运行。
 
-如果你以 Theano 后端运行，则可以使用以下方法之一：
+如果你以 **Theano** 后端运行，则可以使用以下方法之一：
 
 **方法 1**: 使用 Theano flags。
 ```bash
@@ -67,7 +67,7 @@ theano.config.floatX = 'float32'
 <span id="how-can-i-run-a-keras-model-on-multiple-gpus"></span>
 ### 如何在多 GPU 上运行 Keras 模型?
 
-我们建议使用 TensorFlow 后端来执行这项任务。有两种方法可在多个 GPU 上运行单个模型：**数据并行**和**设备并行**。
+我们建议使用 **TensorFlow** 后端来执行这项任务。有两种方法可在多个 GPU 上运行单个模型：**数据并行**和**设备并行**。
 
 在大多数情况下，你最需要的是数据并行。
 
@@ -126,11 +126,11 @@ with tf.device_scope('/cpu:0'):
 - **Sample**: 样本，数据集中的一个元素，一条数据。
     - *例1:* 在卷积神经网络中，一张图像是一个样本。
     - *例2:* 在语音识别模型中，一段音频是一个样本。
-- **Batch**: 批，含有 *N* 个样本的集合。每一个 batch 的样本都是独立并行处理的。在训练时，一个 batch 的结果只会用来更新一次模型。
+- **Batch**: 批次，含有 *N* 个样本的集合。每一个 batch 的样本都是独立并行处理的。在训练时，一个 batch 的结果只会用来更新一次模型。
     - 一个 **batch** 的样本通常比单个输入更接近于总体输入数据的分布，batch 越大就越近似。然而，每个 batch 将花费更长的时间来处理，并且仍然只更新模型一次。在推理（评估/预测）时，建议条件允许的情况下选择一个尽可能大的 batch，（因为较大的 batch 通常评估/预测的速度会更快）。 
-- **Epoch**: 轮次，通常被定义为 「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
+- **Epoch**: 轮次，通常被定义为「在整个数据集上的一轮迭代」，用于训练的不同的阶段，这有利于记录和定期评估。
     - 当在 Keras 模型的 `fit` 方法中使用 `validation_data` 或 `validation_split` 时，评估将在每个 **epoch** 结束时运行。
-    - 在 Keras 中，可以添加专门的用于在 epoch 结束时运行的 [callbacks 回调](/callbacks/)。例如学习率变化和模型检查点（保存）。
+    - 在 Keras 中，可以添加专门的用于在 **epoch** 结束时运行的 [callbacks 回调](/callbacks/)。例如学习率变化和模型检查点（保存）。
 
 ---
 <span id="how-can-i-save-a-keras-model"></span>
@@ -149,7 +149,7 @@ with tf.device_scope('/cpu:0'):
 
 你可以使用 `keras.models.load_model(filepath)` 重新实例化模型。`load_model` 还将负责使用保存的训练配置项来编译模型（除非模型从未编译过）。
 
-例子：
+示例：
 
 ```python
 from keras.models import load_model
@@ -162,7 +162,7 @@ del model  # 删除现有模型
 model = load_model('my_model.h5')
 ```
 
-另请参阅[如何安装 HDF5 或 h5py 以在 Keras 中保存我的模型？](#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)，查看有关如何安装 h5py 的说明。
+另请参阅[如何安装 HDF5 或 h5py 以在 Keras 中保存我的模型](#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)，查看有关如何安装 h5py 的说明。
 
 #### 只保存/加载模型的结构
 
@@ -213,7 +213,7 @@ model.load_weights('my_model_weights.h5')
 model.load_weights('my_model_weights.h5', by_name=True)
 ```
 
-例子：
+示例：
 
 ```python
 """
@@ -244,7 +244,7 @@ from keras.models import load_model
 model = load_model('my_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
 ```
 
-或者，你可以使用 [自定义对象作用域](/utils/#customobjectscope)：
+或者，你可以使用[自定义对象作用域](/utils/#customobjectscope)：
 
 ```python
 from keras.utils import CustomObjectScope
@@ -315,7 +315,7 @@ layer_output = get_3rd_layer_output([x, 1])[0]
 <span id="how-can-i-use-keras-with-datasets-that-dont-fit-in-memory"></span>
 ### 如何用 Keras 处理超过内存的数据集？
 
-你可以使用 `model.train_on_batch(x，y)` 和 `model.test_on_batch(x，y)` 进行批量训练与测试。请参阅 [模型文档](/models/sequential)。
+你可以使用 `model.train_on_batch(x，y)` 和 `model.test_on_batch(x，y)` 进行批量训练与测试。请参阅[模型文档](/models/sequential)。
 
 或者，你可以编写一个生成批处理训练数据的生成器，然后使用 `model.fit_generator(data_generator，steps_per_epoch，epochs)` 方法。
 
@@ -419,7 +419,7 @@ trainable_model.fit(data, labels)  # 这会更新 `layer` 的权重
 - 使用 `model.reset_states()` 来重置模型中所有层的状态
 - 使用 `layer.reset_states()` 来重置指定有状态 RNN 层的状态
 
-例子：
+示例：
 
 ```python
 x  # 输入数据，尺寸为 (32, 21, 16)
@@ -473,12 +473,14 @@ print(len(model.layers))  # "1"
 - VGG16
 - VGG19
 - ResNet50
+- ResNet v2
+- ResNeXt
 - Inception v3
 - Inception-ResNet v2
 - MobileNet v1
+- MobileNet v2
 - DenseNet
 - NASNet
-- MobileNet v2
 
 它们可以使用 `keras.applications` 模块进行导入：
 
@@ -502,7 +504,7 @@ model = VGG16(weights='imagenet', include_top=True)
 
 有关一些简单的用法示例，请参阅 [Applications 模块的文档](/applications)。
 
-有关如何使用此类预训练的模型进行特征提取或微调的详细示例，请参阅 [此博客文章](http://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html)。
+有关如何使用此类预训练的模型进行特征提取或微调的详细示例，请参阅[此博客文章](http://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html)。
 
 VGG16 模型也是以下几个 Keras 示例脚本的基础：
 
@@ -514,7 +516,7 @@ VGG16 模型也是以下几个 Keras 示例脚本的基础：
 <span id="how-can-i-use-hdf5-inputs-with-keras"></span>
 ### 如何在 Keras 中使用 HDF5 输入？
 
-你可以使用 `keras.utils.io_utils` 中的 `HDF5Matrix` 类。有关详细信息，请参阅 [HDF5Matrix文档](/utils/#hdf5matrix)。
+你可以使用 `keras.utils` 中的 `HDF5Matrix` 类。有关详细信息，请参阅 [HDF5Matrix 文档](/utils/#hdf5matrix)。
 
 你也可以直接使用 HDF5 数据集：
 
@@ -524,6 +526,8 @@ with h5py.File('input/file.hdf5', 'r') as f:
     x_data = f['x_data']
     model.predict(x_data)
 ```
+
+请查看[如何在 Keras 中安装 HDF5 或 h5py 来保存模型](#how-can-i-install-HDF5-or-h5py-to-save-my-models-in-Keras)找到 h5py 安装指引。
 
 ---
 <span id="where-is-the-keras-configuration-file-stored"></span>
@@ -537,7 +541,7 @@ $HOME/.keras/
 
 注意，Windows 用户应该将 `$HOME` 替换为 `％USERPROFILE％`。如果 Keras 无法创建上述目录（例如，由于权限问题），则使用 `/tmp/.keras/` 作为备份。
 
-Keras配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默认的配置文件如下所示：
+Keras 配置文件是存储在 `$HOME/.keras/keras.json` 中的 JSON 文件。默认的配置文件如下所示：
 
 ```
 {

@@ -11,7 +11,7 @@
 - `activity_regularizer`: `keras.regularizers.Regularizer` 的实例
 
 
-## 例
+## 示例
 
 ```python
 from keras import regularizers

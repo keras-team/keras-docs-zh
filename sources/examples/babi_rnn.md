@@ -32,10 +32,10 @@ QA20 - Agent's Motivations   | 91               | 90.7
 ### 注意
 
 - 使用默认的单词、句子和查询向量尺寸，GRU 模型得到了以下效果：
-  - 20 轮迭代后，在 QA1 上达到了 52.1% 的测试准确率（在 CPU 上每轮迭代 2 秒）；
-  - 20 轮迭代后，在 QA2 上达到了 37.0% 的测试准确率（在 CPU 上每轮迭代 16 秒）。
+    - 20 轮迭代后，在 QA1 上达到了 52.1% 的测试准确率（在 CPU 上每轮迭代 2 秒）；
+    - 20 轮迭代后，在 QA2 上达到了 37.0% 的测试准确率（在 CPU 上每轮迭代 16 秒）。
 
-    相比之下，Facebook的论文中 LSTM baseline 的准确率分别是 50% 和 20%。
+      相比之下，Facebook的论文中 LSTM baseline 的准确率分别是 50% 和 20%。
 
 - 这个任务并不是笼统地单独去解析问题。这应该可以提高准确率，且是合并两个 RNN 的一次较好实践。
 
@@ -69,7 +69,7 @@ def tokenize(sent):
     >>> tokenize('Bob dropped the apple. Where is the apple?')
     ['Bob', 'dropped', 'the', 'apple', '.', 'Where', 'is', 'the', 'apple', '?']
     '''
-    return [x.strip() for x in re.split(r'(\W+)?', sent) if x.strip()]
+    return [x.strip() for x in re.split(r'(\W+)', sent) if x.strip()]
 
 
 def parse_stories(lines, only_supporting=False):
@@ -125,7 +125,7 @@ def vectorize_stories(data, word_idx, story_maxlen, query_maxlen):
     for story, query, answer in data:
         x = [word_idx[w] for w in story]
         xq = [word_idx[w] for w in query]
-        # let's not forget that index 0 is reserved
+        # 不要忘记索引 0 已被保留
         y = np.zeros(len(word_idx) + 1)
         y[word_idx[answer]] = 1
         xs.append(x)

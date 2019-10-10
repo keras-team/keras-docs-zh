@@ -4,11 +4,11 @@
 
 ---
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L148)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L275)</span>
 ### Callback
 
 ```python
-keras.callbacks.Callback()
+keras.callbacks.callbacks.Callback()
 ```
 
 用来组建新的回调函数的抽象基类。
@@ -30,11 +30,11 @@ __属性__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L204)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L477)</span>
 ### BaseLogger
 
 ```python
-keras.callbacks.BaseLogger(stateful_metrics=None)
+keras.callbacks.callbacks.BaseLogger(stateful_metrics=None)
 ```
 
 会积累训练轮平均评估的回调函数。
@@ -49,22 +49,22 @@ __stateful_metrics__: 可重复使用不应在一个 epoch 上平均的指标的
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L251)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L524)</span>
 ### TerminateOnNaN
 
 ```python
-keras.callbacks.TerminateOnNaN()
+keras.callbacks.callbacks.TerminateOnNaN()
 ```
 
 当遇到 NaN 损失会停止训练的回调函数。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L264)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L537)</span>
 ### ProgbarLogger
 
 ```python
-keras.callbacks.ProgbarLogger(count_mode='samples', stateful_metrics=None)
+keras.callbacks.callbacks.ProgbarLogger(count_mode='samples', stateful_metrics=None)
 ```
 
 会把评估以标准输出打印的回调函数。
@@ -84,11 +84,11 @@ __异常__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L341)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L614)</span>
 ### History
 
 ```python
-keras.callbacks.History()
+keras.callbacks.callbacks.History()
 ```
 
 把所有事件都记录到 `History` 对象的回调函数。
@@ -97,11 +97,11 @@ keras.callbacks.History()
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L360)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L633)</span>
 ### ModelCheckpoint
 
 ```python
-keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+keras.callbacks.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
 ```
 
 在每个训练期之后保存模型。
@@ -128,11 +128,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L460)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L733)</span>
 ### EarlyStopping
 
 ```python
-keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto', baseline=None, restore_best_weights=False)
+keras.callbacks.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto', baseline=None, restore_best_weights=False)
 ```
 
 当被监测的数量不再提升，则停止训练。
@@ -142,7 +142,7 @@ __参数__
 - __monitor__: 被监测的数据。
 - __min_delta__: 在被监测的数据中被认为是提升的最小变化，
 例如，小于 min_delta 的绝对变化会被认为没有提升。
-- __patience__: 没有进步的训练轮数，在这之后训练就会被停止。
+- __patience__: 在监测质量经过多少轮次没有进度时即停止。如果验证频率 (`model.fit(validation_freq=5)`) 大于 1，则可能不会在每个轮次都产生验证数。
 - __verbose__: 详细信息模式。
 - __mode__: {auto, min, max} 其中之一。 在 `min` 模式中，
 当被监测的数据停止下降，训练就会停止；在 `max`
@@ -155,11 +155,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L574)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L851)</span>
 ### RemoteMonitor
 
 ```python
-keras.callbacks.RemoteMonitor(root='http://localhost:9000', path='/publish/epoch/end/', field='data', headers=None, send_as_json=False)
+keras.callbacks.callbacks.RemoteMonitor(root='http://localhost:9000', path='/publish/epoch/end/', field='data', headers=None, send_as_json=False)
 ```
 
 将事件数据流到服务器的回调函数。
@@ -179,11 +179,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L633)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L910)</span>
 ### LearningRateScheduler
 
 ```python
-keras.callbacks.LearningRateScheduler(schedule, verbose=0)
+keras.callbacks.callbacks.LearningRateScheduler(schedule, verbose=0)
 ```
 
 学习速率定时器。
@@ -196,58 +196,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L669)</span>
-### TensorBoard
-
-```python
-keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
-```
-
-Tensorboard 基本可视化。
-
-[TensorBoard](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
-是由 Tensorflow 提供的一个可视化工具。
-
-这个回调函数为 Tensorboard 编写一个日志，
-这样你可以可视化测试和训练的标准评估的动态图像，
-也可以可视化模型中不同层的激活值直方图。
-
-如果你已经使用 pip 安装了 Tensorflow，你应该可以从命令行启动 Tensorflow：
-
-```sh
-tensorboard --logdir=/full_path_to_your_logs
-```
-
-__参数__
-
-- __log_dir__: 用来保存被 TensorBoard 分析的日志文件的文件名。
-- __histogram_freq__: 对于模型中各个层计算激活值和模型权重直方图的频率（训练轮数中）。
-如果设置成 0 ，直方图不会被计算。对于直方图可视化的验证数据（或分离数据）一定要明确的指出。
-- __write_graph__: 是否在 TensorBoard 中可视化图像。
-如果 write_graph 被设置为 True，日志文件会变得非常大。
-- __write_grads__: 是否在 TensorBoard  中可视化梯度值直方图。
-`histogram_freq` 必须要大于 0 。
-- __batch_size__: 用以直方图计算的传入神经元网络输入批的大小。
-- __write_images__: 是否在 TensorBoard 中将模型权重以图片可视化。
-- __embeddings_freq__: 被选中的嵌入层会被保存的频率（在训练轮中）。
-- __embeddings_layer_names__: 一个列表，会被监测层的名字。
-如果是 None 或空列表，那么所有的嵌入层都会被监测。
-- __embeddings_metadata__: 一个字典，对应层的名字到保存有这个嵌入层元数据文件的名字。
-查看 [详情](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
-关于元数据的数据格式。
-以防同样的元数据被用于所用的嵌入层，字符串可以被传入。
-- __embeddings_data__: 要嵌入在 `embeddings_layer_names` 指定的层的数据。
-Numpy 数组（如果模型有单个输入）或 Numpy 数组列表（如果模型有多个输入）。
-[Learn ore about embeddings](https://www.tensorflow.org/programmers_guide/embedding)。
-- __update_freq__: `'batch'` 或 `'epoch'` 或 整数。当使用 `'batch'` 时，在每个 batch 之后将损失和评估值写入到 TensorBoard 中。同样的情况应用到 `'epoch'` 中。如果使用整数，例如 `10000`，这个回调会在每 10000 个样本之后将损失和评估值写入到 TensorBoard 中。注意，频繁地写入到 TensorBoard 会减缓你的训练。
-
-----
-
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L1017)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L946)</span>
 ### ReduceLROnPlateau
 
 ```python
-keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
+keras.callbacks.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
 ```
 
 当标准评估停止提升时，降低学习速率。
@@ -269,7 +222,7 @@ __参数__
 
 - __monitor__: 被监测的数据。
 - __factor__: 学习速率被降低的因数。新的学习速率 = 学习速率 * 因数
-- __patience__: 没有进步的训练轮数，在这之后训练速率会被降低。
+- __patience__: 在监测质量经过多少轮次没有进度时即停止。如果验证频率 (`model.fit(validation_freq=5)`) 大于 1，则可能不会在每个轮次都产生验证数。
 - __verbose__: 整数。0：安静，1：更新信息。
 - __mode__: {auto, min, max} 其中之一。如果是 `min` 模式，学习速率会被降低如果被监测的数据已经停止下降；
 在 `max` 模式，学习塑料会被降低如果被监测的数据已经停止上升；
@@ -280,11 +233,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L1138)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L1071)</span>
 ### CSVLogger
 
 ```python
-keras.callbacks.CSVLogger(filename, separator=',', append=False)
+keras.callbacks.callbacks.CSVLogger(filename, separator=',', append=False)
 ```
 
 把训练轮结果数据流到 csv 文件的回调函数。
@@ -307,11 +260,11 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks.py#L1226)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/callbacks.py#L1163)</span>
 ### LambdaCallback
 
 ```python
-keras.callbacks.LambdaCallback(on_epoch_begin=None, on_epoch_end=None, on_batch_begin=None, on_batch_end=None, on_train_begin=None, on_train_end=None)
+keras.callbacks.callbacks.LambdaCallback(on_epoch_begin=None, on_epoch_end=None, on_batch_begin=None, on_batch_end=None, on_train_begin=None, on_train_end=None)
 ```
 
 在训练进行中创建简单，自定义的回调函数的回调函数。
@@ -319,12 +272,9 @@ keras.callbacks.LambdaCallback(on_epoch_begin=None, on_epoch_end=None, on_batch_
 这个回调函数和匿名函数在合适的时间被创建。
 需要注意的是回调函数要求位置型参数，如下：
 
-- `on_epoch_begin` 和 `on_epoch_end` 要求两个位置型的参数：
-`epoch`, `logs`
-- `on_batch_begin` 和 `on_batch_end` 要求两个位置型的参数：
-`batch`, `logs`
-- `on_train_begin` 和 `on_train_end` 要求一个位置型的参数：
-`logs`
+- `on_epoch_begin` 和 `on_epoch_end` 要求两个位置型的参数：`epoch`, `logs`
+- `on_batch_begin` 和 `on_batch_end` 要求两个位置型的参数：`batch`, `logs`
+- `on_train_begin` 和 `on_train_end` 要求一个位置型的参数：`logs`
 
 __参数__
 
@@ -335,7 +285,7 @@ __参数__
 - __on_train_begin__: 在模型训练开始时被调用。
 - __on_train_end__: 在模型训练结束时被调用。
 
-__例子__
+__示例__
 
 
 ```python
@@ -369,7 +319,59 @@ model.fit(...,
 ---
 
 
-# 创建一个回调函数
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/callbacks/tensorboard_v1.py#L20)</span>
+### TensorBoard
+
+```python
+keras.callbacks.tensorboard_v1.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
+```
+
+Tensorboard 基本可视化。
+
+[TensorBoard](https://www.tensorflow.org/get_started/summaries_and_tensorboard)
+是由 Tensorflow 提供的一个可视化工具。
+
+这个回调函数为 Tensorboard 编写一个日志，
+这样你可以可视化测试和训练的标准评估的动态图像，
+也可以可视化模型中不同层的激活值直方图。
+
+如果你已经使用 pip 安装了 Tensorflow，你应该可以从命令行启动 Tensorflow：
+```sh
+tensorboard --logdir=/full_path_to_your_logs
+```
+
+当使用 TensorFlow 之外德后端时, TensorBoard 仍然可以运行
+(如果你安装了 TensorFlow), 但是仅有展示损失值和评估指标这
+两个功能可用。
+
+__参数__
+
+- __log_dir__: 用来保存被 TensorBoard 分析的日志文件的文件名。
+- __histogram_freq__: 对于模型中各个层计算激活值和模型权重直方图的频率（训练轮数中）。
+如果设置成 0 ，直方图不会被计算。对于直方图可视化的验证数据（或分离数据）一定要明确的指出。
+- __batch_size__: 用以直方图计算的传入神经元网络输入批的大小。
+- __write_graph__: 是否在 TensorBoard 中可视化图像。
+如果 write_graph 被设置为 True，日志文件会变得非常大。
+- __write_grads__: 是否在 TensorBoard  中可视化梯度值直方图。
+`histogram_freq` 必须要大于 0 。
+- __write_images__: 是否在 TensorBoard 中将模型权重以图片可视化。
+- __embeddings_freq__: 被选中的嵌入层会被保存的频率（在训练轮中）。如果设置为0，则不会计算嵌入。
+要在 TensorBoard 的嵌入选项卡中可视化的数据必须作为 `embeddings_data` 传递。
+- __embeddings_layer_names__: 一个列表，会被监测层的名字。
+如果是 None 或空列表，那么所有的嵌入层都会被监测。
+- __embeddings_metadata__: 一个字典，对应层的名字到保存有这个嵌入层元数据文件的名字。
+查看[详情](https://www.tensorflow.org/how_tos/embedding_viz/#metadata_optional)
+关于元数据的数据格式。
+以防同样的元数据被用于所用的嵌入层，字符串可以被传入。
+- __embeddings_data__: 要嵌入在 `embeddings_layer_names` 指定的层的数据。
+Numpy 数组（如果模型有单个输入）或 Numpy 数组列表（如果模型有多个输入）。
+[Learn more about embeddings](https://www.tensorflow.org/programmers_guide/embedding)。
+- __update_freq__: `'batch'` 或 `'epoch'` 或 整数。当使用 `'batch'` 时，在每个 batch 之后将损失和评估值写入到 TensorBoard 中。同样的情况应用到 `'epoch'` 中。如果使用整数，例如 `10000`，这个回调会在每 10000 个样本之后将损失和评估值写入到 TensorBoard 中。注意，频繁地写入到 TensorBoard 会减缓你的训练。
+
+----
+
+
+# 创建一个回调
 
 你可以通过扩展 `keras.callbacks.Callback` 基类来创建一个自定义的回调函数。
 通过类的属性 `self.model`，回调函数可以获得它所联系的模型。
@@ -387,7 +389,7 @@ class LossHistory(keras.callbacks.Callback):
 
 ---
 
-### 例: 记录损失历史
+### 示例: 记录损失历史
 
 ```python
 class LossHistory(keras.callbacks.Callback):
@@ -414,7 +416,7 @@ print(history.losses)
 
 ---
 
-### 例: 模型检查点
+### 示例: 模型检查点
 
 ```python
 from keras.callbacks import ModelCheckpoint

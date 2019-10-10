@@ -1,7 +1,7 @@
 
 ## 激活函数的用法
 
-激活函数可以通过设置单独的激活层实现，也可以在构造层对象时通过传递 `activation` 参数实现：
+激活函数可以通过设置单独的 `Activation` 层实现，也可以在构造层对象时通过传递 `activation` 参数实现：
 
 ```python
 from keras.layers import Activation, Dense
@@ -12,12 +12,12 @@ model.add(Activation('tanh'))
 
 等价于：
 
+
 ```python
 model.add(Dense(64, activation='tanh'))
 ```
 
 你也可以通过传递一个逐元素运算的 Theano/TensorFlow/CNTK 函数来作为激活函数：
-
 
 ```python
 from keras import backend as K
@@ -27,6 +27,29 @@ model.add(Activation(K.tanh))
 ```
 
 ## 预定义激活函数
+
+### elu
+
+```python
+keras.activations.elu(x, alpha=1.0)
+```
+
+指数线性单元。
+
+__参数__
+
+- __x__：输入张量。
+- __alpha__：一个标量，表示负数部分的斜率。
+
+__返回__
+
+线性指数激活：如果 `x > 0`，返回值为 `x`；如果 `x < 0` 返回值为 `alpha * (exp(x)-1)`
+
+__参考文献__
+
+- [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)](https://arxiv.org/abs/1511.07289)
+
+----
 
 ### softmax
 
@@ -40,8 +63,8 @@ Softmax 激活函数。
 
 __参数__
 
-- __x__：张量。
-- __axis__：整数，代表softmax所作用的维度。
+- __x__：输入张量。
+- __axis__：整数，代表 softmax 所作用的维度。
 
 __返回__
 
@@ -53,28 +76,6 @@ __异常__
 
 ----
 
-### elu
-
-```python
-keras.activations.elu(x, alpha=1.0)
-```
-
-指数线性单元。
-
-__参数__
-
-- __x__：张量。
-- __alpha__：一个标量，表示负数部分的斜率。
-
-__返回__
-
-线性指数激活：如果 `x > 0`，返回值为 `x`；如果 `x < 0` 返回值为 `alpha * (exp(x)-1)`
-
-__参考文献__
-
-- [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)](https://arxiv.org/abs/1511.07289)
-
-----
 
 ### selu
 
@@ -117,7 +118,7 @@ Softplus 激活函数。
 
 __参数__
 
-- __x__: 张量。
+- __x__: 输入张量。
 
 __返回__
 
@@ -136,7 +137,7 @@ Softsign 激活函数。
 
 __参数__
 
-- __x__: 张量。
+- __x__: 输入张量。
 
 __返回__
 
@@ -163,7 +164,7 @@ keras.activations.relu(x, alpha=0.0, max_value=None, threshold=0.0)
 
 __参数__
 
-- __x__: 张量。
+- __x__: 输入张量。
 - __alpha__：负数部分的斜率。默认为 0。
 - __max_value__：输出的最大值。
 - __threshold__: 浮点数。Thresholded activation 的阈值值。
@@ -182,6 +183,15 @@ keras.activations.tanh(x)
 
 双曲正切激活函数。
 
+__参数__
+
+- __x__: 输入张量。
+
+__返回__
+
+双曲正切激活函数:
+`tanh(x) = (exp(x) - exp(-x)) / (exp(x) + exp(-x))`
+
 ----
 
 ### sigmoid
@@ -192,6 +202,14 @@ sigmoid(x)
 ```
 
 Sigmoid 激活函数。
+
+__参数__
+
+- __x__: 输入张量.
+
+__返回__
+
+Sigmoid激活函数: `1 / (1 + exp(-x))`.
 
 ----
 
@@ -208,14 +226,14 @@ Hard sigmoid 激活函数。
 
 __参数__
 
-- __x__: 张量。
+- __x__: 输入张量。
 
 __返回__
 
-Hard sigmoid 激活：
+Hard sigmoid 激活函数：
 
-- 如果 `x < -2.5`，返回 0。
-- 如果 `x > 2.5`，返回 1。
+- 如果 `x < -2.5`，返回 `0`。
+- 如果 `x > 2.5`，返回 `1`。
 - 如果 `-2.5 <= x <= 2.5`，返回 `0.2 * x + 0.5`。
 
 ----
@@ -239,6 +257,14 @@ keras.activations.linear(x)
 ```
 
 线性激活函数（即不做任何改变）
+
+__参数__
+
+- __x__: 输入张量。
+
+__返回__
+
+输入张量，不变。
 
 
 ## 高级激活函数

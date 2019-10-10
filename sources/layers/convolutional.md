@@ -1,4 +1,4 @@
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L241)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L234)</span>
 ### Conv1D
 
 ```python
@@ -15,9 +15,9 @@ keras.layers.Conv1D(filters, kernel_size, strides=1, padding='valid', data_forma
 最后，如果 `activation` 
 不是 `None`，它也会应用于输出。
 
-当使用该层作为模型第一层时，需要提供 `input_shape` 参数（整数元组或 `None`），例如，
-`(10, 128)` 表示 10 个 128 维的向量组成的向量序列，
-`(None, 128)` 表示 128 维的向量组成的变长序列。
+当使用该层作为模型第一层时，需要提供 `input_shape` 参数（整数元组或 `None`，不包含 batch 轴），
+例如，`input_shape=(10, 128)` 在 `data_format="channels_last"` 时表示 10 个 128 维的向量组成的向量序列，
+`(None, 128)` 表示每步 128 维的向量组成的变长序列。
 
 __参数__
 
@@ -73,7 +73,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L367)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L361)</span>
 ### Conv2D
 
 ```python
@@ -91,7 +91,7 @@ keras.layers.Conv2D(filters, kernel_size, strides=(1, 1), padding='valid', data_
 不是 `None`，它也会应用于输出。
 
 当使用该层作为模型第一层时，需要提供 `input_shape` 参数
-（整数元组，不包含样本表示的轴），例如，
+（整数元组，不包含 batch 轴），例如，
 `input_shape=(128, 128, 3)` 表示 128x128 RGB 图像，
 在 `data_format="channels_last"` 时。
 
@@ -153,11 +153,11 @@ __输出尺寸__
 - 如果 data_format='channels_last'，
 输出 4D 张量，尺寸为 `(samples, new_rows, new_cols, filters)`。
 
-由于填充的原因， `rows` 和 `cols` 值可能已更改。
+由于填充的原因，`rows` 和 `cols` 值可能已更改。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1420)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1414)</span>
 ### SeparableConv1D
 
 ```python
@@ -237,11 +237,11 @@ __输出尺寸__
 - 如果 data_format='channels_last'，
 输出 3D 张量，尺寸为 `(batch, new_steps, filters)`。
 
-由于填充的原因， `new_steps` 值可能已更改。
+由于填充的原因，`new_steps` 值可能已更改。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1552)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1546)</span>
 ### SeparableConv2D
 
 ```python
@@ -250,7 +250,7 @@ keras.layers.SeparableConv2D(filters, kernel_size, strides=(1, 1), padding='vali
 
 深度方向的可分离 2D 卷积。
 
-可分离的卷积的操作包括，首先执行深度方向的空间卷积
+可分离的卷积的操作首先执行深度方向的空间卷积
 （分别作用于每个输入通道），紧接一个将所得输出通道
 混合在一起的逐点卷积。`depth_multiplier` 参数控
 制深度步骤中每个输入通道生成多少个输出通道。
@@ -323,20 +323,20 @@ __输出尺寸__
 - 如果 data_format='channels_last'，
 输出 4D 张量，尺寸为 `(batch, new_rows, new_cols, filters)`。
 
-由于填充的原因， `rows` 和 `cols` 值可能已更改。
+由于填充的原因，`rows` 和 `cols` 值可能已更改。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1693)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1687)</span>
 ### DepthwiseConv2D
 
 ```python
-keras.layers.DepthwiseConv2D(kernel_size, strides=(1, 1), padding='valid', depth_multiplier=1, data_format=None, activation=None, use_bias=True, depthwise_initializer='glorot_uniform', bias_initializer='zeros', depthwise_regularizer=None, bias_regularizer=None, activity_regularizer=None, depthwise_constraint=None, bias_constraint=None)
+keras.layers.DepthwiseConv2D(kernel_size, strides=(1, 1), padding='valid', depth_multiplier=1, data_format=None, dilation_rate=(1, 1), activation=None, use_bias=True, depthwise_initializer='glorot_uniform', bias_initializer='zeros', depthwise_regularizer=None, bias_regularizer=None, activity_regularizer=None, depthwise_constraint=None, bias_constraint=None)
 ```
 
-深度可分离 2D 卷积。
+深度 2D 卷积。
 
-深度可分离卷积包括仅执行深度空间卷积中的第一步（其分别作用于每个输入通道）。
+深度卷积仅执行深度空间卷积中的第一步（其分别作用于每个输入通道）。
 `depth_multiplier` 参数控制深度步骤中每个输入通道生成多少个输出通道。
 
 __Arguments__
@@ -358,6 +358,9 @@ __Arguments__
     它默认为从 Keras 配置文件 `~/.keras/keras.json` 中
     找到的 `image_data_format` 值。
     如果你从未设置它，将使用「channels_last」。
+- __dilation_rate__: 一个整数，或者 2 个整数表示的元组或列表，
+    为使用扩张（空洞）卷积指明扩张率。
+    目前，指定任何 `dilation_rate` 值 != 1 与指定任何 `stride` 值 != 1 两者不兼容。
 - __activation__: 要使用的激活函数
     (详见 [activations](../activations.md))。
     如果你不指定，则不使用激活函数
@@ -388,15 +391,15 @@ __输入尺寸__
 __输出尺寸__
 
 - 如果 data_format='channels_first'，
-输出 4D 张量，尺寸为 `(batch, filters, new_rows, new_cols)`。
+输出 4D 张量，尺寸为 `(batch, channels * depth_multiplier, new_rows, new_cols)`。
 - 如果 data_format='channels_last'，
-输出 4D 张量，尺寸为 `(batch, new_rows, new_cols, filters)`。
+输出 4D 张量，尺寸为 `(batch, new_rows, new_cols,  channels * depth_multiplier)`。
 
-由于填充的原因， `rows` 和 `cols` 值可能已更改。
+由于填充的原因，`rows` 和 `cols` 值可能已更改。
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L627)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L621)</span>
 ### Conv2DTranspose
 
 ```python
@@ -412,7 +415,7 @@ keras.layers.Conv2DTranspose(filters, kernel_size, strides=(1, 1), padding='vali
 同时保持与所述卷积相容的连通性模式。
 
 当使用该层作为模型第一层时，需要提供 `input_shape` 参数
-（整数元组，不包含样本表示的轴），例如，
+（整数元组，不包含 batch 轴），例如，
 `input_shape=(128, 128, 3)` 表示 128x128 RGB 图像，
 在 `data_format="channels_last"` 时。
 
@@ -479,7 +482,7 @@ __输出尺寸__
 - 如果 data_format='channels_last'，
 输出 4D 张量，尺寸为 `(batch, new_rows, new_cols, filters)`。
 
-由于填充的原因， `rows` 和 `cols` 值可能已更改。
+由于填充的原因，`rows` 和 `cols` 值可能已更改。
 
 如果指定了 `output_padding`:
 
@@ -493,11 +496,11 @@ new_cols = ((cols - 1) * strides[1] + kernel_size[1]
 __参考文献__
 
 - [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285v1)
-- [Deconvolutional Networks](http://www.matthewzeiler.com/pubs/cvpr2010/cvpr2010.pdf)
+- [Deconvolutional Networks](https://www.matthewzeiler.com/mattzeiler/deconvolutionalnetworks.pdf)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L498)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L492)</span>
 ### Conv3D
 
 ```python
@@ -515,7 +518,7 @@ keras.layers.Conv3D(filters, kernel_size, strides=(1, 1, 1), padding='valid', da
 不是 `None`，它也会应用于输出。
 
 当使用该层作为模型第一层时，需要提供 `input_shape` 参数
-（整数元组，不包含样本表示的轴），例如，
+（整数元组，不包含 batch 轴），例如，
 `input_shape=(128, 128, 128, 1)` 表示 128x128x128 的单通道立体，
 在 `data_format="channels_last"` 时。
 
@@ -579,7 +582,7 @@ __输出尺寸__
 - 如果 data_format='channels_last'，
 输出 5D 张量，尺寸为 `(samples, new_conv_dim1, new_conv_dim2, new_conv_dim3, filters)`。
 
-由于填充的原因， `new_conv_dim1`, `new_conv_dim2` 和 `new_conv_dim3` 值可能已更改。
+由于填充的原因，`new_conv_dim1`, `new_conv_dim2` 和 `new_conv_dim3` 值可能已更改。
 
 ----
 
@@ -680,14 +683,12 @@ new_cols = ((cols - 1) * strides[2] + kernel_size[2]
 
 __参考文献__
 
-- [A guide to convolution arithmetic for deep learning]
-(https://arxiv.org/abs/1603.07285v1)
-- [Deconvolutional Networks]
-(http://www.matthewzeiler.com/pubs/cvpr2010/cvpr2010.pdf)
+- [A guide to convolution arithmetic for deep learning](https://arxiv.org/abs/1603.07285v1)
+- [Deconvolutional Networks](https://www.matthewzeiler.com/mattzeiler/deconvolutionalnetworks.pdf)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2375)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2377)</span>
 ### Cropping1D
 
 ```python
@@ -716,7 +717,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2407)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2409)</span>
 ### Cropping2D
 
 ```python
@@ -755,7 +756,7 @@ __输出尺寸__
 输出 4D 张量，尺寸为 `(batch, channels, rows, cols)`。
 
 
-由于填充的原因， `rows` 和 `cols` 值可能已更改。
+由于填充的原因，`rows` 和 `cols` 值可能已更改。
 
 __输入尺寸__
 
@@ -771,7 +772,7 @@ __输出尺寸__
 - 如果 `data_format` 为 `"channels_first"`，
 输出 4D 张量，尺寸为 `(batch, channels, cropped_rows, cropped_cols)`。
 
-__例子__
+__示例__
 
 
 ```python
@@ -787,7 +788,7 @@ model.add(Cropping2D(cropping=((2, 2), (2, 2))))
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2490)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2492)</span>
 ### Cropping3D
 
 ```python
@@ -835,7 +836,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1943)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1945)</span>
 ### UpSampling1D
 
 ```python
@@ -860,7 +861,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1973)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L1975)</span>
 ### UpSampling2D
 
 ```python
@@ -908,7 +909,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2031)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2033)</span>
 ### UpSampling3D
 
 ```python
@@ -954,7 +955,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2123)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2125)</span>
 ### ZeroPadding1D
 
 ```python
@@ -981,7 +982,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2158)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2160)</span>
 ### ZeroPadding2D
 
 ```python
@@ -1031,7 +1032,7 @@ __输出尺寸__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2234)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/layers/convolutional.py#L2236)</span>
 ### ZeroPadding3D
 
 ```python

@@ -56,7 +56,7 @@ model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 # 初始化 RMSprop 优化器。
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=1e-6)
 
 # 利用 RMSprop 来训练模型。
 model.compile(loss='categorical_crossentropy',

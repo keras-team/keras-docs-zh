@@ -1,12 +1,13 @@
-Restore a character-level sequence to sequence model from disk and use it
-to generate predictions.
 
-This script loads the s2s.h5 model saved by lstm_seq2seq.py and generates
-sequences from it.  It assumes that no changes have been made (for example:
-latent_dim is unchanged, and the input data and model architecture are unchanged).
+#Restore a character-level sequence to sequence model from to generate predictions.
 
-See lstm_seq2seq.py for more details on the model architecture and how
-it is trained.
+This script loads the ```s2s.h5``` model saved by [lstm_seq2seq.py
+](/examples/lstm_seq2seq/) and generates sequences from it. It assumes
+that no changes have been made (for example: ```latent_dim``` is unchanged,
+and the input data and model architecture are unchanged).
+
+See [lstm_seq2seq.py](/examples/lstm_seq2seq/) for more details on the
+model architecture and how it is trained.
 
 
 ```python

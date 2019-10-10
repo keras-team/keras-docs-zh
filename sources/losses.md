@@ -29,7 +29,7 @@ model.compile(loss=losses.mean_squared_error, optimizer='sgd')
 
 
 ```python
-mean_squared_error(y_true, y_pred)
+keras.losses.mean_squared_error(y_true, y_pred)
 ```
 
 ----
@@ -38,7 +38,7 @@ mean_squared_error(y_true, y_pred)
 
 
 ```python
-mean_absolute_error(y_true, y_pred)
+eras.losses.mean_absolute_error(y_true, y_pred)
 ```
 
 ----
@@ -47,7 +47,7 @@ mean_absolute_error(y_true, y_pred)
 
 
 ```python
-mean_absolute_percentage_error(y_true, y_pred)
+keras.losses.mean_absolute_percentage_error(y_true, y_pred)
 ```
 
 ----
@@ -56,7 +56,7 @@ mean_absolute_percentage_error(y_true, y_pred)
 
 
 ```python
-mean_squared_logarithmic_error(y_true, y_pred)
+keras.losses.mean_squared_logarithmic_error(y_true, y_pred)
 ```
 
 ----
@@ -65,7 +65,7 @@ mean_squared_logarithmic_error(y_true, y_pred)
 
 
 ```python
-squared_hinge(y_true, y_pred)
+keras.losses.squared_hinge(y_true, y_pred)
 ```
 
 ----
@@ -74,7 +74,7 @@ squared_hinge(y_true, y_pred)
 
 
 ```python
-hinge(y_true, y_pred)
+keras.losses.hinge(y_true, y_pred)
 ```
 
 ----
@@ -83,7 +83,7 @@ hinge(y_true, y_pred)
 
 
 ```python
-categorical_hinge(y_true, y_pred)
+keras.losses.categorical_hinge(y_true, y_pred)
 ```
 
 ----
@@ -92,7 +92,7 @@ categorical_hinge(y_true, y_pred)
 
 
 ```python
-logcosh(y_true, y_pred)
+keras.losses.logcosh(y_true, y_pred)
 ```
 
 预测误差的双曲余弦的对数。
@@ -110,11 +110,20 @@ __返回__
 
 ----
 
+### huber_loss
+
+
+```python
+keras.losses.huber_loss(y_true, y_pred, delta=1.0)
+```
+
+---
+
 ### categorical_crossentropy
 
 
 ```python
-categorical_crossentropy(y_true, y_pred)
+keras.losses.categorical_crossentropy(y_true, y_pred, from_logits=False, label_smoothing=0)
 ```
 
 ----
@@ -123,7 +132,7 @@ categorical_crossentropy(y_true, y_pred)
 
 
 ```python
-sparse_categorical_crossentropy(y_true, y_pred)
+keras.losses.sparse_categorical_crossentropy(y_true, y_pred, from_logits=False, axis=-1)
 ```
 
 ----
@@ -132,7 +141,7 @@ sparse_categorical_crossentropy(y_true, y_pred)
 
 
 ```python
-binary_crossentropy(y_true, y_pred)
+keras.losses.binary_crossentropy(y_true, y_pred, from_logits=False, label_smoothing=0)
 ```
 
 ----
@@ -141,7 +150,7 @@ binary_crossentropy(y_true, y_pred)
 
 
 ```python
-kullback_leibler_divergence(y_true, y_pred)
+keras.losses.kullback_leibler_divergence(y_true, y_pred)
 ```
 
 ----
@@ -150,7 +159,7 @@ kullback_leibler_divergence(y_true, y_pred)
 
 
 ```python
-poisson(y_true, y_pred)
+keras.losses.poisson(y_true, y_pred)
 ```
 
 ----
@@ -159,9 +168,16 @@ poisson(y_true, y_pred)
 
 
 ```python
-cosine_proximity(y_true, y_pred)
+keras.losses.cosine_proximity(y_true, y_pred, axis=-1)
 ```
 
+---
+
+### is_categorical_crossentropy
+
+```python
+keras.losses.is_categorical_crossentropy(loss)
+```
 
 ----
 
@@ -172,3 +188,7 @@ from keras.utils.np_utils import to_categorical
 
 categorical_labels = to_categorical(int_labels, num_classes=None)
 ```
+
+当使用 sparse_categorical_crossentropy 损失时，你的目标应该是整数。如果你是类别目标，应该使用 categorical_crossentropy。
+
+categorical_crossentropy 是多类对数损失的另一种形式。

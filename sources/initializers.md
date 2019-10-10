@@ -11,7 +11,7 @@ model.add(Dense(64,
                 bias_initializer='zeros'))
 ```
 
-## 可用的初始化器
+## 预定义初始化器
 
 下面这些是可用的内置初始化器，是 `keras.initializers` 模块的一部分: 
 
@@ -80,7 +80,7 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L94)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L97)</span>
 ### RandomUniform
 
 ```python
@@ -97,7 +97,7 @@ __参数__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L122)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L128)</span>
 ### TruncatedNormal
 
 ```python
@@ -116,7 +116,7 @@ __Arguments__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L155)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L164)</span>
 ### VarianceScaling
 
 ```python
@@ -146,7 +146,7 @@ __异常__
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L228)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L241)</span>
 ### Orthogonal
 
 ```python
@@ -162,11 +162,11 @@ __参数__
 
 __参考文献__
 
-Saxe et al., http://arxiv.org/abs/1312.6120
+- [Exact solutions to the nonlinear dynamics of learning in deep linear neural networks](http://arxiv.org/abs/1312.6120)
 
 ----
 
-<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L265)</span>
+<span style="float:right;">[[source]](https://github.com/keras-team/keras/blob/master/keras/initializers.py#L281)</span>
 ### Identity
 
 ```python
@@ -207,7 +207,7 @@ __返回__
 
 __参考文献__
 
-[LeCun 98, Efficient Backprop](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
+- [Efficient Backprop](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
 
 ----
 
@@ -235,7 +235,7 @@ __返回__
 
 __参考文献__
 
-[Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
+- [Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
 
 ----
 
@@ -264,7 +264,7 @@ __返回__
 
 __参考文献__
 
-[Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
+- [Understanding the difficulty of training deep feedforward neural networks](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf)
 
 ----
 
