@@ -1,23 +1,21 @@
 
-#Train an Auxiliary Classifier GAN (ACGAN) on the MNIST dataset.
+# 在 MNIST 数据集上训练辅助分类器 GAN（ACGAN）。
 
-[More details on Auxiliary Classifier GANs.](https://arxiv.org/abs/1610.09585)
+[有关辅助分类器 GAN 的更多详细信息。](https://arxiv.org/abs/1610.09585)
 
-You should start to see reasonable images after ~5 epochs, and good images
-by ~15 epochs. You should use a GPU, as the convolution-heavy operations are
-very slow on the CPU. Prefer the TensorFlow backend if you plan on iterating,
-as the compilation time can be a blocker using Theano.
+你应该在大约 5 个轮次后开始看到合理的图像，而在大约 15 个轮次后开始看到良好的图像。
+你应该使用 GPU，因为大量卷积运算在 CPU 上非常慢。
+如果你打算进行迭代，请首选 TensorFlow 后端，因为使用 Theano 的话编译时间可能会称为阻碍。
 
-Timings:
+耗时：
 
-Hardware           | Backend | Time / Epoch
+硬件           | 后端 | Time / Epoch
 :------------------|:--------|------------:
  CPU               | TF      | 3 hrs
  Titan X (maxwell) | TF      | 4 min
  Titan X (maxwell) | TH      | 7 min
 
-Consult [Auxiliary Classifier Generative Adversarial Networks in Keras
-](https://github.com/lukedeo/keras-acgan) for more information and example output.
+有关更多信息和示例输出，请咨询 [Keras 中的辅助分类器生成对抗网络](https://github.com/lukedeo/keras-acgan)。
 
 
 ```python
@@ -48,40 +46,39 @@ num_classes = 10
 
 
 def build_generator(latent_size):
-    # we will map a pair of (z, L), where z is a latent vector and L is a
-    # label drawn from P_c, to image space (..., 28, 28, 1)
+    # 我们将一对 (z, L) 映射到图像空间 (..., 28, 28, 1)，其中 z 是隐向量，L 是从 P_c 绘制的标签。
     cnn = Sequential()
 
     cnn.add(Dense(3 * 3 * 384, input_dim=latent_size, activation='relu'))
     cnn.add(Reshape((3, 3, 384)))
 
-    # upsample to (7, 7, ...)
+    # 上采样至 (7, 7, ...)
     cnn.add(Conv2DTranspose(192, 5, strides=1, padding='valid',
                             activation='relu',
                             kernel_initializer='glorot_normal'))
     cnn.add(BatchNormalization())
 
-    # upsample to (14, 14, ...)
+    # 上采样至 (14, 14, ...)
     cnn.add(Conv2DTranspose(96, 5, strides=2, padding='same',
                             activation='relu',
                             kernel_initializer='glorot_normal'))
     cnn.add(BatchNormalization())
 
-    # upsample to (28, 28, ...)
+    # 上采样至 (28, 28, ...)
     cnn.add(Conv2DTranspose(1, 5, strides=2, padding='same',
                             activation='tanh',
                             kernel_initializer='glorot_normal'))
 
-    # this is the z space commonly referred to in GAN papers
+    # 这是 GAN 论文中通常提到的 z 空间
     latent = Input(shape=(latent_size, ))
 
-    # this will be our label
+    # 这将是我们的标签
     image_class = Input(shape=(1,), dtype='int32')
 
     cls = Embedding(num_classes, latent_size,
                     embeddings_initializer='glorot_normal')(image_class)
 
-    # hadamard product between z-space and a class conditional embedding
+    # z 空间和一类条件嵌入之间的 hadamard 积
     h = layers.multiply([latent, cls])
 
     fake_image = cnn(h)
@@ -90,8 +87,7 @@ def build_generator(latent_size):
 
 
 def build_discriminator():
-    # build a relatively standard conv net, with LeakyReLUs as suggested in
-    # the reference paper
+    # 根据参考文献中的建议，使用 LeakyReLU 构建相对标准的转换网络
     cnn = Sequential()
 
     cnn.add(Conv2D(32, 3, padding='same', strides=2,
@@ -117,10 +113,8 @@ def build_discriminator():
 
     features = cnn(image)
 
-    # first output (name=generation) is whether or not the discriminator
-    # thinks the image that is being shown is fake, and the second output
-    # (name=auxiliary) is the class that the discriminator thinks the image
-    # belongs to.
+    # 第一个输出 (name=generation) 是鉴别是否认为所显示的图像是伪造的，
+    # 而第二个输出 (name=auxiliary) 是鉴别认为图像所属的类。
     fake = Dense(1, activation='sigmoid', name='generation')(features)
     aux = Dense(num_classes, activation='softmax', name='auxiliary')(features)
 
@@ -128,16 +122,16 @@ def build_discriminator():
 
 
 if __name__ == '__main__':
-    # batch and latent size taken from the paper
+    # 论文的批次和潜在大小
     epochs = 100
     batch_size = 100
     latent_size = 100
 
-    # Adam parameters suggested in https://arxiv.org/abs/1511.06434
+    # https://arxiv.org/abs/1511.06434 建议的 Adam 参数
     adam_lr = 0.0002
     adam_beta_1 = 0.5
 
-    # build the discriminator
+    # 建立鉴别器
     print('Discriminator model:')
     discriminator = build_discriminator()
     discriminator.compile(
@@ -146,16 +140,16 @@ if __name__ == '__main__':
     )
     discriminator.summary()
 
-    # build the generator
+    # 建立生成器
     generator = build_generator(latent_size)
 
     latent = Input(shape=(latent_size, ))
     image_class = Input(shape=(1,), dtype='int32')
 
-    # get a fake image
+    # 取得假图片
     fake = generator([latent, image_class])
 
-    # we only want to be able to train generation for the combined model
+    # 我们只希望能够训练组合模型的生成
     discriminator.trainable = False
     fake, aux = discriminator(fake)
     combined = Model([latent, image_class], [fake, aux])
@@ -167,8 +161,7 @@ if __name__ == '__main__':
     )
     combined.summary()
 
-    # get our mnist data, and force it to be of shape (..., 28, 28, 1) with
-    # range [-1, 1]
+    # 获取我们的 mnist 数据，并强制其形状为 (..., 28, 28, 1)，范围为 [-1, 1]
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     x_train = (x_train.astype(np.float32) - 127.5) / 127.5
     x_train = np.expand_dims(x_train, axis=-1)
@@ -191,26 +184,25 @@ if __name__ == '__main__':
         epoch_disc_loss = []
 
         for index in range(num_batches):
-            # get a batch of real images
+            # 得到一批真实的图像
             image_batch = x_train[index * batch_size:(index + 1) * batch_size]
             label_batch = y_train[index * batch_size:(index + 1) * batch_size]
 
-            # generate a new batch of noise
+            # 产生一批新的噪音
             noise = np.random.uniform(-1, 1, (len(image_batch), latent_size))
 
-            # sample some labels from p_c
+            # 从 p_c 采样一些标签
             sampled_labels = np.random.randint(0, num_classes, len(image_batch))
 
-            # generate a batch of fake images, using the generated labels as a
-            # conditioner. We reshape the sampled labels to be
-            # (len(image_batch), 1) so that we can feed them into the embedding
-            # layer as a length one sequence
+            # 使用生成的标签作为调节器，生成一批假图像。
+            # 我们将采样的标签重塑为 (len(image_batch),1)，
+            # 以便我们可以将它们作为一个序列的长度送入嵌入层
             generated_images = generator.predict(
                 [noise, sampled_labels.reshape((-1, 1))], verbose=0)
 
             x = np.concatenate((image_batch, generated_images))
 
-            # use one-sided soft real/fake labels
+            # 使用单面 soft real/fake 标签
             # Salimans et al., 2016
             # https://arxiv.org/pdf/1606.03498.pdf (Section 3.4)
             soft_zero, soft_one = 0, 0.95
@@ -218,29 +210,24 @@ if __name__ == '__main__':
                 [soft_one] * len(image_batch) + [soft_zero] * len(image_batch))
             aux_y = np.concatenate((label_batch, sampled_labels), axis=0)
 
-            # we don't want the discriminator to also maximize the classification
-            # accuracy of the auxiliary classifier on generated images, so we
-            # don't train discriminator to produce class labels for generated
-            # images (see https://openreview.net/forum?id=rJXTf9Bxg).
-            # To preserve sum of sample weights for the auxiliary classifier,
-            # we assign sample weight of 2 to the real images.
+            # 我们不希望鉴别器也能最大化生成图像上辅助分类器的分类精度，
+            # 因此我们不训练鉴别器为生成图像生成类标签（请参阅 https://openreview.net/forum?id=rJXTf9Bxg）。
+            # 为了保留辅助分类器的样本权重总和，我们将样本权重 2 分配给实际图像。
             disc_sample_weight = [np.ones(2 * len(image_batch)),
                                   np.concatenate((np.ones(len(image_batch)) * 2,
                                                   np.zeros(len(image_batch))))]
 
-            # see if the discriminator can figure itself out...
+            # 看看鉴别器是否能弄清楚自己...
             epoch_disc_loss.append(discriminator.train_on_batch(
                 x, [y, aux_y], sample_weight=disc_sample_weight))
 
-            # make new noise. we generate 2 * batch size here such that we have
-            # the generator optimize over an identical number of images as the
-            # discriminator
+            # 制造新的声音。我们在这里生成 2 倍批量大小，
+            # 这样我们就可以使生成器对与鉴别器相同数量的图像进行优化
             noise = np.random.uniform(-1, 1, (2 * len(image_batch), latent_size))
             sampled_labels = np.random.randint(0, num_classes, 2 * len(image_batch))
 
-            # we want to train the generator to trick the discriminator
-            # For the generator, we want all the {fake, not-fake} labels to say
-            # not-fake
+            # 我们想训练生成器来欺骗鉴别器
+            # 对于生成器，我们希望所有 {fake，not-fake} 标签都说不假
             trick = np.ones(2 * len(image_batch)) * soft_one
 
             epoch_gen_loss.append(combined.train_on_batch(
@@ -251,12 +238,12 @@ if __name__ == '__main__':
 
         print('Testing for epoch {}:'.format(epoch))
 
-        # evaluate the testing loss here
+        #在这里评估测试损失
 
-        # generate a new batch of noise
+        # 产生一批新的噪音
         noise = np.random.uniform(-1, 1, (num_test, latent_size))
 
-        # sample some labels from p_c and generate images from them
+        # 从 p_c 采样一些标签并从中生成图像
         sampled_labels = np.random.randint(0, num_classes, num_test)
         generated_images = generator.predict(
             [noise, sampled_labels.reshape((-1, 1))], verbose=False)
@@ -265,13 +252,13 @@ if __name__ == '__main__':
         y = np.array([1] * num_test + [0] * num_test)
         aux_y = np.concatenate((y_test, sampled_labels), axis=0)
 
-        # see if the discriminator can figure itself out...
+        # 看看鉴别器是否能弄清楚自己...
         discriminator_test_loss = discriminator.evaluate(
             x, [y, aux_y], verbose=False)
 
         discriminator_train_loss = np.mean(np.array(epoch_disc_loss), axis=0)
 
-        # make new noise
+        # 制造新的噪声
         noise = np.random.uniform(-1, 1, (2 * num_test, latent_size))
         sampled_labels = np.random.randint(0, num_classes, 2 * num_test)
 
@@ -283,7 +270,7 @@ if __name__ == '__main__':
 
         generator_train_loss = np.mean(np.array(epoch_gen_loss), axis=0)
 
-        # generate an epoch report on performance
+        # 生成有关性能的轮次报告
         train_history['generator'].append(generator_train_loss)
         train_history['discriminator'].append(discriminator_train_loss)
 
@@ -304,13 +291,13 @@ if __name__ == '__main__':
         print(ROW_FMT.format('discriminator (test)',
                              *test_history['discriminator'][-1]))
 
-        # save weights every epoch
+        # 在每个轮次保存权重
         generator.save_weights(
             'params_generator_epoch_{0:03d}.hdf5'.format(epoch), True)
         discriminator.save_weights(
             'params_discriminator_epoch_{0:03d}.hdf5'.format(epoch), True)
 
-        # generate some digits to display
+        # 生成一些数字来显示
         num_rows = 40
         noise = np.tile(np.random.uniform(-1, 1, (num_rows, latent_size)),
                         (num_classes, 1))
@@ -319,24 +306,24 @@ if __name__ == '__main__':
             [i] * num_rows for i in range(num_classes)
         ]).reshape(-1, 1)
 
-        # get a batch to display
+        # 批量显示
         generated_images = generator.predict(
             [noise, sampled_labels], verbose=0)
 
-        # prepare real images sorted by class label
+        # 准备按类别标签排序的真实图像
         real_labels = y_train[(epoch - 1) * num_rows * num_classes:
                               epoch * num_rows * num_classes]
         indices = np.argsort(real_labels, axis=0)
         real_images = x_train[(epoch - 1) * num_rows * num_classes:
                               epoch * num_rows * num_classes][indices]
 
-        # display generated images, white separator, real images
+        # 显示生成的图像，白色分隔符，真实图像
         img = np.concatenate(
             (generated_images,
              np.repeat(np.ones_like(x_train[:1]), num_rows, axis=0),
              real_images))
 
-        # arrange them into a grid
+        # 将它们排列成网格
         img = (np.concatenate([r.reshape(-1, 28)
                                for r in np.split(img, 2 * num_classes + 1)
                                ], axis=-1) * 127.5 + 127.5).astype(np.uint8)

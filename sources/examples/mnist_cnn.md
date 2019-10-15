@@ -1,8 +1,8 @@
-Trains a simple convnet on the MNIST dataset.
+# 在 MNIST 数据集上训练一个简单的 convnet。
 
-Gets to 99.25% test accuracy after 12 epochs
-(there is still a lot of margin for parameter tuning).
-16 seconds per epoch on a GRID K520 GPU.
+12 个轮次后达到 99.25％ 的测试准确度
+(参数调整仍有很多余地)。
+在 GRID K520 GPU 上，每个轮次 16秒。
 
 
 ```python
@@ -18,10 +18,10 @@ batch_size = 128
 num_classes = 10
 epochs = 12
 
-# input image dimensions
+# 输入图像尺寸
 img_rows, img_cols = 28, 28
 
-# the data, split between train and test sets
+# 数据，分为训练集和测试集
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 if K.image_data_format() == 'channels_first':
@@ -41,7 +41,7 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# convert class vectors to binary class matrices
+# 将类向量转换为二进制类矩阵
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 

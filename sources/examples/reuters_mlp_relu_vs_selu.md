@@ -1,15 +1,12 @@
-Compares self-normalizing MLPs with regular MLPs.
+# 将自规范化 MLP 与常规 MLP 进行比较。
 
-Compares the performance of a simple MLP using two
-different activation functions: RELU and SELU
-on the Reuters newswire topic classification task.
+使用两种不同的激活函数（路透社新闻分类主题任务上的 RELU 和 SELU）比较简单 MLP 的性能。
 
-# Reference
+# 参考文献
 
 - Klambauer, G., Unterthiner, T., Mayr, A., & Hochreiter, S. (2017).
-  Self-Normalizing Neural Networks. arXiv preprint arXiv:1706.02515.
-  https://arxiv.org/abs/1706.02515
-
+  [Self-Normalizing Neural Networks. arXiv preprint arXiv:1706.02515.](https://arxiv.org/abs/1706.02515)
+  
 
 ```python
 from __future__ import print_function
@@ -38,20 +35,20 @@ def create_network(n_dense=6,
                    optimizer='adam',
                    num_classes=1,
                    max_words=max_words):
-    """Generic function to create a fully-connected neural network.
+    """泛型函数可创建完全连接的神经网络。
 
-    # Arguments
-        n_dense: int > 0. Number of dense layers.
-        dense_units: int > 0. Number of dense units per layer.
-        dropout: keras.layers.Layer. A dropout layer to apply.
-        dropout_rate: 0 <= float <= 1. The rate of dropout.
-        kernel_initializer: str. The initializer for the weights.
-        optimizer: str/keras.optimizers.Optimizer. The optimizer to use.
-        num_classes: int > 0. The number of classes to predict.
-        max_words: int > 0. The maximum number of words per data point.
+    # 参数
+        n_dense: int > 0. 全连接层数。
+        dense_units: int > 0. 每层的全连接单元数。
+        dropout: keras.layers.Layer. 要应用的 dropout 层。
+        dropout_rate: 0 <= float <= 1. dropout 率。
+        kernel_initializer: str. 权重的初始化程序。
+        optimizer: str/keras.optimizers.Optimizer. 要使用的优化程序。
+        num_classes: int > 0. 要预测的类数。
+        max_words: int > 0. 每个数据点的最大字数。
 
-    # Returns
-        A Keras model instance (compiled).
+    # 返回
+        Keras 模型实例（已编译）。
     """
     model = Sequential()
     model.add(Dense(dense_units, input_shape=(max_words,),

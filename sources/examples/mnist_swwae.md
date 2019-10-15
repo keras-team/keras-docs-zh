@@ -1,42 +1,23 @@
-Trains a stacked what-where autoencoder built on residual blocks on the
-MNIST dataset. It exemplifies two influential methods that have been developed
-in the past few years.
+# 训练基于 MNIST 数据集上残差块的堆叠式自动编码器。
 
-The first is the idea of properly 'unpooling.' During any max pool, the
-exact location (the 'where') of the maximal value in a pooled receptive field
-is lost, however it can be very useful in the overall reconstruction of an
-input image. Therefore, if the 'where' is handed from the encoder
-to the corresponding decoder layer, features being decoded can be 'placed' in
-the right location, allowing for reconstructions of much higher fidelity.
+它举例说明了过去几年开发的两种有影响力的方法。
 
-# References
+首先是适当地 "分拆" 的想法。在任何最大池化期间，都会丢失合并的接收场中最大值的确切位置（where），但是在输入图像的整体重建中可能非常有用。
+因此，如果将 "位置" 从编码器传递到相应的解码器层，则可以将要解码的特征 "放置" 在正确的位置，从而可以实现更高保真度的重构。
 
-- Visualizing and Understanding Convolutional Networks
-  Matthew D Zeiler, Rob Fergus
-  https://arxiv.org/abs/1311.2901v3
-- Stacked What-Where Auto-encoders
-  Junbo Zhao, Michael Mathieu, Ross Goroshin, Yann LeCun
-  https://arxiv.org/abs/1506.02351v8
+# 参考文献
 
-The second idea exploited here is that of residual learning. Residual blocks
-ease the training process by allowing skip connections that give the network
-the ability to be as linear (or non-linear) as the data sees fit.  This allows
-for much deep networks to be easily trained. The residual element seems to
-be advantageous in the context of this example as it allows a nice symmetry
-between the encoder and decoder. Normally, in the decoder, the final
-projection to the space where the image is reconstructed is linear, however
-this does not have to be the case for a residual block as the degree to which
-its output is linear or non-linear is determined by the data it is fed.
-However, in order to cap the reconstruction in this example, a hard softmax is
-applied as a bias because we know the MNIST digits are mapped to [0, 1].
+- [Visualizing and Understanding Convolutional Networks, Matthew D Zeiler, Rob Fergus](https://arxiv.org/abs/1311.2901v3)
+- [Stacked What-Where Auto-encoders, Junbo Zhao, Michael Mathieu, Ross Goroshin, Yann LeCun](https://arxiv.org/abs/1506.02351v8)
 
-# References
-- Deep Residual Learning for Image Recognition
-  Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
-  https://arxiv.org/abs/1512.03385v1
-- Identity Mappings in Deep Residual Networks
-  Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
-  https://arxiv.org/abs/1603.05027v3
+这里利用的第二个想法是残差学习的想法。残差块通过允许跳过连接使网络能够按照数据认为合适的线性（或非线性）能力简化训练过程。
+这样可以轻松地训练很多深度的网络。残差元素在该示例的上下文中似乎是有利的，因为它允许编码器和解码器之间的良好对称性。
+通常，在解码器中，对重构图像的空间的最终投影是线性的，但是对于残差块，则不必如此，因为其输出是线性还是非线性的程度取决于被馈送的像素数据。
+但是，为了限制此示例中的重建，因为我们知道 MNIST 数字映射到 [0, 1]，所以将硬 softmax 用作偏置。
+
+# 参考文献
+- [Deep Residual Learning for Image Recognition, Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun](https://arxiv.org/abs/1512.03385v1)
+- [Identity Mappings in Deep Residual Networks, Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun](https://arxiv.org/abs/1603.05027v3)
 
 
 ```python
@@ -54,27 +35,25 @@ from keras import layers
 
 
 def convresblock(x, nfeats=8, ksize=3, nskipped=2, elu=True):
-    """The proposed residual block from [4].
+    """[4] 中提出的残差块。
 
-    Running with elu=True will use ELU nonlinearity and running with
-    elu=False will use BatchNorm + RELU nonlinearity.  While ELU's are fast
-    due to the fact they do not suffer from BatchNorm overhead, they may
-    overfit because they do not offer the stochastic element of the batch
-    formation process of BatchNorm, which acts as a good regularizer.
+    以 elu=True 运行将使用 ELU 非线性，而以 elu=False 运行将使用 BatchNorm+RELU 非线性。
+    尽管 ELU 由于不受 BatchNorm 开销的困扰而很快，但它们可能会过拟合，
+    因为它们不提供 BatchNorm 批处理过程的随机因素，而后者是一个很好的正则化工具。
 
-    # Arguments
-        x: 4D tensor, the tensor to feed through the block
-        nfeats: Integer, number of feature maps for conv layers.
-        ksize: Integer, width and height of conv kernels in first convolution.
-        nskipped: Integer, number of conv layers for the residual function.
-        elu: Boolean, whether to use ELU or BN+RELU.
+    # 参数
+        x: 4D 张量, 穿过块的张量
+        nfeats: 整数。卷积层的特征图大小。
+        ksize: 整数，第一个卷积中 conv 核的宽度和高度。
+        nskipped: 整数，残差函数的卷积层数。
+        elu: 布尔值，是使用 ELU 还是 BN+RELU。
 
-    # Input shape
-        4D tensor with shape:
+    # 输入尺寸
+        4D 张量，尺寸为：
         `(batch, channels, rows, cols)`
 
-    # Output shape
-        4D tensor with shape:
+    # 输出尺寸
+        4D 张量，尺寸为：
         `(batch, filters, rows, cols)`
     """
     y0 = Conv2D(nfeats, ksize, padding='same')(x)
@@ -90,19 +69,18 @@ def convresblock(x, nfeats=8, ksize=3, nskipped=2, elu=True):
 
 
 def getwhere(x):
-    ''' Calculate the 'where' mask that contains switches indicating which
-    index contained the max value when MaxPool2D was applied.  Using the
-    gradient of the sum is a nice trick to keep everything high level.'''
+    '''计算包含开关的 'where' 掩码，该掩码指示应用 MaxPool2D 时哪个索引包含最大值。
+    使用总和的梯度是使所有内容保持高水平的不错的技巧。'''
     y_prepool, y_postpool = x
     return K.gradients(K.sum(y_postpool), y_prepool)
 
-# This example assume 'channels_first' data format.
+# 本示例假定 'channels_first' 数据格式。
 K.set_image_data_format('channels_first')
 
-# input image dimensions
+# 输入图像尺寸
 img_rows, img_cols = 28, 28
 
-# the data, split between train and test sets
+# 数据，分为训练集和测试集
 (x_train, _), (x_test, _) = mnist.load_data()
 
 x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -115,27 +93,27 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# The size of the kernel used for the MaxPooling2D
+# MaxPooling2D 使用的内核大小
 pool_size = 2
-# The total number of feature maps at each layer
+# 每层特征图的总数
 nfeats = [8, 16, 32, 64, 128]
-# The sizes of the pooling kernel at each layer
+# 每层池化内核的大小
 pool_sizes = np.array([1, 1, 1, 1, 1]) * pool_size
-# The convolution kernel size
+# 卷积核大小
 ksize = 3
-# Number of epochs to train for
+# 要训练的轮次数
 epochs = 5
-# Batch size during training
+# 训练期间的批次大小
 batch_size = 128
 
 if pool_size == 2:
-    # if using a 5 layer net of pool_size = 2
+    # 如果使用 pool_size = 2 的 5 层网络
     x_train = np.pad(x_train, [[0, 0], [0, 0], [2, 2], [2, 2]],
                      mode='constant')
     x_test = np.pad(x_test, [[0, 0], [0, 0], [2, 2], [2, 2]], mode='constant')
     nlayers = 5
 elif pool_size == 3:
-    # if using a 3 layer net of pool_size = 3
+    # 如果使用 pool_size = 3 的 3 层网
     x_train = x_train[:, :, :-1, :-1]
     x_test = x_test[:, :, :-1, :-1]
     nlayers = 3
@@ -143,15 +121,15 @@ else:
     import sys
     sys.exit('Script supports pool_size of 2 and 3.')
 
-# Shape of input to train on (note that model is fully convolutional however)
+# 训练输入的形状（请注意，模型是完全卷积的）
 input_shape = x_train.shape[1:]
-# The final list of the size of axis=1 for all layers, including input
+# axis=1 的所有层的尺寸最终大小，包括输入
 nfeats_all = [input_shape[0]] + nfeats
 
-# First build the encoder, all the while keeping track of the 'where' masks
+# 首先构建编码器，同时始终跟踪 'where' 掩码
 img_input = Input(shape=input_shape)
 
-# We push the 'where' masks to the following list
+# 我们将 'where' 掩码推到下面的列表中
 wheres = [None] * nlayers
 y = img_input
 for i in range(nlayers):
@@ -160,27 +138,27 @@ for i in range(nlayers):
     wheres[i] = layers.Lambda(
         getwhere, output_shape=lambda x: x[0])([y_prepool, y])
 
-# Now build the decoder, and use the stored 'where' masks to place the features
+# 现在构建解码器，并使用存储的 'where' 掩码放置特征
 for i in range(nlayers):
     ind = nlayers - 1 - i
     y = UpSampling2D(size=(pool_sizes[ind], pool_sizes[ind]))(y)
     y = layers.multiply([y, wheres[ind]])
     y = convresblock(y, nfeats=nfeats_all[ind], ksize=ksize)
 
-# Use hard_simgoid to clip range of reconstruction
+# 使用 hard_sigmoid 裁剪重建范围
 y = Activation('hard_sigmoid')(y)
 
-# Define the model and it's mean square error loss, and compile it with Adam
+# 定义模型及其均方误差损失，并使用 Adam 进行编译
 model = Model(img_input, y)
 model.compile('adam', 'mse')
 
-# Fit the model
+# 拟合模型
 model.fit(x_train, x_train,
           batch_size=batch_size,
           epochs=epochs,
           validation_data=(x_test, x_test))
 
-# Plot
+# 绘图
 x_recon = model.predict(x_test[:25])
 x_plot = np.concatenate((x_test[:25], x_recon), axis=1)
 x_plot = x_plot.reshape((5, 10, input_shape[-2], input_shape[-1]))

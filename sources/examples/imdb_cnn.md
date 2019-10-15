@@ -1,8 +1,8 @@
-# This example demonstrates the use of Convolution1D for text classification.
+# 本示例演示了将 Convolution1D 用于文本分类。
 
-Gets to 0.89 test accuracy after 2 epochs. </br>
-90s/epoch on Intel i5 2.4Ghz CPU. </br>
-10s/epoch on Tesla K40 GPU.
+2个轮次后达到 0.89 的测试精度。 </br>
+在 Intel i5 2.4Ghz CPU 上每轮次 90秒。 </br>
+在 Tesla K40 GPU 上每轮次 10秒。
 
 
 ```python
@@ -15,7 +15,7 @@ from keras.layers import Embedding
 from keras.layers import Conv1D, GlobalMaxPooling1D
 from keras.datasets import imdb
 
-# set parameters:
+# 设置参数：
 max_features = 5000
 maxlen = 400
 batch_size = 32
@@ -39,21 +39,19 @@ print('x_test shape:', x_test.shape)
 print('Build model...')
 model = Sequential()
 
-# we start off with an efficient embedding layer which maps
-# our vocab indices into embedding_dims dimensions
+# 我们从有效的嵌入层开始，该层将 vocab 索引映射到 embedding_dims 维度
 model.add(Embedding(max_features,
                     embedding_dims,
                     input_length=maxlen))
 model.add(Dropout(0.2))
 
-# we add a Convolution1D, which will learn filters
-# word group filters of size filter_length:
+# 我们添加了一个 Convolution1D，它将学习大小为 filter_length 的过滤器词组过滤器：
 model.add(Conv1D(filters,
                  kernel_size,
                  padding='valid',
                  activation='relu',
                  strides=1))
-# we use max pooling:
+# 我们使用最大池化：
 model.add(GlobalMaxPooling1D())
 
 # We add a vanilla hidden layer:
@@ -61,7 +59,7 @@ model.add(Dense(hidden_dims))
 model.add(Dropout(0.2))
 model.add(Activation('relu'))
 
-# We project onto a single unit output layer, and squash it with a sigmoid:
+# 我们投影到单个单位输出层上，并用 sigmoid 压扁它：
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
 

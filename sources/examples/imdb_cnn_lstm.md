@@ -1,6 +1,6 @@
-# Train a recurrent convolutional network on the IMDB sentiment classification task.
+# 在 IMDB 情绪分类任务上训练循环卷积网络。
 
-Gets to 0.8498 test accuracy after 2 epochs. 41s/epoch on K520 GPU.
+2 个轮次后达到 0.8498 的测试精度。K520 GPU 上为 41 秒/轮次。
 
 
 ```python
@@ -32,9 +32,9 @@ batch_size = 30
 epochs = 2
 
 '''
-Note:
-batch_size is highly sensitive.
-Only 2 epochs are needed as the dataset is very small.
+注意:
+batch_size 是高度敏感的
+由于数据集非常小，因此仅需要 2 个轮次。
 '''
 
 print('Loading data...')

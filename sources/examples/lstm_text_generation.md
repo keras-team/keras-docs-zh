@@ -1,14 +1,11 @@
 
-#Example script to generate text from Nietzsche's writings.
+# 从尼采作品生成文本的示例脚本。
 
-At least 20 epochs are required before the generated text
-starts sounding coherent.
+生成的文本开始听起来连贯之前，至少需要 20 个轮次。
 
-It is recommended to run this script on GPU, as recurrent
-networks are quite computationally intensive.
+建议在 GPU 上运行此脚本，因为循环网络的计算量很大。
 
-If you try this script on new data, make sure your corpus
-has at least ~100k characters. ~1M is better.
+如果在新数据上尝试使用此脚本，请确保您的语料库至少包含约 10 万个字符。〜1M 更好。
 
 
 ```python
@@ -36,7 +33,7 @@ print('total chars:', len(chars))
 char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 
-# cut the text in semi-redundant sequences of maxlen characters
+# 以 maxlen 字符的半冗余序列剪切文本
 maxlen = 40
 step = 3
 sentences = []
@@ -55,7 +52,7 @@ for i, sentence in enumerate(sentences):
     y[i, char_indices[next_chars[i]]] = 1
 
 
-# build the model: a single LSTM
+# 建立模型：单个 LSTM
 print('Build model...')
 model = Sequential()
 model.add(LSTM(128, input_shape=(maxlen, len(chars))))
@@ -66,7 +63,7 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
 
 def sample(preds, temperature=1.0):
-    # helper function to sample an index from a probability array
+    # 辅助函数从概率数组中采样索引
     preds = np.asarray(preds).astype('float64')
     preds = np.log(preds) / temperature
     exp_preds = np.exp(preds)
@@ -76,7 +73,7 @@ def sample(preds, temperature=1.0):
 
 
 def on_epoch_end(epoch, _):
-    # Function invoked at end of each epoch. Prints generated text.
+    # 在每个轮次结束时调用的函数。 打印生成的文本。
     print()
     print('----- Generating text after Epoch: %d' % epoch)
 

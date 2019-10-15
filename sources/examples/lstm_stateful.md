@@ -1,40 +1,28 @@
 
-#How to use a stateful LSTM model, stateful vs stateless LSTM performance comparison
+# 如何使用有状态 LSTM 模型，有状态与无状态 LSTM 性能比较
 
-[More documentation about the Keras LSTM model](/layers/recurrent/#lstm)
+[有关 Keras LSTM 模型的更多文档](/layers/recurrent/#lstm)
 
-The models are trained on an input/output pair, where
-the input is a generated uniformly distributed
-random sequence of length = `input_len`,
-and the output is a moving average of the input with window length = `tsteps`.
-Both `input_len` and `tsteps` are defined in the "editable parameters"
-section.
+在输入/输出对上训练模型，其中输入是生成的长度为 `input_len` 的均匀分布随机序列，
+输出是窗口长度为 `tsteps` 的输入的移动平均值。`input_len` 和 `tsteps` 都在 "可编辑参数" 部分中定义。
 
-A larger `tsteps` value means that the LSTM will need more memory
-to figure out the input-output relationship.
-This memory length is controlled by the `lahead` variable (more details below).
+较大的 `tsteps` 值意味着 LSTM 需要更多的内存来确定输入输出关系。
+该内存长度由 `lahead` 变量控制（下面有更多详细信息）。
 
-The rest of the parameters are:
+其余参数为：
 
-- `input_len`: the length of the generated input sequence
-- `lahead`: the input sequence length that the LSTM
-  is trained on for each output point
-- `batch_size`, `epochs`: same parameters as in the `model.fit(...)`
-  function
+- `input_len`: 生成的输入序列的长度
+- `lahead`: LSTM 针对每个输出点训练的输入序列长度
+- `batch_size`, `epochs`: 与 `model.fit(...)` 函数中的参数相同
 
-When `lahead > 1`, the model input is preprocessed to a "rolling window view"
-of the data, with the window length = `lahead`.
-This is similar to sklearn's `view_as_windows`
-with `window_shape` [being a single number.](
-http://scikit-image.org/docs/0.10.x/api/skimage.util.html#view-as-windows)
+当 `lahead > 1` 时，模型输入将预处理为数据的 "滚动窗口视图"，窗口长度为 `lahead`。
+这类似于 sklearn 的 `view_as_windows`，
+其中 `window_shape` [是一个数字。](http://scikit-image.org/docs/0.10.x/api/skimage.util.html#view-as-windows)
 
-When `lahead < tsteps`, only the stateful LSTM converges because its
-statefulness allows it to see beyond the capability that lahead
-gave it to fit the n-point average. The stateless LSTM does not have
-this capability, and hence is limited by its `lahead` parameter,
-which is not sufficient to see the n-point average.
+当 `lahead  < tsteps` 时，只有有状态的 LSTM 会收敛，因为它的有状态性使其能够看到超出 lahead 赋予其的 n 点平均值的能力。
+无状态 LSTM 不具备此功能，因此受到其 `lahead` 参数的限制，该参数不足以查看 n 点平均值。
 
-When `lahead >= tsteps`, both the stateful and stateless LSTM converge.
+当 `lahead >= tsteps` 时，有状态和无状态 LSTM 都会收敛。
 
 
 ```python
@@ -46,29 +34,27 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 
 # ----------------------------------------------------------
-# EDITABLE PARAMETERS
-# Read the documentation in the script head for more details
+# 可编辑参数
+# 阅读脚本头中的文档以获取更多详细信息
 # ----------------------------------------------------------
 
-# length of input
+# 输入长度
 input_len = 1000
 
-# The window length of the moving average used to generate
-# the output from the input in the input/output pair used
-# to train the LSTM
-# e.g. if tsteps=2 and input=[1, 2, 3, 4, 5],
-#      then output=[1.5, 2.5, 3.5, 4.5]
+# 用于从训练 LSTM 的输入/输出对中的输入生成输出的移动平均值的窗口长度
+# 例如，如果 tsteps=2，input=[1, 2, 3, 4, 5],
+#      那么 output=[1.5, 2.5, 3.5, 4.5]
 tsteps = 2
 
-# The input sequence length that the LSTM is trained on for each output point
+# LSTM 针对每个输出点训练的输入序列长度
 lahead = 1
 
-# training parameters passed to "model.fit(...)"
+# 传递给 "model.fit(...)" 的训练参数
 batch_size = 1
 epochs = 10
 
 # ------------
-# MAIN PROGRAM
+# 主程序
 # ------------
 
 print("*" * 33)
@@ -84,35 +70,29 @@ print('Generating Data...')
 
 
 def gen_uniform_amp(amp=1, xn=10000):
-    """Generates uniform random data between
-    -amp and +amp
-    and of length xn
+    """生成 -amp 和 +amp 之间且长度为 xn 的均匀随机数据
 
-    # Arguments
-        amp: maximum/minimum range of uniform data
-        xn: length of series
+    # 参数
+        amp: 统一数据的最大/最小范围
+        xn: 系列长度
     """
     data_input = np.random.uniform(-1 * amp, +1 * amp, xn)
     data_input = pd.DataFrame(data_input)
     return data_input
 
-# Since the output is a moving average of the input,
-# the first few points of output will be NaN
-# and will be dropped from the generated data
-# before training the LSTM.
-# Also, when lahead > 1,
-# the preprocessing step later of "rolling window view"
-# will also cause some points to be lost.
-# For aesthetic reasons,
-# in order to maintain generated data length = input_len after pre-processing,
-# add a few points to account for the values that will be lost.
+# 由于输出是输入的移动平均值，
+# 因此输出的前几个点将是 NaN，
+# 并且在训练 LSTM 之前将其从生成的数据中删除。
+# 同样，当 lahead > 1时，"滚动窗口视图" 
+# 后面的预处理步骤也将导致某些点丢失。
+# 出于美学原因，为了在预处理后保持生成的数据长度等于 input_len，请添加一些点以说明将丢失的值。
 to_drop = max(tsteps - 1, lahead - 1)
 data_input = gen_uniform_amp(amp=0.1, xn=input_len + to_drop)
 
-# set the target to be a N-point average of the input
+# 将目标设置为输入的 N 点平均值
 expected_output = data_input.rolling(window=tsteps, center=False).mean()
 
-# when lahead > 1, need to convert the input to "rolling window view"
+# 当 lahead > 1时，需要将输入转换为 "滚动窗口视图"
 # https://docs.scipy.org/doc/numpy/reference/generated/numpy.repeat.html
 if lahead > 1:
     data_input = np.repeat(data_input.values, repeats=lahead, axis=1)
@@ -120,7 +100,7 @@ if lahead > 1:
     for i, c in enumerate(data_input.columns):
         data_input[c] = data_input[c].shift(i)
 
-# drop the nan
+# 丢弃 nan
 expected_output = expected_output[to_drop:]
 data_input = data_input[to_drop:]
 
@@ -157,10 +137,10 @@ print('Creating Stateful Model...')
 model_stateful = create_model(stateful=True)
 
 
-# split train/test data
+# 切分训练/测试数据
 def split_data(x, y, ratio=0.8):
     to_train = int(input_len * ratio)
-    # tweak to match with batch_size
+    # 进行调整以匹配 batch_size
     to_train -= to_train % batch_size
 
     x_train = x[:to_train]
@@ -168,13 +148,13 @@ def split_data(x, y, ratio=0.8):
     x_test = x[to_train:]
     y_test = y[to_train:]
 
-    # tweak to match with batch_size
+    # 进行调整以匹配 batch_size
     to_drop = x.shape[0] % batch_size
     if to_drop > 0:
         x_test = x_test[:-1 * to_drop]
         y_test = y_test[:-1 * to_drop]
 
-    # some reshaping
+    # 一些重塑
     reshape_3 = lambda x: x.values.reshape((x.shape[0], x.shape[1], 1))
     x_train = reshape_3(x_train)
     x_test = reshape_3(x_test)
@@ -195,12 +175,9 @@ print('y_test.shape: ', y_test.shape)
 print('Training')
 for i in range(epochs):
     print('Epoch', i + 1, '/', epochs)
-    # Note that the last state for sample i in a batch will
-    # be used as initial state for sample i in the next batch.
-    # Thus we are simultaneously training on batch_size series with
-    # lower resolution than the original series contained in data_input.
-    # Each of these series are offset by one step and can be
-    # extracted with data_input[i::batch_size].
+    # 请注意，批次 i 中样品 i 的最后状态将用作下一批中样品 i 的初始状态。
+    # 因此，我们同时以低于 data_input 中包含的原始序列的分辨率对 batch_size 系列进行训练。
+    # 这些系列中的每一个都偏移一个步骤，并且可以使用 data_input[i::batch_size] 提取。
     model_stateful.fit(x_train,
                        y_train,
                        batch_size=batch_size,
@@ -235,8 +212,7 @@ plt.subplot(3, 1, 1)
 plt.plot(y_test)
 plt.title('Expected')
 plt.subplot(3, 1, 2)
-# drop the first "tsteps-1" because it is not possible to predict them
-# since the "previous" timesteps to use do not exist
+# 删除第一个 "tsteps-1"，因为不可能预测它们，因为不存在要使用的 "上一个" 时间步
 plt.plot((y_test - predicted_stateful).flatten()[tsteps - 1:])
 plt.title('Stateful: Expected - Predicted')
 plt.subplot(3, 1, 3)

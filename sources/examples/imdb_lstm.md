@@ -1,17 +1,11 @@
-# Trains an LSTM model on the IMDB sentiment classification task.
+# 在 IMDB 情感分类任务上训练 LSTM 模型。
 
-The dataset is actually too small for LSTM to be of any advantage
-compared to simpler, much faster methods such as TF-IDF + LogReg.
+与 TF-IDF + LogReg 之类的简单且快得多的方法相比，LSTM 实际上由于数据集太小而无济于事。
 
-**Notes**
+**注意**
 
-- RNNs are tricky. Choice of batch size is important,
-choice of loss and optimizer is critical, etc.
-Some configurations won't converge.
-
-- LSTM loss decrease patterns during training can be quite different
-from what you see with CNNs/MLPs/etc.
-
+- RNN 非常棘手。批次大小、损失和优化器的选择很重要，等等。某些配置无法收敛。
+- 训练期间的 LSTM 损失减少模式可能与你在 CNN/MLP 等中看到的完全不同。
 
 ```python
 from __future__ import print_function
@@ -23,7 +17,7 @@ from keras.layers import LSTM
 from keras.datasets import imdb
 
 max_features = 20000
-# cut texts after this number of words (among top max_features most common words)
+# 在此数量的单词之后剪切文本（取最常见的 max_features 个单词）
 maxlen = 80
 batch_size = 32
 
@@ -44,7 +38,7 @@ model.add(Embedding(max_features, 128))
 model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 
-# try using different optimizers and different optimizer configs
+# 尝试使用不同的优化器和优化器配置
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])

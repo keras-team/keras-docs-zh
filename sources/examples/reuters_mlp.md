@@ -1,5 +1,4 @@
-Trains and evaluate a simple MLP
-on the Reuters newswire topic classification task.
+# 在路透社新闻分类主题任务上训练和评估一个简单的 MLP。
 
 
 ```python

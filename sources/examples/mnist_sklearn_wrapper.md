@@ -1,6 +1,6 @@
-Example of how to use sklearn wrapper
+# 如何使用 sklearn 包装器的示例
 
-Builds simple CNN models on MNIST and uses sklearn's GridSearchCV to find best model
+在 MNIST 上构建简单的 CNN 模型，并使用 sklearn 的 GridSearchCV 查找最佳模型
 
 
 ```python
@@ -18,10 +18,10 @@ from sklearn.model_selection import GridSearchCV
 
 num_classes = 10
 
-# input image dimensions
+# 输入图像尺寸
 img_rows, img_cols = 28, 28
 
-# load training data and do basic data normalization
+# 加载训练数据并进行基本数据归一化
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 if K.image_data_format() == 'channels_first':
@@ -38,19 +38,19 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-# convert class vectors to binary class matrices
+# 将类向量转换为二进制类矩阵
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 def make_model(dense_layer_sizes, filters, kernel_size, pool_size):
-    '''Creates model comprised of 2 convolutional layers followed by dense layers
+    '''创建由 2 个卷积层和紧随其后的密集层组成的模型
 
-    dense_layer_sizes: List of layer sizes.
-        This list has one number for each layer
-    filters: Number of convolutional filters in each convolutional layer
-    kernel_size: Convolutional kernel size
-    pool_size: Size of pooling area for max pooling
+    dense_layer_sizes: 网络层大小列表。
+        此列表每一层都有一个数字。
+    filters: 每个卷积层中的卷积滤波器数量
+    kernel_size: 卷积核大小
+    pool_size: 最大共享池的大小
     '''
 
     model = Sequential()
@@ -81,8 +81,7 @@ dense_size_candidates = [[32], [64], [32, 32], [64, 64]]
 my_classifier = KerasClassifier(make_model, batch_size=32)
 validator = GridSearchCV(my_classifier,
                          param_grid={'dense_layer_sizes': dense_size_candidates,
-                                     # epochs is avail for tuning even when not
-                                     # an argument to model building function
+                                     # epochs 可用于调整，即使不是模型构建函数的参数
                                      'epochs': [3, 6],
                                      'filters': [8],
                                      'kernel_size': [3],
@@ -94,8 +93,8 @@ validator.fit(x_train, y_train)
 print('The parameters of the best model are: ')
 print(validator.best_params_)
 
-# validator.best_estimator_ returns sklearn-wrapped version of best model.
-# validator.best_estimator_.model returns the (unwrapped) keras model
+# validator.best_estimator_ 返回 sklearn-wrapped 版本的最佳模型
+# validator.best_estimator_.model 返回非包装的 keras 模型
 best_model = validator.best_estimator_.model
 metric_names = best_model.metrics_names
 metric_values = best_model.evaluate(x_test, y_test)

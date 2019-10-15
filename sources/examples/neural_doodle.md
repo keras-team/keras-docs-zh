@@ -1,45 +1,38 @@
-Neural doodle with Keras
+# Keras 神经涂鸦
 
-# Script Usage
+# 脚本用法
 
-## Arguments
+## 参数
 ```
---nlabels:              # of regions (colors) in mask images
---style-image:          image to learn style from
---style-mask:           semantic labels for style image
---target-mask:          semantic labels for target image (your doodle)
+--nlabels:              遮罩图像中的区域（颜色）数
+--style-image:          从中学习风格的图像
+--style-mask:           样式图像的语义标签
+--target-mask:          目标图像的语义标签（你的 Doodle）
 --content-image:        optional image to learn content from
 --target-image-prefix:  path prefix for generated target images
 ```
 
-## Example 1: doodle using a style image, style mask
-and target mask.
+## 示例 1: 使用样式图像、样式蒙版和目标蒙版涂鸦。
 ```
 python neural_doodle.py --nlabels 4 --style-image Monet/style.png --style-mask Monet/style_mask.png --target-mask Monet/target_mask.png --target-image-prefix generated/monet
 ```
 
-## Example 2: doodle using a style image, style mask,
-target mask and an optional content image.
+## 示例二: 使用样式图像、样式蒙版、目标蒙版和可选的内容图像涂鸦。
 ```
 python neural_doodle.py --nlabels 4 --style-image Renoir/style.png --style-mask Renoir/style_mask.png --target-mask Renoir/target_mask.png --content-image Renoir/creek.jpg --target-image-prefix generated/renoir
 ```
 
-# References
+# 参考文献
 
-- [Dmitry Ulyanov's blog on fast-neural-doodle]
-    (http://dmitryulyanov.github.io/feed-forward-neural-doodle/)
-- [Torch code for fast-neural-doodle]
-    (https://github.com/DmitryUlyanov/fast-neural-doodle)
-- [Torch code for online-neural-doodle]
-    (https://github.com/DmitryUlyanov/online-neural-doodle)
-- [Paper Texture Networks: Feed-forward Synthesis of Textures and Stylized Images]
-    (http://arxiv.org/abs/1603.03417)
-- [Discussion on parameter tuning]
-    (https://github.com/keras-team/keras/issues/3705)
+- [Dmitry Ulyanov's blog on fast-neural-doodle](http://dmitryulyanov.github.io/feed-forward-neural-doodle/)
+- [Torch code for fast-neural-doodle](https://github.com/DmitryUlyanov/fast-neural-doodle)
+- [Torch code for online-neural-doodle](https://github.com/DmitryUlyanov/online-neural-doodle)
+- [Paper Texture Networks: Feed-forward Synthesis of Textures and Stylized Images](http://arxiv.org/abs/1603.03417)
+- [Discussion on parameter tuning](https://github.com/keras-team/keras/issues/3705)
 
-# Resources
+# 资源
 
-Example images can be downloaded from
+示例图像可以从此下载
 https://github.com/DmitryUlyanov/fast-neural-doodle/tree/master/data
 
 
@@ -56,7 +49,7 @@ from keras.models import Model
 from keras.preprocessing.image import load_img, save_img, img_to_array
 from keras.applications import vgg19
 
-# Command line arguments
+# 命令行参数
 parser = argparse.ArgumentParser(description='Keras neural doodle example')
 parser.add_argument('--nlabels', type=int,
                     help='number of semantic labels'
@@ -83,7 +76,7 @@ use_content_img = content_img_path is not None
 
 num_labels = args.nlabels
 num_colors = 3  # RGB
-# determine image sizes based on target_mask
+# 根据 target_mask 确定图像大小
 ref_img = img_to_array(load_img(target_mask_path))
 img_nrows, img_ncols = ref_img.shape[:2]
 
@@ -94,12 +87,12 @@ style_weight = 1.
 content_weight = 0.1 if use_content_img else 0
 
 content_feature_layers = ['block5_conv2']
-# To get better generation qualities, use more conv layers for style features
+# 为了获得更好的生成质量，请为样式特征使用更多的转换层
 style_feature_layers = ['block1_conv1', 'block2_conv1', 'block3_conv1',
                         'block4_conv1', 'block5_conv1']
 
 
-# helper functions for reading/processing images
+# 读取/处理图像的辅助功能
 def preprocess_image(image_path):
     img = load_img(image_path, target_size=(img_nrows, img_ncols))
     img = img_to_array(img)
@@ -114,7 +107,7 @@ def deprocess_image(x):
         x = x.transpose((1, 2, 0))
     else:
         x = x.reshape((img_nrows, img_ncols, 3))
-    # Remove zero-center by mean pixel
+    # 通过平均像素去除零中心
     x[:, :, 0] += 103.939
     x[:, :, 1] += 116.779
     x[:, :, 2] += 123.68
@@ -136,10 +129,9 @@ def kmeans(xs, k):
 
 
 def load_mask_labels():
-    '''Load both target and style masks.
-    A mask image (nr x nc) with m labels/colors will be loaded
-    as a 4D boolean tensor:
-        (1, m, nr, nc) for 'channels_first' or (1, nr, nc, m) for 'channels_last'
+    '''加载目标和样式蒙版。
+    具有 m 个标签/颜色的蒙版图像 (nr x nc) 将作为 4D 布尔张量加载：
+        (1, m, nr, nc) 对于 'channels_first' 或 (1, nr, nc, m) 对于 'channels_last'
     '''
     target_mask_img = load_img(target_mask_path,
                                target_size=(img_nrows, img_ncols))
@@ -170,7 +162,7 @@ def load_mask_labels():
             np.expand_dims(target_mask, axis=0))
 
 
-# Create tensor variables for images
+# 为图像创建张量变量
 if K.image_data_format() == 'channels_first':
     shape = (1, num_colors, img_nrows, img_ncols)
 else:
@@ -185,20 +177,19 @@ else:
 
 images = K.concatenate([style_image, target_image, content_image], axis=0)
 
-# Create tensor variables for masks
+# 为遮罩创建张量变量
 raw_style_mask, raw_target_mask = load_mask_labels()
 style_mask = K.variable(raw_style_mask.astype('float32'))
 target_mask = K.variable(raw_target_mask.astype('float32'))
 masks = K.concatenate([style_mask, target_mask], axis=0)
 
-# index constants for images and tasks variables
+# 图像和任务变量的索引常量
 STYLE, TARGET, CONTENT = 0, 1, 2
 
-# Build image model, mask model and use layer outputs as features
-# image model as VGG19
+# 建立图像模型，遮罩模型，并将层输出用作特征图像模型（如 VGG19）
 image_model = vgg19.VGG19(include_top=False, input_tensor=images)
 
-# mask model as a series of pooling
+# 蒙版模型作为一系列合并
 mask_input = Input(tensor=masks, shape=(None, None, None), name='mask_input')
 x = mask_input
 for layer in image_model.layers[1:]:
@@ -210,7 +201,7 @@ for layer in image_model.layers[1:]:
         x = AveragePooling2D((2, 2), name=name)(x)
 mask_model = Model(mask_input, x)
 
-# Collect features from image_model and task_model
+# 从 image_model 和 task_model 收集特征
 image_features = {}
 mask_features = {}
 for img_layer, mask_layer in zip(image_model.layers, mask_model.layers):
@@ -222,7 +213,7 @@ for img_layer, mask_layer in zip(image_model.layers, mask_model.layers):
         mask_features[layer_name] = mask_feat
 
 
-# Define loss functions
+# 定义损失函数
 def gram_matrix(x):
     assert K.ndim(x) == 3
     features = K.batch_flatten(x)
@@ -231,8 +222,7 @@ def gram_matrix(x):
 
 
 def region_style_loss(style_image, target_image, style_mask, target_mask):
-    '''Calculate style loss between style_image and target_image,
-    for one common region specified by their (boolean) masks
+    '''计算由其（布尔）掩码指定的一个公共区域的 style_image 和 target_image 之间的样式损失
     '''
     assert 3 == K.ndim(style_image) == K.ndim(target_image)
     assert 2 == K.ndim(style_mask) == K.ndim(target_mask)
@@ -253,8 +243,7 @@ def region_style_loss(style_image, target_image, style_mask, target_mask):
 
 
 def style_loss(style_image, target_image, style_masks, target_masks):
-    '''Calculate style loss between style_image and target_image,
-    in all regions.
+    '''计算所有区域中 style_image 和 target_image 之间的样式损失。
     '''
     assert 3 == K.ndim(style_image) == K.ndim(target_image)
     assert 3 == K.ndim(style_masks) == K.ndim(target_masks)
@@ -292,8 +281,8 @@ def total_variation_loss(x):
     return K.sum(K.pow(a + b, 1.25))
 
 
-# Overall loss is the weighted sum of content_loss, style_loss and tv_loss
-# Each individual loss uses features from image/mask models.
+# 总损失是 content_loss, style_loss 和 tv_loss 的加权总和
+# 每个损失都使用图像/蒙版模型中的特征。
 loss = K.variable(0)
 for layer in content_feature_layers:
     content_feat = image_features[layer][CONTENT, :, :, :]
@@ -311,7 +300,7 @@ for layer in style_feature_layers:
 loss = loss + total_variation_weight * total_variation_loss(target_image)
 loss_grads = K.gradients(loss, target_image)
 
-# Evaluator class for computing efficiency
+# 计算效率评估器类
 outputs = [loss]
 if isinstance(loss_grads, (list, tuple)):
     outputs += loss_grads
@@ -358,7 +347,7 @@ class Evaluator(object):
 
 evaluator = Evaluator()
 
-# Generate images by iterative optimization
+# 通过迭代优化生成图像
 if K.image_data_format() == 'channels_first':
     x = np.random.uniform(0, 255, (1, 3, img_nrows, img_ncols)) - 128.
 else:
@@ -370,7 +359,7 @@ for i in range(num_iterations):
     x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
                                      fprime=evaluator.grads, maxfun=20)
     print('Current loss value:', min_val)
-    # save current generated image
+    # 保存当前生成的图像
     img = deprocess_image(x.copy())
     fname = target_img_prefix + '_at_iteration_%d.png' % i
     save_img(fname, img)

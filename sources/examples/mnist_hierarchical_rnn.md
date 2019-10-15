@@ -1,36 +1,23 @@
-Example of using Hierarchical RNN (HRNN) to classify MNIST digits.
+# 使用分层 RNN (HRNN) 对 MNIST 数字进行分类的示例。
 
-HRNNs can learn across multiple levels
-of temporal hierarchy over a complex sequence.
-Usually, the first recurrent layer of an HRNN
-encodes a sentence (e.g. of word vectors)
-into a  sentence vector.
-The second recurrent layer then encodes a sequence of
-such vectors (encoded by the first layer) into a document vector.
-This document vector is considered to preserve both
-the word-level and sentence-level structure of the context.
+HRNN 可以跨复杂序列跨多个时间层次学习。
+通常，HRNN 的第一循环层将句子（例如单词向量）编码成句子向量。
+然后，第二循环层将这样的向量序列（由第一层编码）编码为文档向量。
+该文档向量被认为既可以保留上下文的单词级结构也可以保留句子级结构。
 
-# References
+# 参考文献
 
-- [A Hierarchical Neural Autoencoder for Paragraphs and Documents]
-    (https://arxiv.org/abs/1506.01057)
-    Encodes paragraphs and documents with HRNN.
-    Results have shown that HRNN outperforms standard
-    RNNs and may play some role in more sophisticated generation tasks like
-    summarization or question answering.
-- [Hierarchical recurrent neural network for skeleton based action recognition]
-    (http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7298714)
-    Achieved state-of-the-art results on
-    skeleton based action recognition with 3 levels
-    of bidirectional HRNN combined with fully connected layers.
+- [A Hierarchical Neural Autoencoder for Paragraphs and Documents](https://arxiv.org/abs/1506.01057)
+    使用 HRNN 对段落和文档进行编码。
+    结果表明，HRNN 优于标准 RNN，并且可能在摘要或问题解答等更复杂的生成任务中发挥某些作用。
+- [Hierarchical recurrent neural network for skeleton based action recognition](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7298714)
+    通过 3 级双向 HRNN 与完全连接的层相结合，在基于骨骼的动作识别方面取得了最新的成果。
 
-In the below MNIST example the first LSTM layer first encodes every
-column of pixels of shape (28, 1) to a column vector of shape (128,).
-The second LSTM layer encodes then these 28 column vectors of shape (28, 128)
-to a image vector representing the whole image.
-A final Dense layer is added for prediction.
+在下面的 MNIST 示例中，第一 LSTM 层首先将形状 (28, 1) 的每一列像素编码为形状 (128,) 的列矢量。
+然后，第二个 LSTM 层将形状 (28, 128) 的这 28 个列向量编码为代表整个图像的图像向量。
+添加最终的密集层以进行预测。
 
-After 5 epochs: train acc: 0.9858, val acc: 0.9864
+5 个轮次后：train acc：0.9858, val acc：0.9864
 
 
 ```python
@@ -42,19 +29,19 @@ from keras.models import Model
 from keras.layers import Input, Dense, TimeDistributed
 from keras.layers import LSTM
 
-# Training parameters.
+# 训练参数。
 batch_size = 32
 num_classes = 10
 epochs = 5
 
-# Embedding dimensions.
+# 嵌入尺寸。
 row_hidden = 128
 col_hidden = 128
 
-# The data, split between train and test sets.
+# 数据，分为训练集和测试集。
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# Reshapes data to 4D for Hierarchical RNN.
+# 将数据重塑为 4D 以进行分层 RNN。
 x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
 x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
 x_train = x_train.astype('float32')
@@ -65,36 +52,36 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# Converts class vectors to binary class matrices.
+# 将类向量转换为二进制类矩阵。
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 row, col, pixel = x_train.shape[1:]
 
-# 4D input.
+# 4D 输入。
 x = Input(shape=(row, col, pixel))
 
-# Encodes a row of pixels using TimeDistributed Wrapper.
+# 使用 TimeDistributed Wrapper 对一行像素进行编码。
 encoded_rows = TimeDistributed(LSTM(row_hidden))(x)
 
-# Encodes columns of encoded rows.
+# 对已编码行的列进行编码。
 encoded_columns = LSTM(col_hidden)(encoded_rows)
 
-# Final predictions and model.
+# 最终预测和模型。
 prediction = Dense(num_classes, activation='softmax')(encoded_columns)
 model = Model(x, prediction)
 model.compile(loss='categorical_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-# Training.
+# 训练。
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
           validation_data=(x_test, y_test))
 
-# Evaluation.
+# 评估。
 scores = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', scores[0])
 print('Test accuracy:', scores[1])

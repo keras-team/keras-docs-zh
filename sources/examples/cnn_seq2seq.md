@@ -1,45 +1,30 @@
-# Sequence-to-sequence example in Keras (character-level).
+# 用 Keras 实现字符级序列到序列模型。
 
-This script demonstrates how to implement a basic character-level CNN
-sequence-to-sequence model. We apply it to translating
-short English sentences into short French sentences,
-character-by-character. Note that it is fairly unusual to
-do character-level machine translation, as word-level
-models are much more common in this domain. This example
-is for demonstration purposes only.
+该脚本演示了如何实现基本的字符级 CNN 序列到序列模型。
+我们将其用于将英文短句逐个字符翻译成法语短句。
+请注意，进行字符级机器翻译是非比寻常的，因为在此领域中词级模型更为常见。
+本示例仅用于演示目的。
 
-**Summary of the algorithm**
+**算法总结**
 
-- We start with input sequences from a domain (e.g. English sentences)
-    and corresponding target sequences from another domain
-    (e.g. French sentences).
-- An encoder CNN encodes the input character sequence.
-- A decoder CNN is trained to turn the target sequences into
-    the same sequence but offset by one timestep in the future,
-    a training process called "teacher forcing" in this context.
-    It uses the output from the encoder.
-    Effectively, the decoder learns to generate `targets[t+1...]`
-    given `targets[...t]`, conditioned on the input sequence.
-- In inference mode, when we want to decode unknown input sequences, we:
-    - Encode the input sequence.
-    - Start with a target sequence of size 1
-        (just the start-of-sequence character)
-    - Feed the input sequence and 1-char target sequence
-        to the decoder to produce predictions for the next character
-    - Sample the next character using these predictions
-        (we simply use argmax).
-    - Append the sampled character to the target sequence
-    - Repeat until we hit the character limit.
+- 我们从一个领域的输入序列（例如英语句子）和另一个领域的对应目标序列（例如法语句子）开始。
+- 编码器 CNN 对输入字符序列进行编码。
+- 对解码器 CNN 进行训练，以将目标序列转换为相同序列，但以后将偏移一个时间步，在这种情况下，该训练过程称为 "教师强制"。它使用编码器的输出。实际上，解码器会根据输入序列，根据给定的 `targets[...t]` 来学习生成 `target[t+1...]`。 
+- 在推理模式下，当我们想解码未知的输入序列时，我们：
+    - 对输入序列进行编码；
+    - 从大小为1的目标序列开始（仅是序列开始字符）；
+    - 将输入序列和 1 个字符的目标序列馈送到解码器，以生成下一个字符的预测；
+    - 使用这些预测来采样下一个字符（我们仅使用 argmax）;
+    - 将采样的字符附加到目标序列；
+    - 重复直到我们达到字符数限制。
 
-**Data download**
+**数据下载**
 
-[English to French sentence pairs.
-](http://www.manythings.org/anki/fra-eng.zip)
+[English to French sentence pairs.](http://www.manythings.org/anki/fra-eng.zip)
 
-[Lots of neat sentence pairs datasets.
-](http://www.manythings.org/anki/)
+[Lots of neat sentence pairs datasets.](http://www.manythings.org/anki/)
 
-**References**
+**参考**
 
 - lstm_seq2seq.py
 - https://wanasit.github.io/attention-based-sequence-to-sequence-in-keras.html
@@ -50,12 +35,12 @@ from __future__ import print_function
 import numpy as np
 from keras.layers import Input, Convolution1D, Dot, Dense, Activation, Concatenate
 from keras.models import Model
-batch_size = 64  # Batch size for training.
-epochs = 100  # Number of epochs to train for.
-num_samples = 10000  # Number of samples to train on.
-# Path to the data txt file on disk.
+batch_size = 64  # 训练批次大小。
+epochs = 100  # 训练迭代轮次。
+num_samples = 10000  # 训练样本数。
+# 磁盘数据文件路径
 data_path = 'fra-eng/fra.txt'
-# Vectorize the data.
+# 向量化数据。
 input_texts = []
 target_texts = []
 input_characters = set()
@@ -64,8 +49,8 @@ with open(data_path, 'r', encoding='utf-8') as f:
     lines = f.read().split('\n')
 for line in lines[: min(num_samples, len(lines) - 1)]:
     input_text, target_text = line.split('\t')
-    # We use "tab" as the "start sequence" character
-    # for the targets, and "\n" as "end sequence" character.
+    # 我们使用 "tab" 作为 "起始序列" 字符，
+    # 对于目标，使用 "\n" 作为 "终止序列" 字符。
     target_text = '\t' + target_text + '\n'
     input_texts.append(input_text)
     target_texts.append(target_text)
@@ -109,7 +94,7 @@ for i, (input_text, target_text) in enumerate(zip(input_texts, target_texts)):
             # decoder_target_data will be ahead by one timestep
             # and will not include the start character.
             decoder_target_data[i, t - 1, target_token_index[char]] = 1.
-# Define an input sequence and process it.
+# 定义输入序列并处理它。
 encoder_inputs = Input(shape=(None, num_encoder_tokens))
 # Encoder
 x_encoder = Convolution1D(256, kernel_size=3, activation='relu',
@@ -135,23 +120,23 @@ decoder_outputs = Convolution1D(64, kernel_size=3, activation='relu',
                                 padding='causal')(decoder_combined_context)
 decoder_outputs = Convolution1D(64, kernel_size=3, activation='relu',
                                 padding='causal')(decoder_outputs)
-# Output
+# 输出
 decoder_dense = Dense(num_decoder_tokens, activation='softmax')
 decoder_outputs = decoder_dense(decoder_outputs)
-# Define the model that will turn
-# `encoder_input_data` & `decoder_input_data` into `decoder_target_data`
+# 定义将 `encoder_input_data` & `decoder_input_data` 
+# 转化为 `decoder_target_data`的模型。
 model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 model.summary()
-# Run training
+# 执行训练
 model.compile(optimizer='adam', loss='categorical_crossentropy')
 model.fit([encoder_input_data, decoder_input_data], decoder_target_data,
           batch_size=batch_size,
           epochs=epochs,
           validation_split=0.2)
-# Save model
+# 保存模型
 model.save('cnn_s2s.h5')
-# Next: inference mode (sampling).
-# Define sampling models
+# 接下来: 推理模式 (采样)。
+# 定义采样模型
 reverse_input_char_index = dict(
     (i, char) for char, i in input_token_index.items())
 reverse_target_char_index = dict(
@@ -172,8 +157,7 @@ for i in range(max_decoder_seq_length - 1):
     for j, x in enumerate(predict_):
         in_decoder[j, i + 1, x] = 1
 for seq_index in range(nb_examples):
-    # Take one sequence (part of the training set)
-    # for trying out decoding.
+    # 抽取一个序列（训练集的一部分）进行解码。
     output_seq = predict[seq_index, :].ravel().tolist()
     decoded = []
     for x in output_seq:

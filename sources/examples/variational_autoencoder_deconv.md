@@ -1,16 +1,12 @@
-Example of VAE on MNIST dataset using CNN
+# 使用 CNN 的 MNIST 数据集上的 VAE 示例
 
-The VAE has a modular design. The encoder, decoder and VAE
-are 3 models that share weights. After training the VAE model,
-the encoder can be used to  generate latent vectors.
-The decoder can be used to generate MNIST digits by sampling the
-latent vector from a Gaussian distribution with mean=0 and std=1.
+VAE 具有模块化设计。编码器、解码器和 VAE 是 3 种共享权重的模型。训练 VAE 模型后，编码器可用于生成潜矢量。
+通过从 mean=0 和 std=1 的高斯分布中采样潜矢量，可以将解码器用于生成 MNIST 数字。
 
-# Reference
+# 参考文献
 
 [1] Kingma, Diederik P., and Max Welling.
-"Auto-encoding variational bayes."
-https://arxiv.org/abs/1312.6114
+["Auto-encoding variational bayes."](https://arxiv.org/abs/1312.6114)
 
 
 ```python
@@ -33,17 +29,17 @@ import argparse
 import os
 
 
-# reparameterization trick
-# instead of sampling from Q(z|X), sample eps = N(0,I)
-# then z = z_mean + sqrt(var)*eps
+# 重新参数化技巧
+# 代替从 Q(z|X) 采样, 采样 eps = N(0,I)
+# 然后 z = z_mean + sqrt(var)*eps
 def sampling(args):
-    """Reparameterization trick by sampling fr an isotropic unit Gaussian.
+    """通过向各向同性单位高斯采样来进行重新参数化技巧。
 
-    # Arguments
-        args (tensor): mean and log of variance of Q(z|X)
+    # 参数
+        args (tensor): Q(z|X) 的均值和对数
 
-    # Returns
-        z (tensor): sampled latent vector
+    # 返回
+        z (tensor): 采样的潜在向量
     """
 
     z_mean, z_log_var = args
@@ -58,13 +54,13 @@ def plot_results(models,
                  data,
                  batch_size=128,
                  model_name="vae_mnist"):
-    """Plots labels and MNIST digits as function of 2-dim latent vector
+    """绘制标签和 MNIST 数字作为 2 维潜矢量的函数
 
-    # Arguments
-        models (tuple): encoder and decoder models
-        data (tuple): test data and label
-        batch_size (int): prediction batch size
-        model_name (string): which model is using this function
+    # 参数
+        models (tuple): 编码器和解码器模型
+        data (tuple): 测试数据和标签
+        batch_size (int): 预测批次大小
+        model_name (string): 哪个模型正在使用此功能
     """
 
     encoder, decoder = models
@@ -72,7 +68,7 @@ def plot_results(models,
     os.makedirs(model_name, exist_ok=True)
 
     filename = os.path.join(model_name, "vae_mean.png")
-    # display a 2D plot of the digit classes in the latent space
+    # 在潜在空间中显示数字类的二维图
     z_mean, _, _ = encoder.predict(x_test,
                                    batch_size=batch_size)
     plt.figure(figsize=(12, 10))
@@ -84,12 +80,11 @@ def plot_results(models,
     plt.show()
 
     filename = os.path.join(model_name, "digits_over_latent.png")
-    # display a 30x30 2D manifold of digits
+    # 显示 30x30 的 2D 数字流形
     n = 30
     digit_size = 28
     figure = np.zeros((digit_size * n, digit_size * n))
-    # linearly spaced coordinates corresponding to the 2D plot
-    # of digit classes in the latent space
+    # 线性空间坐标，对应于潜在空间中数字类的二维图
     grid_x = np.linspace(-4, 4, n)
     grid_y = np.linspace(-4, 4, n)[::-1]
 
@@ -116,7 +111,7 @@ def plot_results(models,
     plt.show()
 
 
-# MNIST dataset
+# MNIST 数据集
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 image_size = x_train.shape[1]
@@ -125,7 +120,7 @@ x_test = np.reshape(x_test, [-1, image_size, image_size, 1])
 x_train = x_train.astype('float32') / 255
 x_test = x_test.astype('float32') / 255
 
-# network parameters
+# 网络参数
 input_shape = (image_size, image_size, 1)
 batch_size = 128
 kernel_size = 3
@@ -134,7 +129,7 @@ latent_dim = 2
 epochs = 30
 
 # VAE model = encoder + decoder
-# build encoder model
+# 建立编码器模型
 inputs = Input(shape=input_shape, name='encoder_input')
 x = inputs
 for i in range(2):
@@ -145,25 +140,25 @@ for i in range(2):
                strides=2,
                padding='same')(x)
 
-# shape info needed to build decoder model
+# 构建解码器模型所需的形状信息
 shape = K.int_shape(x)
 
-# generate latent vector Q(z|X)
+# 生成潜在向量 Q(z|X)
 x = Flatten()(x)
 x = Dense(16, activation='relu')(x)
 z_mean = Dense(latent_dim, name='z_mean')(x)
 z_log_var = Dense(latent_dim, name='z_log_var')(x)
 
-# use reparameterization trick to push the sampling out as input
-# note that "output_shape" isn't necessary with the TensorFlow backend
+# 使用重新参数化技巧将采样作为输入推送
+# 注意 TensorFlow 后端不需要 "output_shape"
 z = Lambda(sampling, output_shape=(latent_dim,), name='z')([z_mean, z_log_var])
 
-# instantiate encoder model
+# 实例化编码器模型
 encoder = Model(inputs, [z_mean, z_log_var, z], name='encoder')
 encoder.summary()
 plot_model(encoder, to_file='vae_cnn_encoder.png', show_shapes=True)
 
-# build decoder model
+# 建立解码器模型
 latent_inputs = Input(shape=(latent_dim,), name='z_sampling')
 x = Dense(shape[1] * shape[2] * shape[3], activation='relu')(latent_inputs)
 x = Reshape((shape[1], shape[2], shape[3]))(x)
@@ -182,12 +177,12 @@ outputs = Conv2DTranspose(filters=1,
                           padding='same',
                           name='decoder_output')(x)
 
-# instantiate decoder model
+# 实例化解码器模型
 decoder = Model(latent_inputs, outputs, name='decoder')
 decoder.summary()
 plot_model(decoder, to_file='vae_cnn_decoder.png', show_shapes=True)
 
-# instantiate VAE model
+# 实例化VAE模型
 outputs = decoder(encoder(inputs)[2])
 vae = Model(inputs, outputs, name='vae')
 
@@ -221,7 +216,7 @@ if __name__ == '__main__':
     if args.weights:
         vae.load_weights(args.weights)
     else:
-        # train the autoencoder
+        # 训练自动编码器
         vae.fit(x_train,
                 epochs=epochs,
                 batch_size=batch_size,

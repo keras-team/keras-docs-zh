@@ -1,8 +1,8 @@
-Trains a simple deep NN on the MNIST dataset.
+# 在 MNIST 数据集上训练简单的深度 NN。
 
-Gets to 98.40% test accuracy after 20 epochs
-(there is *a lot* of margin for parameter tuning).
-2 seconds per epoch on a K520 GPU.
+20 个轮次后达到 98.40％ 的测试准确度
+(参数调整有*很大*的空间)。
+在 K520 GPU 上，每个轮次 2 秒。
 
 
 ```python
@@ -18,7 +18,7 @@ batch_size = 128
 num_classes = 10
 epochs = 20
 
-# the data, split between train and test sets
+# 数据，分为训练集和测试集
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 x_train = x_train.reshape(60000, 784)
@@ -30,7 +30,7 @@ x_test /= 255
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# convert class vectors to binary class matrices
+# 将类向量转换为二进制类矩阵
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 

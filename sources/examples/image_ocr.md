@@ -1,22 +1,14 @@
 
-# Optical character recognition
-This example uses a convolutional stack followed by a recurrent stack
-and a CTC logloss function to perform optical character recognition
-of generated text images. I have no evidence of whether it actually
-learns general shapes of text, or just is able to recognize all
-the different fonts thrown at it...the purpose is more to demonstrate CTC
-inside of Keras.  Note that the font list may need to be updated
-for the particular OS in use.
+# 光学字符识别
 
-This starts off with 4 letter words.  For the first 12 epochs, the
-difficulty is gradually increased using the TextImageGenerator class
-which is both a generator class for test/train data and a Keras
-callback class. After 20 epochs, longer sequences are thrown at it
-by recompiling the model to handle a wider image and rebuilding
-the word list to include two words separated by a space.
+此示例使用卷积堆栈，后跟递归堆栈和 CTC logloss 函数，以对生成的文本图像进行光学字符识别。
+我没有证据表明它实际上是学习文本的一般形状，还是仅仅能够识别所抛出的所有不同字体……它的目的更多是为了在 Keras 中演示CTC。
+请注意，可能需要针对使用中的特定操作系统更新字体列表。
 
-The table below shows normalized edit distance values. Theano uses
-a slightly different CTC implementation, hence the different results.
+它从 4 个字母词开始。对于前12个轮次，使用 TextImageGenerator 类（同时是测试/训练数据的生成器类和 Keras 回调类）会逐渐增加难度。
+20个 轮次后，通过重新编译模型以处理更宽的图像并重建单词列表以包含两个以空格分隔的单词，将抛出更长的序列。
+
+下表显示了标准化的编辑距离值。 Theano 使用的 CTC 实现略有不同，因此结果也有所不同。
 
 Epoch |   TF   |   TH
 -----:|-------:|-------:
@@ -25,13 +17,13 @@ Epoch |   TF   |   TH
     20|  0.043 | 0.045
     25|  0.014 | 0.019
 
-# Additional dependencies
+# 其他依赖
 
-This requires ```cairo``` and ```editdistance``` packages:
+需要 ```cairo``` 和 ```editdistance``` 包:
 
-First, install the Cairo library: https://cairographics.org/
+首先，安装 Cairo 库: https://cairographics.org/
 
-Then install Python dependencies:
+然后安装 Python 依赖:
 
 ```python
 pip install cairocffi
@@ -68,16 +60,16 @@ import keras.callbacks
 
 OUTPUT_DIR = 'image_ocr'
 
-# character classes and matching regex filter
+# 字符类和匹配的正则表达式过滤器
 regex = r'^[a-z ]+$'
 alphabet = u'abcdefghijklmnopqrstuvwxyz '
 
 np.random.seed(55)
 
 
-# this creates larger "blotches" of noise which look
-# more realistic than just adding gaussian noise
-# assumes greyscale with pixels ranging from 0 to 1
+# 这会产生更大的 "斑点" 噪声，
+# 看起来比仅添加高斯噪声更为真实，
+# 它假定像素的灰度范围为 0 到 1
 
 def speckle(img):
     severity = np.random.uniform(0, 0.6)
@@ -88,16 +80,14 @@ def speckle(img):
     return img_speck
 
 
-# paints the string in a random location the bounding box
-# also uses a random font, a slight random rotation,
-# and a random amount of speckle noise
+# 在随机位置绘制字符串，边界框也使用随机字体、轻微的随机旋转和随机的斑点噪声
 
 def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
     with cairo.Context(surface) as context:
-        context.set_source_rgb(1, 1, 1)  # White
+        context.set_source_rgb(1, 1, 1)  # 白色
         context.paint()
-        # this font list works in CentOS 7
+        # 此字体列表可在 CentOS 7 中使用
         if multi_fonts:
             fonts = [
                 'Century Schoolbook', 'Courier', 'STIX',
@@ -117,8 +107,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
             raise IOError(('Could not fit string into image.'
                            'Max char count is too large for given image width.'))
 
-        # teach the RNN translational invariance by
-        # fitting text box randomly on canvas, with some room to rotate
+        # 通过在画布上随机放置文本框并旋转一些空间来教会 RNN 平移不变性
         max_shift_x = w - box[2] - border_w_h[0]
         max_shift_y = h - box[3] - border_w_h[1]
         top_left_x = np.random.randint(0, int(max_shift_x))
@@ -133,7 +122,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
     buf = surface.get_data()
     a = np.frombuffer(buf, np.uint8)
     a.shape = (h, w, 4)
-    a = a[:, :, 0]  # grab single channel
+    a = a[:, :, 0]  # 抓取单个通道
     a = a.astype(np.float32) / 255
     a = np.expand_dims(a, 0)
     if rotate:
@@ -165,7 +154,7 @@ def shuffle_mats_or_lists(matrix_list, stop_ind=None):
     return ret
 
 
-# Translation of characters to unique integer values
+# 将字符转换为唯一的整数值
 def text_to_labels(text):
     ret = []
     for char in text:
@@ -173,28 +162,25 @@ def text_to_labels(text):
     return ret
 
 
-# Reverse translation of numerical classes back to characters
+# 将数字类反向转换回字符
 def labels_to_text(labels):
     ret = []
     for c in labels:
-        if c == len(alphabet):  # CTC Blank
+        if c == len(alphabet):  # CTC 空白
             ret.append("")
         else:
             ret.append(alphabet[c])
     return "".join(ret)
 
 
-# only a-z and space..probably not to difficult
-# to expand to uppercase and symbols
+# 仅 a-z 和空格..可能不难扩展为大写和符号
 
 def is_valid_str(in_str):
     search = re.compile(regex, re.UNICODE).search
     return bool(search(in_str))
 
 
-# Uses generator functions to supply train/test with
-# data. Image renderings and text are created on the fly
-# each time with random perturbations
+# 使用生成器函数提供训练/测试数据。每次使用随机扰动动态创建图像渲染和文本
 
 class TextImageGenerator(keras.callbacks.Callback):
 
@@ -215,8 +201,7 @@ class TextImageGenerator(keras.callbacks.Callback):
     def get_output_size(self):
         return len(alphabet) + 1
 
-    # num_words can be independent of the epoch size due to the use of generators
-    # as max_string_len grows, num_words can grow
+    # 由于使用生成器，因此 num_words可以与轮次大小无关，因为 max_string_len 增长, num_words 也会增长
     def build_word_list(self, num_words, max_string_len=None, mono_fraction=0.5):
         assert max_string_len <= self.absolute_max_string_len
         assert num_words % self.minibatch_size == 0
@@ -234,7 +219,7 @@ class TextImageGenerator(keras.callbacks.Callback):
                     max_string_len is None or
                     len(word) <= max_string_len)
 
-        # monogram file is sorted by frequency in english speech
+        # 会标文件按英语语音中的频率排序
         with codecs.open(self.monogram_file, mode='r', encoding='utf-8') as f:
             for line in f:
                 if len(tmp_string_list) == int(self.num_words * mono_fraction):
@@ -243,7 +228,7 @@ class TextImageGenerator(keras.callbacks.Callback):
                 if _is_length_of_word_valid(word):
                     tmp_string_list.append(word)
 
-        # bigram file contains common word pairings in english speech
+        # bigram文件包含英语语音中的常用单词对
         with codecs.open(self.bigram_file, mode='r', encoding='utf-8') as f:
             lines = f.readlines()
             for line in lines:
@@ -256,7 +241,7 @@ class TextImageGenerator(keras.callbacks.Callback):
         if len(tmp_string_list) != self.num_words:
             raise IOError('Could not pull enough words'
                           'from supplied monogram and bigram files.')
-        # interlace to mix up the easy and hard words
+        # 隔行扫描以混合易用词和难用词
         self.string_list[::2] = tmp_string_list[:self.num_words // 2]
         self.string_list[1::2] = tmp_string_list[self.num_words // 2:]
 
@@ -269,11 +254,9 @@ class TextImageGenerator(keras.callbacks.Callback):
         self.cur_val_index = self.val_split
         self.cur_train_index = 0
 
-    # each time an image is requested from train/val/test, a new random
-    # painting of the text is performed
+    # 每次从训练/验证/测试中请求图像时，都会对文本进行新的随机绘制
     def get_batch(self, index, size, train):
-        # width and height are backwards from typical Keras convention
-        # because width is the time dimension when it gets fed into the RNN
+        # width 和 height 按典型的 Keras 约定反向，因为 width 是将其馈入 RNN 时的时间维。
         if K.image_data_format() == 'channels_first':
             X_data = np.ones([size, 1, self.img_w, self.img_h])
         else:
@@ -284,8 +267,7 @@ class TextImageGenerator(keras.callbacks.Callback):
         label_length = np.zeros([size, 1])
         source_str = []
         for i in range(size):
-            # Mix in some blank inputs.  This seems to be important for
-            # achieving translational invariance
+            # 混合一些空白输入。这对于实现翻译不变性似乎很重要
             if train and i > size - 4:
                 if K.image_data_format() == 'channels_first':
                     X_data[i, 0, 0:self.img_w, :] = self.paint_func('')[0, :, :].T
@@ -310,9 +292,9 @@ class TextImageGenerator(keras.callbacks.Callback):
                   'the_labels': labels,
                   'input_length': input_length,
                   'label_length': label_length,
-                  'source_str': source_str  # used for visualization only
+                  'source_str': source_str  # 仅用于可视化
                   }
-        outputs = {'ctc': np.zeros([size])}  # dummy data for dummy loss function
+        outputs = {'ctc': np.zeros([size])}  # 虚拟数据，用于虚拟 loss 函数
         return (inputs, outputs)
 
     def next_train(self):
@@ -342,7 +324,7 @@ class TextImageGenerator(keras.callbacks.Callback):
             rotate=False, ud=False, multi_fonts=False)
 
     def on_epoch_begin(self, epoch, logs={}):
-        # rebind the paint function to implement curriculum learning
+        # 重新结合绘画功能以实现课程学习
         if 3 <= epoch < 6:
             self.paint_func = lambda text: paint_text(
                 text, self.img_w, self.img_h,
@@ -359,19 +341,17 @@ class TextImageGenerator(keras.callbacks.Callback):
             self.build_word_list(32000, 12, 0.5)
 
 
-# the actual loss calc occurs here despite it not being
-# an internal Keras loss function
+# 尽管不是内部 Keras 损失函数，但实际损失计算仍在此处发生
 
 def ctc_lambda_func(args):
     y_pred, labels, input_length, label_length = args
-    # the 2 is critical here since the first couple outputs of the RNN
-    # tend to be garbage:
+    # 这里的 2 是至关重要的，因为 RNN 的前几个输出往往是垃圾：
     y_pred = y_pred[:, 2:, :]
     return K.ctc_batch_cost(labels, y_pred, input_length, label_length)
 
 
-# For a real OCR application, this should be beam search with a dictionary
-# and language model.  For this example, best path is sufficient.
+# 对于真正的 OCR 应用程序，这应该是带有字典和语言模型的波束搜索。
+# 对于此示例，最佳路径就足够了。
 
 def decode_batch(test_func, word_batch):
     out = test_func([word_batch])[0]
@@ -444,13 +424,13 @@ class VizCallback(keras.callbacks.Callback):
 
 
 def train(run_name, start_epoch, stop_epoch, img_w):
-    # Input Parameters
+    # 输入参数
     img_h = 64
     words_per_epoch = 16000
     val_split = 0.2
     val_words = int(words_per_epoch * (val_split))
 
-    # Network parameters
+    # 网络参数
     conv_filters = 16
     kernel_size = (3, 3)
     pool_size = 2
@@ -491,11 +471,11 @@ def train(run_name, start_epoch, stop_epoch, img_w):
                         (img_h // (pool_size ** 2)) * conv_filters)
     inner = Reshape(target_shape=conv_to_rnn_dims, name='reshape')(inner)
 
-    # cuts down input size going into RNN:
+    # 减少进入 RNN 的输入大小：
     inner = Dense(time_dense_size, activation=act, name='dense1')(inner)
 
-    # Two layers of bidirectional GRUs
-    # GRU seems to work as well, if not better than LSTM:
+    # 两层双向GRU
+    # 单层 GRU 似乎也可以，如果不比 LSTM 强：
     gru_1 = GRU(rnn_size, return_sequences=True,
                 kernel_initializer='he_normal', name='gru1')(inner)
     gru_1b = GRU(rnn_size, return_sequences=True,
@@ -507,7 +487,7 @@ def train(run_name, start_epoch, stop_epoch, img_w):
     gru_2b = GRU(rnn_size, return_sequences=True, go_backwards=True,
                  kernel_initializer='he_normal', name='gru2_b')(gru1_merged)
 
-    # transforms RNN output to character activations:
+    # 将 RNN 输出转换为字符激活：
     inner = Dense(img_gen.get_output_size(), kernel_initializer='he_normal',
                   name='dense2')(concatenate([gru_2, gru_2b]))
     y_pred = Activation('softmax', name='softmax')(inner)
@@ -517,13 +497,12 @@ def train(run_name, start_epoch, stop_epoch, img_w):
                    shape=[img_gen.absolute_max_string_len], dtype='float32')
     input_length = Input(name='input_length', shape=[1], dtype='int64')
     label_length = Input(name='label_length', shape=[1], dtype='int64')
-    # Keras doesn't currently support loss funcs with extra parameters
-    # so CTC loss is implemented in a lambda layer
+    # Keras 当前不支持带有额外参数的损失函数，因此 CTC 损失在 Lambda 层中实现
     loss_out = Lambda(
         ctc_lambda_func, output_shape=(1,),
         name='ctc')([y_pred, labels, input_length, label_length])
 
-    # clipnorm seems to speeds up convergence
+    # clipnorm 似乎加快了收敛速度
     sgd = SGD(learning_rate=0.02,
               decay=1e-6,
               momentum=0.9,
@@ -532,14 +511,14 @@ def train(run_name, start_epoch, stop_epoch, img_w):
     model = Model(inputs=[input_data, labels, input_length, label_length],
                   outputs=loss_out)
 
-    # the loss calc occurs elsewhere, so use a dummy lambda func for the loss
+    # 损失计算发生在其他地方，因此请使用虚拟 lambda 函数补偿损失
     model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
     if start_epoch > 0:
         weight_file = os.path.join(
             OUTPUT_DIR,
             os.path.join(run_name, 'weights%02d.h5' % (start_epoch - 1)))
         model.load_weights(weight_file)
-    # captures output of softmax so we can decode the output during visualization
+    # 捕获 softmax 的输出，以便我们可以在可视化过程中解码输出
     test_func = K.function([input_data], [y_pred])
 
     viz_cb = VizCallback(run_name, test_func, img_gen.next_val())
@@ -557,7 +536,7 @@ def train(run_name, start_epoch, stop_epoch, img_w):
 if __name__ == '__main__':
     run_name = datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S')
     train(run_name, 0, 20, 128)
-    # increase to wider images and start at epoch 20.
-    # The learned weights are reloaded
+    # 增加到更宽的图像并从第 20 个轮次开始。
+    # 学到的重量会重新加载
     train(run_name, 20, 25, 512)
 ```

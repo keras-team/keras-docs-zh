@@ -1,9 +1,10 @@
 
-#Trains a Bidirectional LSTM on the IMDB sentiment classification task.
+# 在 IMDB 情感分类任务上训练双向 LSTM。
 
-Output after 4 epochs on CPU: ~0.8146
-Time per epoch on CPU (Core i7): ~150s.
+Output after 4 epochs on CPU: ~0.8146. Time per epoch on CPU (Core i7): ~150s.
 
+在 CPU 上经过 4 个轮次后的输出：〜0.8146。
+CPU（Core i7）上每个轮次的时间：〜150s。
 
 ```python
 from __future__ import print_function
@@ -16,8 +17,7 @@ from keras.datasets import imdb
 
 
 max_features = 20000
-# cut texts after this number of words
-# (among top max_features most common words)
+# 在此数量的单词之后剪切文本（取最常见的 max_features 个单词）
 maxlen = 100
 batch_size = 32
 
@@ -40,7 +40,7 @@ model.add(Bidirectional(LSTM(64)))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='sigmoid'))
 
-# try using different optimizers and different optimizer configs
+# 尝试使用不同的优化器和优化器配置
 model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
 
 print('Train...')

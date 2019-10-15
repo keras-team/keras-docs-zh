@@ -1,13 +1,12 @@
-This script loads pre-trained word embeddings (GloVe embeddings)
-into a frozen Keras Embedding layer, and uses it to
-train a text classification model on the 20 Newsgroup dataset
-(classification of newsgroup messages into 20 different categories).
+# 加载预训练词嵌入
 
-GloVe embedding data can be found at:
+该脚本将预训练的词嵌入（GloVe 嵌入）加载到冻结的 Keras 嵌入层中，并使用它在 20 个新闻组数据集上训练文本分类模型（将新闻组消息分类为 20 个不同的类别）。
+
+可以在以下位置找到 GloVe 嵌入数据：
 http://nlp.stanford.edu/data/glove.6B.zip
 (source page: http://nlp.stanford.edu/projects/glove/)
 
-20 Newsgroup data can be found at:
+20个新闻组数据可在以下位置找到：
 http://www.cs.cmu.edu/afs/cs.cmu.edu/project/theo-20/www/data/news20.html
 
 
@@ -34,8 +33,7 @@ MAX_NUM_WORDS = 20000
 EMBEDDING_DIM = 100
 VALIDATION_SPLIT = 0.2
 
-# first, build index mapping words in the embeddings set
-# to their embedding vector
+# 首先，在嵌入集中将索引映射词构建为其嵌入向量
 
 print('Indexing word vectors.')
 
@@ -48,12 +46,12 @@ with open(os.path.join(GLOVE_DIR, 'glove.6B.100d.txt')) as f:
 
 print('Found %s word vectors.' % len(embeddings_index))
 
-# second, prepare text samples and their labels
+# 其次，准备文本样本及其标签
 print('Processing text dataset')
 
-texts = []  # list of text samples
-labels_index = {}  # dictionary mapping label name to numeric id
-labels = []  # list of label ids
+texts = []  # 文字样本列表
+labels_index = {}  # 将标签名称映射到数字 ID 的字典
+labels = []  # 标签 ID 列表
 for name in sorted(os.listdir(TEXT_DATA_DIR)):
     path = os.path.join(TEXT_DATA_DIR, name)
     if os.path.isdir(path):
@@ -65,7 +63,7 @@ for name in sorted(os.listdir(TEXT_DATA_DIR)):
                 args = {} if sys.version_info < (3,) else {'encoding': 'latin-1'}
                 with open(fpath, **args) as f:
                     t = f.read()
-                    i = t.find('\n\n')  # skip header
+                    i = t.find('\n\n')  # 跳过标题
                     if 0 < i:
                         t = t[i:]
                     texts.append(t)
@@ -73,7 +71,7 @@ for name in sorted(os.listdir(TEXT_DATA_DIR)):
 
 print('Found %s texts.' % len(texts))
 
-# finally, vectorize the text samples into a 2D integer tensor
+# 最后，将文本样本向量化为 2D 整数张量
 tokenizer = Tokenizer(num_words=MAX_NUM_WORDS)
 tokenizer.fit_on_texts(texts)
 sequences = tokenizer.texts_to_sequences(texts)
@@ -87,7 +85,7 @@ labels = to_categorical(np.asarray(labels))
 print('Shape of data tensor:', data.shape)
 print('Shape of label tensor:', labels.shape)
 
-# split the data into a training set and a validation set
+# 将数据分为训练集和验证集
 indices = np.arange(data.shape[0])
 np.random.shuffle(indices)
 data = data[indices]
@@ -101,7 +99,7 @@ y_val = labels[-num_validation_samples:]
 
 print('Preparing embedding matrix.')
 
-# prepare embedding matrix
+# 准备嵌入矩阵
 num_words = min(MAX_NUM_WORDS, len(word_index) + 1)
 embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
 for word, i in word_index.items():
@@ -109,11 +107,11 @@ for word, i in word_index.items():
         continue
     embedding_vector = embeddings_index.get(word)
     if embedding_vector is not None:
-        # words not found in embedding index will be all-zeros.
+        # 嵌入索引中找不到的单词将为全零。
         embedding_matrix[i] = embedding_vector
 
-# load pre-trained word embeddings into an Embedding layer
-# note that we set trainable = False so as to keep the embeddings fixed
+# 将预训练的词嵌入加载到嵌入层中
+# 请注意，我们设置了 trainable = False，以便保持嵌入固定
 embedding_layer = Embedding(num_words,
                             EMBEDDING_DIM,
                             embeddings_initializer=Constant(embedding_matrix),
@@ -122,7 +120,7 @@ embedding_layer = Embedding(num_words,
 
 print('Training model.')
 
-# train a 1D convnet with global maxpooling
+# 使用全局 maxpooling 训练 1D convnet
 sequence_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
 embedded_sequences = embedding_layer(sequence_input)
 x = Conv1D(128, 5, activation='relu')(embedded_sequences)

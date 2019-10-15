@@ -1,13 +1,11 @@
-#This example demonstrates how to write custom layers for Keras.
+# 本示例演示了如何为 Keras 编写自定义网络层。
 
-We build a custom activation layer called 'Antirectifier',
-which modifies the shape of the tensor that passes through it.
-We need to specify two methods: `compute_output_shape` and `call`.
+我们构建了一个称为 'Antirectifier' 的自定义激活层，该层可以修改通过它的张量的形状。
+我们需要指定两个方法: `compute_output_shape` 和 `call`。
 
-Note that the same result can also be achieved via a Lambda layer.
+注意，相同的结果也可以通过 Lambda 层取得。
 
-Because our custom layer is written with primitives from the Keras
-backend (`K`), our code can run both on TensorFlow and Theano.
+我们的自定义层是使用 Keras 后端 (`K`) 中的基元编写的，因而代码可以在 TensorFlow 和 Theano 上运行。
 
 
 ```python
@@ -20,36 +18,30 @@ from keras import backend as K
 
 
 class Antirectifier(layers.Layer):
-    '''This is the combination of a sample-wise
-    L2 normalization with the concatenation of the
-    positive part of the input with the negative part
-    of the input. The result is a tensor of samples that are
-    twice as large as the input samples.
+    '''这是样本级的 L2 标准化与输入的正负部分串联的组合。
+    结果是两倍于输入样本的样本张量。
+    
+    它可以用于替代 ReLU。
 
-    It can be used in place of a ReLU.
+    # 输入尺寸
+        2D 张量，尺寸为 (samples, n)
 
-    # Input shape
-        2D tensor of shape (samples, n)
+    # 输出尺寸
+        2D 张量，尺寸为 (samples, 2*n)
 
-    # Output shape
-        2D tensor of shape (samples, 2*n)
-
-    # Theoretical justification
-        When applying ReLU, assuming that the distribution
-        of the previous output is approximately centered around 0.,
-        you are discarding half of your input. This is inefficient.
-
-        Antirectifier allows to return all-positive outputs like ReLU,
-        without discarding any data.
-
-        Tests on MNIST show that Antirectifier allows to train networks
-        with twice less parameters yet with comparable
-        classification accuracy as an equivalent ReLU-based network.
+    # 理论依据
+        在应用 ReLU 时，假设先前输出的分布接近于 0 的中心，
+        那么将丢弃一半的输入。这是非常低效的。
+        
+        Antirectifier 允许像 ReLU 一样返回全正输出，而不会丢弃任何数据。
+        
+        在 MNIST 上进行的测试表明，Antirectifier 可以训练参数少两倍但具
+        有与基于 ReLU 的等效网络相当的分类精度的网络。
     '''
 
     def compute_output_shape(self, input_shape):
         shape = list(input_shape)
-        assert len(shape) == 2  # only valid for 2D tensors
+        assert len(shape) == 2  # 仅对 2D 张量有效
         shape[-1] *= 2
         return tuple(shape)
 
@@ -60,12 +52,12 @@ class Antirectifier(layers.Layer):
         neg = K.relu(-inputs)
         return K.concatenate([pos, neg], axis=1)
 
-# global parameters
+# 全局参数
 batch_size = 128
 num_classes = 10
 epochs = 40
 
-# the data, split between train and test sets
+# 切分为训练和测试的数据
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 x_train = x_train.reshape(60000, 784)
@@ -77,11 +69,11 @@ x_test /= 255
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# convert class vectors to binary class matrices
+# 将类向量转化为二进制类矩阵
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
-# build the model
+# 构建模型
 model = Sequential()
 model.add(layers.Dense(256, input_shape=(784,)))
 model.add(Antirectifier())
@@ -92,18 +84,18 @@ model.add(layers.Dropout(0.1))
 model.add(layers.Dense(num_classes))
 model.add(layers.Activation('softmax'))
 
-# compile the model
+# 编译模型
 model.compile(loss='categorical_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-# train the model
+# 训练模型
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
           validation_data=(x_test, y_test))
 
-# next, compare with an equivalent network
-# with2x bigger Dense layers and ReLU
+# 接下来，与具有 2 倍大的密集层
+# 和 ReLU 的等效网络进行比较
 ```

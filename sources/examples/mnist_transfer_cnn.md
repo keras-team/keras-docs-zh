@@ -1,12 +1,9 @@
-Transfer learning toy example.
+# 转移学习玩具示例。
 
-1 - Train a simple convnet on the MNIST dataset the first 5 digits [0..4].
-2 - Freeze convolutional layers and fine-tune dense layers
-   for the classification of digits [5..9].
+1 - 在 MNIST 数据集的前 5 位 [0..4] 上训练简单的 convnet。
+2 - 冻结卷积层并微调密集层以进行数字分类 [5..9]。
 
-Get to 99.8% test accuracy after 5 epochs
-for the first five digits classifier
-and 99.2% for the last five digits after transfer + fine-tuning.
+迁移+微调后的前五个数字分类器经过 5 个轮次后，测试准确率达到 99.8％，最后 5 个数字达到 99.2％。
 
 
 ```python
@@ -26,13 +23,13 @@ batch_size = 128
 num_classes = 5
 epochs = 5
 
-# input image dimensions
+# 输入图像尺寸
 img_rows, img_cols = 28, 28
-# number of convolutional filters to use
+# 使用的卷积滤波器数量
 filters = 32
-# size of pooling area for max pooling
+# 最大池的池区域大小
 pool_size = 2
-# convolution kernel size
+# 卷积核大小
 kernel_size = 3
 
 if K.image_data_format() == 'channels_first':
@@ -52,7 +49,7 @@ def train_model(model, train, test, num_classes):
     print(x_train.shape[0], 'train samples')
     print(x_test.shape[0], 'test samples')
 
-    # convert class vectors to binary class matrices
+    # 将类向量转换为二进制类矩阵
     y_train = keras.utils.to_categorical(train[1], num_classes)
     y_test = keras.utils.to_categorical(test[1], num_classes)
 
@@ -72,10 +69,10 @@ def train_model(model, train, test, num_classes):
     print('Test accuracy:', score[1])
 
 
-# the data, split between train and test sets
+# 数据，分为训练集和测试集
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# create two datasets one with digits below 5 and one with 5 and above
+# 创建两个数据集，一个的数字小于 5，另一个的数字大于等于 5
 x_train_lt5 = x_train[y_train < 5]
 y_train_lt5 = y_train[y_train < 5]
 x_test_lt5 = x_test[y_test < 5]
@@ -86,7 +83,7 @@ y_train_gte5 = y_train[y_train >= 5] - 5
 x_test_gte5 = x_test[y_test >= 5]
 y_test_gte5 = y_test[y_test >= 5] - 5
 
-# define two groups of layers: feature (convolutions) and classification (dense)
+# 定义两组网络层：特征（卷积）和分类（密集）
 feature_layers = [
     Conv2D(filters, kernel_size,
            padding='valid',
@@ -107,19 +104,19 @@ classification_layers = [
     Activation('softmax')
 ]
 
-# create complete model
+# 创建完整的模型
 model = Sequential(feature_layers + classification_layers)
 
-# train model for 5-digit classification [0..4]
+# 5位分类的训练模型[0..4]
 train_model(model,
             (x_train_lt5, y_train_lt5),
             (x_test_lt5, y_test_lt5), num_classes)
 
-# freeze feature layers and rebuild model
+# 冻结特征层并重建模型
 for l in feature_layers:
     l.trainable = False
 
-# transfer: train dense layers for new classification task [5..9]
+# 迁移：为新的分类任务训练密集层 [5..9]
 train_model(model,
             (x_train_gte5, y_train_gte5),
             (x_test_gte5, y_test_gte5), num_classes)

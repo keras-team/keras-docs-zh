@@ -1,11 +1,11 @@
-# his example demonstrates the use of fasttext for text classification
+# 本示例演示了使用 fasttext 进行文本分类
 
-Based on Joulin et al's paper:
+根据Joulin等人的论文：
 
-[Bags of Tricks for Efficient Text Classification]
-(https://arxiv.org/abs/1607.01759)
+[Bags of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
 
-Results on IMDB datasets with uni and bi-gram embeddings:
+在具有 uni-gram 和 bi-gram 嵌入的 IMDB 数据集上的结果：
+
 Embedding|Accuracy, 5 epochs|Speed (s/epoch)|Hardware
 :--------|-----------------:|----:|:-------
 Uni-gram |            0.8813|    8|i7 CPU
@@ -26,7 +26,7 @@ from keras.datasets import imdb
 
 def create_ngram_set(input_list, ngram_value=2):
     """
-    Extract a set of n-grams from a list of integers.
+    从整数列表中提取一组 n 元语法。
 
     >>> create_ngram_set([1, 4, 9, 4, 1, 4], ngram_value=2)
     {(4, 9), (4, 1), (1, 4), (9, 4)}
@@ -39,15 +39,15 @@ def create_ngram_set(input_list, ngram_value=2):
 
 def add_ngram(sequences, token_indice, ngram_range=2):
     """
-    Augment the input list of list (sequences) by appending n-grams values.
+    通过附加 n-gram 值来增强列表（序列）的输入列表。
 
-    Example: adding bi-gram
+    示例：添加 bi-gram
     >>> sequences = [[1, 3, 4, 5], [1, 3, 7, 9, 2]]
     >>> token_indice = {(1, 3): 1337, (9, 2): 42, (4, 5): 2017}
     >>> add_ngram(sequences, token_indice, ngram_range=2)
     [[1, 3, 4, 5, 1337, 2017], [1, 3, 7, 9, 2, 1337, 42]]
 
-    Example: adding tri-gram
+    示例：添加 tri-gram
     >>> sequences = [[1, 3, 4, 5], [1, 3, 7, 9, 2]]
     >>> token_indice = {(1, 3): 1337, (9, 2): 42, (4, 5): 2017, (7, 9, 2): 2018}
     >>> add_ngram(sequences, token_indice, ngram_range=3)
@@ -65,8 +65,8 @@ def add_ngram(sequences, token_indice, ngram_range=2):
 
     return new_sequences
 
-# Set parameters:
-# ngram_range = 2 will add bi-grams features
+# 设置参数
+# ngram_range = 2 会添加bi-grams 特征
 ngram_range = 1
 max_features = 20000
 maxlen = 400
@@ -85,24 +85,24 @@ print('Average test sequence length: {}'.format(
 
 if ngram_range > 1:
     print('Adding {}-gram features'.format(ngram_range))
-    # Create set of unique n-gram from the training set.
+    # 从训练集中创建一组唯一的 n-gram。
     ngram_set = set()
     for input_list in x_train:
         for i in range(2, ngram_range + 1):
             set_of_ngram = create_ngram_set(input_list, ngram_value=i)
             ngram_set.update(set_of_ngram)
 
-    # Dictionary mapping n-gram token to a unique integer.
-    # Integer values are greater than max_features in order
-    # to avoid collision with existing features.
+    # 将 n-gram token 映射到唯一整数的字典。
+    # 整数值大于 max_features，
+    # 以避免与现有功能冲突。
     start_index = max_features + 1
     token_indice = {v: k + start_index for k, v in enumerate(ngram_set)}
     indice_token = {token_indice[k]: k for k in token_indice}
 
-    # max_features is the highest integer that could be found in the dataset.
+    # max_features 是可以在数据集中找到的最大整数。
     max_features = np.max(list(indice_token.keys())) + 1
 
-    # Augmenting x_train and x_test with n-grams features
+    # 使用 n-grams 功能增强 x_train 和 x_test
     x_train = add_ngram(x_train, token_indice, ngram_range)
     x_test = add_ngram(x_test, token_indice, ngram_range)
     print('Average train sequence length: {}'.format(
@@ -119,17 +119,15 @@ print('x_test shape:', x_test.shape)
 print('Build model...')
 model = Sequential()
 
-# we start off with an efficient embedding layer which maps
-# our vocab indices into embedding_dims dimensions
+# 我们从有效的嵌入层开始，该层将 vocab 索引映射到 embedding_dims 维度
 model.add(Embedding(max_features,
                     embedding_dims,
                     input_length=maxlen))
 
-# we add a GlobalAveragePooling1D, which will average the embeddings
-# of all words in the document
+# 我们添加了 GlobalAveragePooling1D，它将对文档中所有单词执行平均嵌入
 model.add(GlobalAveragePooling1D())
 
-# We project onto a single unit output layer, and squash it with a sigmoid:
+# 我们投影到单个单位输出层上，并用 sigmoid 压扁它：
 model.add(Dense(1, activation='sigmoid'))
 
 model.compile(loss='binary_crossentropy',

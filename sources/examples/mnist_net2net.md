@@ -1,64 +1,51 @@
-This is an implementation of Net2Net experiment with MNIST in
-'Net2Net: Accelerating Learning via Knowledge Transfer'
-by Tianqi Chen, Ian Goodfellow, and Jonathon Shlens
+这是由 Tianqi Chen, Ian Goodfellow, and Jonathon Shlens 在 "Net2Net: Accelerating Learning via Knowledge Transfer" 中用 MNIST 进行的 Net2Net 实验的实现。
 
 arXiv:1511.05641v4 [cs.LG] 23 Apr 2016
 http://arxiv.org/abs/1511.05641
 
-# Notes
+# 注意
 
-- What:
-  + Net2Net is a group of methods to transfer knowledge from a teacher neural
-    net to a student net,so that the student net can be trained faster than
-    from scratch.
-  + The paper discussed two specific methods of Net2Net, i.e. Net2WiderNet
-    and Net2DeeperNet.
-  + Net2WiderNet replaces a model with an equivalent wider model that has
-    more units in each hidden layer.
-  + Net2DeeperNet replaces a model with an equivalent deeper model.
-  + Both are based on the idea of 'function-preserving transformations of
-    neural nets'.
-- Why:
-  + Enable fast exploration of multiple neural nets in experimentation and
-    design process,by creating a series of wider and deeper models with
-    transferable knowledge.
-  + Enable 'lifelong learning system' by gradually adjusting model complexity
-    to data availability,and reusing transferable knowledge.
+- 什么:
+  + Net2Net 是将知识从教师神经网络转移到学生网络的一组方法，因此，与从头开始相比，可以更快地训练学生网络。
+  + 本文讨论了 Net2Net 的两种特定方法，即 Net2WiderNet 和 Net2DeeperNet。
+  + Net2WiderNet 将模型替换为等效的更宽模型，该模型在每个隐藏层中具有更多单位。
+  + Net2DeeperNet 将模型替换为等效的更深模型。
+  + 两者都基于“神经网络的功能保留变换”的思想。
+- 为什么:
+  + 通过创建一系列具有可转移知识的更宽和更深入的模型，在实验和设计过程中快速探索多个神经网络。
+  + 通过逐步调整模型的复杂性以适应数据可用性并重用可转让的知识，从而启用“终身学习系统”。
 
-# Experiments
+# 实验
 
-- Teacher model: a basic CNN model trained on MNIST for 3 epochs.
-- Net2WiderNet experiment:
-  + Student model has a wider Conv2D layer and a wider FC layer.
-  + Comparison of 'random-padding' vs 'net2wider' weight initialization.
-  + With both methods, after 1 epoch, student model should perform as well as
-    teacher model, but 'net2wider' is slightly better.
-- Net2DeeperNet experiment:
-  + Student model has an extra Conv2D layer and an extra FC layer.
-  + Comparison of 'random-init' vs 'net2deeper' weight initialization.
-  + After 1 epoch, performance of 'net2deeper' is better than 'random-init'.
-- Hyper-parameters:
-  + SGD with momentum=0.9 is used for training teacher and student models.
-  + Learning rate adjustment: it's suggested to reduce learning rate
-    to 1/10 for student model.
-  + Addition of noise in 'net2wider' is used to break weight symmetry
-    and thus enable full capacity of student models. It is optional
-    when a Dropout layer is used.
+- 教师模型：在 MNIST 上训练的 3 个基本 CNN 模型。
+- Net2WiderNet 实验：
+  + 学生模型具有更宽的 Conv2D 层和更宽的 FC 层。
+  + 比较 'random-padding' 和 'net2wider' 权重初始化。
+  + 使用这两种方法，在 1 个轮次之后，学生模型的表现应与教师模型相同，但 'net2wider' 要好一些。
+- Net2DeeperNet 实验：
+  + 学生模型具有额外的 Conv2D 层和额外的 FC 层。
+  + 比较 'random-init' 和 'net2deeper' 权重初始化。
+  + 1 个轮次后，'net2deeper' 的性能优于 'random-init'。
+- 超参数:
+  + momentum=0.9 的 SGD 用于训练教师和学生模型。
+  + 学习率调整：建议将学生模型的学习率降低到 1/10。
+  + 在 'net2wider' 中添加噪声用于打破权重对称性，
+    从而实现学生模型的全部容量。使用 Dropout 层时，它是可选的。
 
-# Results
+# 结果
 
-- Tested with TF backend and 'channels_last' image_data_format.
-- Running on GPU GeForce GTX Titan X Maxwell
-- Performance Comparisons - validation loss values during first 3 epochs:
+- 经过 TF 后端和 'channels_last' 的 image_data_format 测试。
+- 在 GPU GeForce GTX Titan X Maxwell 上运行
+- 性能比较-前 3 个轮次的验证损失值：
 
-Teacher model ...
+教师模型 ...
 (0) teacher_model:             0.0537   0.0354   0.0356
 
-Experiment of Net2WiderNet ...
+Net2WiderNet 实验...
 (1) wider_random_pad:          0.0320   0.0317   0.0289
 (2) wider_net2wider:           0.0271   0.0274   0.0270
 
-Experiment of Net2DeeperNet ...
+Net2DeeperNet 实验...
 (3) deeper_random_init:        0.0682   0.0506   0.0468
 (4) deeper_net2deeper:         0.0292   0.0294   0.0286
 
@@ -74,14 +61,14 @@ from keras.optimizers import SGD
 from keras.datasets import mnist
 
 if K.image_data_format() == 'channels_first':
-    input_shape = (1, 28, 28)  # image shape
+    input_shape = (1, 28, 28)  # 图像尺寸
 else:
-    input_shape = (28, 28, 1)  # image shape
-num_classes = 10  # number of classes
+    input_shape = (28, 28, 1)  # 图像尺寸
+num_classes = 10  # 类别数
 epochs = 3
 
 
-# load and pre-process data
+# 加载和预处理数据
 def preprocess_input(x):
     return x.astype('float32').reshape((-1,) + input_shape) / 255
 
@@ -97,21 +84,20 @@ print('x_train shape:', x_train.shape, 'y_train shape:', y_train.shape)
 print('x_test shape:', x_test.shape, 'y_test shape', y_test.shape)
 
 
-# knowledge transfer algorithms
+# 知识转移算法
 def wider2net_conv2d(teacher_w1, teacher_b1, teacher_w2, new_width, init):
-    '''Get initial weights for a wider conv2d layer with a bigger filters,
-    by 'random-padding' or 'net2wider'.
+    '''通过 'random-padding' 或 'net2wider'，获得具有较大过滤器的更宽 conv2d 层的初始权重。
 
-    # Arguments
-        teacher_w1: `weight` of conv2d layer to become wider,
-          of shape (filters1, num_channel1, kh1, kw1)
-        teacher_b1: `bias` of conv2d layer to become wider,
-          of shape (filters1, )
-        teacher_w2: `weight` of next connected conv2d layer,
-          of shape (filters2, num_channel2, kh2, kw2)
-        new_width: new `filters` for the wider conv2d layer
-        init: initialization algorithm for new weights,
-          either 'random-pad' or 'net2wider'
+    # 参数
+        teacher_w1: `weight`，conv2d 层需要加宽的权重，
+          尺寸为 (filters1, num_channel1, kh1, kw1)
+        teacher_b1: `bias`，conv2d 层需要加宽的偏置，
+          尺寸为 (filters1, )
+        teacher_w2: `weight`，下一个连接的 conv2d 层的权重，
+          尺寸为 (filters2, num_channel2, kh2, kw2)
+        new_width: 新的 `filters`，对于更宽的 conv2d 层
+        init: 新权重的初始化算法，
+          'random-pad' 或 'net2wider' 之一
     '''
     assert teacher_w1.shape[0] == teacher_w2.shape[1], (
         'successive layers from teacher model should have compatible shapes')
@@ -140,8 +126,7 @@ def wider2net_conv2d(teacher_w1, teacher_b1, teacher_w2, new_width, init):
     if init == 'random-pad':
         student_w2 = np.concatenate((teacher_w2, new_w2), axis=2)
     elif init == 'net2wider':
-        # add small noise to break symmetry, so that student model will have
-        # full capacity later
+        # 添加较小的噪声以破坏对称性，以便学生模型以后可以完全使用
         noise = np.random.normal(0, 5e-2 * new_w2.std(), size=new_w2.shape)
         student_w2 = np.concatenate((teacher_w2, new_w2 + noise), axis=2)
         student_w2[:, :, index, :] = new_w2
@@ -151,19 +136,18 @@ def wider2net_conv2d(teacher_w1, teacher_b1, teacher_w2, new_width, init):
 
 
 def wider2net_fc(teacher_w1, teacher_b1, teacher_w2, new_width, init):
-    '''Get initial weights for a wider fully connected (dense) layer
-       with a bigger nout, by 'random-padding' or 'net2wider'.
+    '''通过 'random-padding' 或 'net2wider'，获得具有更大节点的更宽的完全连接（密集）层的初始权重。
 
-    # Arguments
-        teacher_w1: `weight` of fc layer to become wider,
-          of shape (nin1, nout1)
-        teacher_b1: `bias` of fc layer to become wider,
-          of shape (nout1, )
-        teacher_w2: `weight` of next connected fc layer,
-          of shape (nin2, nout2)
-        new_width: new `nout` for the wider fc layer
-        init: initialization algorithm for new weights,
-          either 'random-pad' or 'net2wider'
+    # 参数
+        teacher_w1: `weight`，fc 层需要加宽的权重，
+          尺寸为 (nin1, nout1)
+        teacher_b1: `bias`，fc 层需要加宽的偏置，
+          尺寸为 (nout1, )
+        teacher_w2: `weight`，下一个连接的 fc 层的权重,
+          尺寸为 (nin2, nout2)
+        new_width: 更宽的 fc 层的新 `nout`
+        init: 新权重的初始化算法，
+          'random-pad' 或 'net2wider' 之一
     '''
     assert teacher_w1.shape[1] == teacher_w2.shape[0], (
         'successive layers from teacher model should have compatible shapes')
@@ -190,8 +174,7 @@ def wider2net_fc(teacher_w1, teacher_b1, teacher_w2, new_width, init):
     if init == 'random-pad':
         student_w2 = np.concatenate((teacher_w2, new_w2), axis=0)
     elif init == 'net2wider':
-        # add small noise to break symmetry, so that student model will have
-        # full capacity later
+        # 添加较小的噪声以破坏对称性，以便学生模型以后可以完全使用
         noise = np.random.normal(0, 5e-2 * new_w2.std(), size=new_w2.shape)
         student_w2 = np.concatenate((teacher_w2, new_w2 + noise), axis=0)
         student_w2[index, :] = new_w2
@@ -201,11 +184,11 @@ def wider2net_fc(teacher_w1, teacher_b1, teacher_w2, new_width, init):
 
 
 def deeper2net_conv2d(teacher_w):
-    '''Get initial weights for a deeper conv2d layer by net2deeper'.
+    '''通过 "net2deeper' 获得更深层 conv2d 层的初始权重。
 
-    # Arguments
-        teacher_w: `weight` of previous conv2d layer,
-          of shape (kh, kw, num_channel, filters)
+    # 参数
+        teacher_w: `weight`，前一个 conv2d 层的权重，
+          尺寸为 (kh, kw, num_channel, filters)
     '''
     kh, kw, num_channel, filters = teacher_w.shape
     student_w = np.zeros_like(teacher_w)
@@ -216,19 +199,18 @@ def deeper2net_conv2d(teacher_w):
 
 
 def copy_weights(teacher_model, student_model, layer_names):
-    '''Copy weights from teacher_model to student_model,
-     for layers with names listed in layer_names
+    '''将名称从 layer_names 中列出的图层的权重从 teacher_model 复制到 student_model
     '''
     for name in layer_names:
         weights = teacher_model.get_layer(name=name).get_weights()
         student_model.get_layer(name=name).set_weights(weights)
 
 
-# methods to construct teacher_model and student_models
+# 构造 teacher_model 和 student_model 的方法
 def make_teacher_model(x_train, y_train,
                        x_test, y_test,
                        epochs):
-    '''Train and benchmark performance of a simple CNN.
+    '''简单 CNN 的训练和基准性能。
     (0) Teacher model
     '''
     model = Sequential()
@@ -254,28 +236,25 @@ def make_wider_student_model(teacher_model,
                              x_train, y_train,
                              x_test, y_test,
                              init, epochs):
-    '''Train a wider student model based on teacher_model,
-       with either 'random-pad' (baseline) or 'net2wider'
+    '''使用 'random-pad'（基线）或 'net2wider'，基于 teacher_model 训练更广泛的学生模型
     '''
     new_conv1_width = 128
     new_fc1_width = 128
 
     model = Sequential()
-    # a wider conv1 compared to teacher_model
+    # 一个比 teacher_model 更宽的 conv1
     model.add(Conv2D(new_conv1_width, 3, input_shape=input_shape,
                      padding='same', name='conv1'))
     model.add(MaxPooling2D(2, name='pool1'))
     model.add(Conv2D(64, 3, padding='same', name='conv2'))
     model.add(MaxPooling2D(2, name='pool2'))
     model.add(Flatten(name='flatten'))
-    # a wider fc1 compared to teacher model
+    # 一个比 teacher_model 更宽的 fc1
     model.add(Dense(new_fc1_width, activation='relu', name='fc1'))
     model.add(Dense(num_classes, activation='softmax', name='fc2'))
 
-    # The weights for other layers need to be copied from teacher_model
-    # to student_model, except for widened layers
-    # and their immediate downstreams, which will be initialized separately.
-    # For this example there are no other layers that need to be copied.
+    # 除了加宽的图层及其直接下游之外，其他图层的权重需要从教师模型复制到学生模型，这将分别进行初始化。
+    # 对于此示例，不需要复制其他任何层。
 
     w_conv1, b_conv1 = teacher_model.get_layer('conv1').get_weights()
     w_conv2, b_conv2 = teacher_model.get_layer('conv2').get_weights()
@@ -304,15 +283,14 @@ def make_deeper_student_model(teacher_model,
                               x_train, y_train,
                               x_test, y_test,
                               init, epochs):
-    '''Train a deeper student model based on teacher_model,
-       with either 'random-init' (baseline) or 'net2deeper'
+    '''使用 'random-pad'（基线）或 'net2wider'，基于 teacher_model 训练更广泛的学生模型
     '''
     model = Sequential()
     model.add(Conv2D(64, 3, input_shape=input_shape,
                      padding='same', name='conv1'))
     model.add(MaxPooling2D(2, name='pool1'))
     model.add(Conv2D(64, 3, padding='same', name='conv2'))
-    # add another conv2d layer to make original conv2 deeper
+    # 添加另一个 conv2d 层以使原始 conv2 更深
     if init == 'net2deeper':
         prev_w, _ = model.get_layer('conv2').get_weights()
         new_weights = deeper2net_conv2d(prev_w)
@@ -325,9 +303,9 @@ def make_deeper_student_model(teacher_model,
     model.add(MaxPooling2D(2, name='pool2'))
     model.add(Flatten(name='flatten'))
     model.add(Dense(64, activation='relu', name='fc1'))
-    # add another fc layer to make original fc1 deeper
+    # 添加另一个 fc 层以使原始 fc1 更深
     if init == 'net2deeper':
-        # net2deeper for fc layer with relu, is just an identity initializer
+        # 带有 relu 的 fc 层的 net2deeper 只是一个身份初始化器
         model.add(Dense(64, kernel_initializer='identity',
                         activation='relu', name='fc1-deeper'))
     elif init == 'random-init':
@@ -336,7 +314,7 @@ def make_deeper_student_model(teacher_model,
         raise ValueError('Unsupported weight initializer: %s' % init)
     model.add(Dense(num_classes, activation='softmax', name='fc2'))
 
-    # copy weights for other layers
+    # 复制其他图层的权重
     copy_weights(teacher_model, model, layer_names=[
                  'conv1', 'conv2', 'fc1', 'fc2'])
 
@@ -349,11 +327,11 @@ def make_deeper_student_model(teacher_model,
               validation_data=(x_test, y_test))
 
 
-# experiments setup
+# 实验设置
 def net2wider_experiment():
-    '''Benchmark performances of
-    (1) a wider student model with `random_pad` initializer
-    (2) a wider student model with `Net2WiderNet` initializer
+    '''基准表现
+    (1) 带有 `random_pad` 初始值设定项的更宽的学生模型
+    (2)带有 `Net2WiderNet` 初始化程序的更宽的学生模型
     '''
     print('\nExperiment of Net2WiderNet ...')
 
@@ -372,9 +350,9 @@ def net2wider_experiment():
 
 
 def net2deeper_experiment():
-    '''Benchmark performances of
-    (3) a deeper student model with `random_init` initializer
-    (4) a deeper student model with `Net2DeeperNet` initializer
+    '''基准表现
+    (3) 带有  `random_init` 初始值设定项的更宽的学生模型
+    (4) 带有  `Net2DeeperNet` 初始值设定项的更宽的学生模型
     '''
     print('\nExperiment of Net2DeeperNet ...')
 
@@ -397,7 +375,7 @@ teacher_model = make_teacher_model(x_train, y_train,
                                    x_test, y_test,
                                    epochs=epochs)
 
-# run the experiments
+# 进行实验
 net2wider_experiment()
 net2deeper_experiment()
 ```
