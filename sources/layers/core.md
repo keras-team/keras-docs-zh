@@ -43,7 +43,7 @@ __参数__
 (详见 [initializers](../initializers.md))。
 - __kernel_regularizer__: 运用到 `kernel` 权值矩阵的正则化函数
 (详见 [regularizer](../regularizers.md))。
-- __bias_regularizer__: 运用到偏置向的的正则化函数
+- __bias_regularizer__: 运用到偏置向量的的正则化函数
 (详见 [regularizer](../regularizers.md))。
 - __activity_regularizer__: 运用到层的输出的正则化函数
 (它的 "activation")。
