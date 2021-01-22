@@ -134,7 +134,7 @@ model.fit(data, one_hot_labels, epochs=10, batch_size=32)
 
 这里有几个可以帮助你起步的例子！
 
-在 [examples](https://github.com/keras-team/keras/tree/master/examples) 目录中，你可以找到真实数据集的示例模型：
+在 [examples](https://github.com/keras-team/keras/tree/master/keras/datasets) 目录中，你可以找到真实数据集的示例模型：
 
 - CIFAR10 小图片分类：具有实时数据增强的卷积神经网络 (CNN)
 - IMDB 电影评论情感分类：基于词序列的 LSTM
