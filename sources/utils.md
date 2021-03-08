@@ -214,7 +214,6 @@ __参数__
 'tar' 包含 tar, tar.gz, 和 tar.bz 文件。
 默认 'auto' 为 ['tar', 'zip']。
 None 或 空列表将返回未找到任何匹配。
-ke xu az z'auto', 'tar', 'zip', and None.
 - __cache_dir__: 存储缓存文件的位置，为 None 时默认为
 [Keras 目录](/faq/#where-is-the-keras-configuration-filed-stored).
 

@@ -40,8 +40,7 @@ __参数__
 
 __参考文献__
 
-- [Dropout: A Simple Way to Prevent Neural Networks from Overfitting]
-(http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+- [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
 
 ----
 
