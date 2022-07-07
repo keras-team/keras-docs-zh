@@ -340,7 +340,7 @@ Tensorboard 基本可视化。
 tensorboard --logdir=/full_path_to_your_logs
 ```
 
-当使用 TensorFlow 之外德后端时, TensorBoard 仍然可以运行
+当使用 TensorFlow 之外的后端时, TensorBoard 仍然可以运行
 (如果你安装了 TensorFlow), 但是仅有展示损失值和评估指标这
 两个功能可用。
 
